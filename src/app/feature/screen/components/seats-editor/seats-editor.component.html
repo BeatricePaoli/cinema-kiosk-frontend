@@ -1,0 +1,27 @@
+<form [formGroup]="addSeatsForm" (ngSubmit)="onCreateBlock()">
+    <label for="blockRows">Righe</label>
+    <input type="number" id="blockRows" formControlName="blockRows" />
+    <label for="blockCols">Colonne</label>
+    <input type="number" id="blockCols" formControlName="blockCols" />
+    <button type="submit" [disabled]="!addSeatsForm.valid">Inserisci</button>
+</form>
+
+<canvas id="fabricSurface" width="800" height="400" style="border: 1px solid #cccccc;"></canvas>
+<!-- <div #canvasContainer style="width: 50%; height: 80vh">
+    <canvas id="fabricSurface" style="border: 1px solid #cccccc;"></canvas>
+</div> -->
+
+<button type="button" [disabled]="isUndoDisabled" (click)="undo()">Undo</button>
+<button type="button" [disabled]="isRedoDisabled" (click)="redo()">Redo</button>
+
+<br>
+
+<form *ngIf="selectedSeat" [formGroup]="editSeatForm" (ngSubmit)="onEditSelectedSeat()">
+    <label for="label">Etichetta</label>
+    <input id="label" formControlName="label" />
+    <button type="submit" [disabled]="!editSeatForm.valid">Modifica</button>
+</form>
+
+<br>
+
+<button (click)="onSaveScreen()">Salva schermo</button>
