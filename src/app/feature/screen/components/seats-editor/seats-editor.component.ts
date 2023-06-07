@@ -83,6 +83,9 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
 
       // this.canvas?.setZoom(zoom); // Zoom generico
       this.canvas?.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom); // Zoom su cursore
+
+      opt.e.stopPropagation();
+      opt.e.preventDefault();
     });
 
     this.canvas?.on('mouse:down', (opt) => {
