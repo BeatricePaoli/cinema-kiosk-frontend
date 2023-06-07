@@ -30,8 +30,7 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "src/scss/styles.scss"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
@@ -97,8 +96,7 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "src/scss/styles.scss"
             ],
             "scripts": []
           }

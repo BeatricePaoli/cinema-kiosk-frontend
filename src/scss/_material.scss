@@ -1,0 +1,41 @@
+@use '@angular/material' as mat;
+
+@import "@angular/material/theming";
+
+@include mat.core();
+
+// $indigo-palette: (
+//  50: #e8eaf6,
+//  100: #c5cae9,
+//  200: #9fa8da,
+//  300: #7986cb,
+//  // ... continues to 900
+//  contrast: (
+//    50: rgba(black, 0.87),
+//    100: rgba(black, 0.87),
+//    200: rgba(black, 0.87),
+//    300: white,
+//    // ... continues to 900
+//  )
+// );
+$angular-primary: mat.define-palette(mat.$blue-palette);
+$angular-accent: mat.define-palette(mat.$pink-palette);
+$angular-warn: mat.define-palette(mat.$red-palette);
+
+$angular-default-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $angular-primary,
+      accent: $angular-accent,
+      warn: $angular-warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($angular-default-theme);
+
+// TODO: non bellissimo, meglio ridefinire la palette?
+.mat-toolbar {
+  background-color: mat.get-color-from-palette($angular-primary, 50) !important;
+  color: black !important;
+}
