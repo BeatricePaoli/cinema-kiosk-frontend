@@ -9,7 +9,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ScreenModule } from './feature/screen/screen.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HeaderModule } from './feature/header/container/header.module';
+import { HeaderModule } from './feature/header/header.module';
 
 @NgModule({
   declarations: [
