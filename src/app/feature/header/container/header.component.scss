@@ -1,0 +1,13 @@
+.logo {
+    width: 12rem;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.mat-drawer {
+    button.mat-mdc-menu-item.cdk-program-focused:not(:hover) {
+        background: none !important;
+    }
+}
