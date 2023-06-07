@@ -35,7 +35,7 @@ $angular-default-theme: mat.define-light-theme(
 @include mat.all-component-themes($angular-default-theme);
 
 // TODO: non bellissimo, meglio ridefinire la palette?
-.mat-toolbar {
+.mat-toolbar, .mat-drawer {
   background-color: mat.get-color-from-palette($angular-primary, 50) !important;
   color: black !important;
 }

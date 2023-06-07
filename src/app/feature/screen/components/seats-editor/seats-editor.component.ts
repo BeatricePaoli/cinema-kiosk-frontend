@@ -55,9 +55,10 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
         backgroundColor: "transparent"
       });
 
-      var screen = new fabric.Text("SCHERMO", {
+      var screen = new fabric.Text("Schermo", {
         fontSize: 30,
         fontWeight: 'bold',
+        fontFamily: 'Montserrat',
         charSpacing: 1.2,
         fill: '#545252',
         top: PADDING,
@@ -239,6 +240,7 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
           var text = new fabric.Text(rowLabel + "-" + (j + 1), {
             fontSize: 10,
             fontWeight: 'bold',
+            fontFamily: 'Montserrat',
             originX: 'center',
             originY: 'center',
             selectable: false,
