@@ -8,6 +8,20 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'movie-list-now',
+    loadChildren: () =>
+      import('./feature/movie-list/movie-list.module').then(
+        (m) => m.MovieListModule
+      ),
+  },
+  {
+    path: 'movie-list-next',
+    loadChildren: () =>
+      import('./feature/movie-list/movie-list.module').then(
+        (m) => m.MovieListModule
+      ),
+  },
+  {
     path: 'screen',
     loadChildren: () =>
       import('./feature/screen/screen.module').then(

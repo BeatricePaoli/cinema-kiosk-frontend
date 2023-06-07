@@ -1,0 +1,33 @@
+<div class="container py-4">
+    <form id="searchForm" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Filtra per nome</mat-label>
+                    <input matInput formControlName="movie">
+                    <mat-icon matSuffix class="cursor-pointer" (click)="onSubmit()">search</mat-icon>
+                </mat-form-field>
+                <!-- <button mat-raised-button color="primary" type="submit" [disabled]="!searchForm.valid">Cerca</button> -->
+            </div>
+        </div>
+    </form>
+
+    <div class="movie-list-container d-flex justify-content-center flex-wrap">
+        <mat-card class="movie-card m-2 m-sm-4" *ngFor="let movie of movies">
+            <!-- <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>Shiba Inu</mat-card-title>
+                <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+            </mat-card-header> -->
+            <img mat-card-image src="https://cinemaadriano.it/images/locandine_film/spider.jpg"
+                alt="Locandina film">
+            <mat-card-content class="pt-4">
+                <h6>Spider-man: Across the Spiderverse</h6>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

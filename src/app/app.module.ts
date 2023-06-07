@@ -10,6 +10,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ScreenModule } from './feature/screen/screen.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderModule } from './feature/header/header.module';
+import { MovieListModule } from './feature/movie-list/movie-list.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { HeaderModule } from './feature/header/header.module';
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     ScreenModule,
     HeaderModule,
+    MovieListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

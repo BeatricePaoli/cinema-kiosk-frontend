@@ -1,0 +1,14 @@
+.movie-list-container {
+    max-height: calc(100vh - 185px);
+    overflow-y: auto;
+}
+
+.movie-card {
+    width: 170px;
+}
+
+@media screen and (min-width: 576px) {
+    .movie-card {
+        width: 200px;
+    }
+}

@@ -39,3 +39,20 @@ $angular-default-theme: mat.define-light-theme(
   background-color: mat.get-color-from-palette($angular-primary, 50) !important;
   color: black !important;
 }
+
+::-webkit-scrollbar-track {
+	border-radius: 15px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+	height: .5rem;
+	width: .5rem;
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 15px;
+	background-color: mat.get-color-from-palette($angular-primary, 500);
+}

@@ -1,39 +1,40 @@
 <mat-drawer-container autosize>
     <mat-drawer #drawer mode="over" class="py-5 px-5">
-        <button mat-menu-item class="py-2">
+        <button mat-menu-item class="py-2" routerLink="movie-list-now" (click)="drawer.close()">
             <span>In programmazione</span>
         </button>
-        <button mat-menu-item class="py-2">
+        <button mat-menu-item class="py-2" routerLink="movie-list-next" (click)="drawer.close()">
             <span>Prossime uscite</span>
         </button>
     </mat-drawer>
 
-    <mat-toolbar color="primary">
-        <button mat-icon-button (click)="drawer.toggle()">
-            <mat-icon>menu</mat-icon>
-        </button>
-        <a [routerLink]="'.'"><img src="/assets/images/logo.png" class="logo"></a>
-        <span class="spacer"></span>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>person</mat-icon>
-        </button>
-    </mat-toolbar>
-
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item>
-            <mat-icon>settings</mat-icon>
-            <span>Profilo</span>
-        </button>
-        <button mat-menu-item>
-            <mat-icon>list_alt</mat-icon>
-            <span>Prenotazioni</span>
-        </button>
-        <button mat-menu-item>
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-        </button>
-    </mat-menu>
-
-    <ng-content></ng-content>
-
+    <div class="min-vh-100">
+        <mat-toolbar color="primary">
+            <button mat-icon-button (click)="drawer.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <a [routerLink]="'.'"><img src="/assets/images/logo.png" class="logo"></a>
+            <span class="spacer"></span>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>person</mat-icon>
+            </button>
+        </mat-toolbar>
+    
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>settings</mat-icon>
+                <span>Profilo</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>list_alt</mat-icon>
+                <span>Prenotazioni</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+    
+        <ng-content></ng-content>
+    </div>
 </mat-drawer-container>
