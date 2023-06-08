@@ -27,6 +27,7 @@ import { MovieListModule } from './feature/movie-list/movie-list.module';
     ScreenModule,
     HeaderModule,
     MovieListModule,
+    MovieListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
