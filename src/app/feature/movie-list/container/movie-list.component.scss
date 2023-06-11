@@ -1,22 +1,29 @@
-.movie-list-container {
-    max-height: calc(100vh - 185px);
-    overflow-y: auto;
-}
+.slick-slider {
+    width: 90%;
+    margin: 0 50px;
 
-.movie-card {
-    width: 170px;
-}
+    .slide {
+        cursor: pointer;
 
-@media screen and (min-width: 576px) {
-    .movie-card {
-        width: 200px;
+        &:hover {
+            opacity: 0.85;
+        }
     }
-}
 
-.genre-container {
-    gap: 5px;
-}
+    .slick-left, .slick-right {
+        position: absolute;
+        width: 3rem;
+        height: 3rem;
+        top: calc(50% - 3.5rem);
+        z-index: 2;
+        cursor: pointer;
+    }
 
-.star-icon {
-    color: #fcca03;
+    .slick-left {
+        left: -30px;
+    }
+
+    .slick-right {
+        right: -30px;
+    }
 }

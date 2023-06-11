@@ -1,37 +1,81 @@
 <div class="container py-4">
     <form id="searchForm" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-        <div class="row">
+        <div class="row mb-5">
             <div class="col">
-                <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>Filtra per nome</mat-label>
-                    <input matInput formControlName="movie">
-                    <mat-icon matSuffix class="cursor-pointer" (click)="onSubmit()">search</mat-icon>
-                </mat-form-field>
-                <!-- <button mat-raised-button color="primary" type="submit" [disabled]="!searchForm.valid">Cerca</button> -->
+                <div class="d-flex align-items-center gap-3">
+                    <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
+                        <mat-label>Filtra per nome</mat-label>
+                        <input matInput formControlName="movie">
+                        <mat-icon matSuffix class="cursor-pointer" (click)="onSubmit()">search</mat-icon>
+                    </mat-form-field>
+                    <button mat-icon-button matTooltip="Filtri aggiuntivi" matBadge="2"
+                        matBadgeSize="small" matBadgePosition="after" matBadgeColor="accent"
+                        (click)="onToggleAccordion()">
+                        <mat-icon>tune</mat-icon>
+                    </button>
+                </div>
+
+                <div [@slideInOut]="animationState" class="d-flex justify-content-center align-items-center pt-3 gap-3 flex-wrap">
+                    <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
+                        <mat-label>Città</mat-label>
+                        <input matInput formControlName="city" [matAutocomplete]="autoCity">
+                        <mat-autocomplete #autoCity="matAutocomplete" hideSingleSelectionIndicator>
+                            <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+                                {{ city }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
+                        <mat-label>Cinema</mat-label>
+                        <input matInput formControlName="cinema" [matAutocomplete]="autoCinema">
+                        <mat-autocomplete #autoCinema="matAutocomplete" hideSingleSelectionIndicator>
+                            <mat-option *ngFor="let cinema of filteredCinemas | async" [value]="cinema">
+                                {{ cinema }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <div>
+                        <button mat-raised-button class="me-3" type="reset">Reset</button>
+                        <button mat-raised-button color="primary" type="submit" [disabled]="!searchForm.valid">Filtra</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
 
-    <div class="movie-list-container d-flex justify-content-center flex-wrap">
-        <mat-card class="movie-card m-2 m-sm-4" *ngFor="let movie of movies">
-            <img mat-card-image src="https://cinemaadriano.it/images/locandine_film/spider.jpg"
-                alt="Locandina film">
-            <mat-card-content class="pt-4">
-                <!-- TODO: ellipsis per nome e generi -->
-                <h6>Spider-man: Across the Spiderverse</h6>
-                <div class="py-2 d-flex flex-wrap genre-container">
-                    <span class="badge rounded-pill text-bg-light">Animazione</span>
-                    <span class="badge rounded-pill text-bg-light">Azione</span>
-                    <span class="badge rounded-pill text-bg-light">Avventura</span>
-                </div>
-                <div class="d-flex justify-content-end align-items-center">
-                    <span>4.5/5</span>
-                    <mat-icon class="star-icon">star</mat-icon>
-                </div>
-            </mat-card-content>
-            <mat-card-actions class="justify-content-center">
-                <button mat-button [routerLink]="['./', movie]">INFO E SPETTACOLI</button>
-            </mat-card-actions>
-        </mat-card>
+    <!-- TODO: ellipsis per nome -->
+    
+    <div class="row">
+        <div class="col">
+            <h3>Al Cinema</h3>
+
+            <div class="d-flex justify-content-center">
+                <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie]" class="slide px-3">
+                        <img src="https://cinemaadriano.it/images/locandine_film/spider.jpg"
+                            class="w-100 mb-3 rounded-3" alt="Locandina film">
+                        <h6 class="text-center">Spider-man: Across the Spiderverse</h6>
+                    </div>
+                </ngx-slick-carousel>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h3>Prossimamente</h3>
+
+            <div class="d-flex justify-content-center">
+                <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie]" class="px-3">
+                        <img src="https://cinemaadriano.it/images/locandine_film/spider.jpg"
+                            class="w-100 mb-3 rounded-3" alt="Locandina film">
+                        <h6 class="text-center">Spider-man: Across the Spiderverse</h6>
+                    </div>
+                </ngx-slick-carousel>
+            </div>
+        </div>
     </div>
 </div>
