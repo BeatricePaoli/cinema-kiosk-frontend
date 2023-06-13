@@ -1,1 +1,63 @@
-<p>movie works!</p>
+<div class="movie-poster position-relative">
+    <button mat-mini-fab class="back-btn" routerLink="/movie-list">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+    <img src="https://cinemaadriano.it/images/locandine_film/spider.jpg" class="w-100" alt="Locandina film">
+</div>
+
+<div class="container py-2">
+    <div class="row">
+        <div class="col">
+
+            <h2 class="fw-bold">Spider-man: Across the Spiderverse</h2>
+
+            <div class="d-flex justify-content-between align-items-center gap-4 py-4">
+                <div class="text-center">
+                    <h6 class="fw-bold">Data di uscita</h6>
+                    <div>01/06/2023</div>
+                </div>
+                <div class="text-center">
+                    <h6 class="fw-bold">Durata</h6>
+                    <div>140 min</div>
+                </div>
+                <div class="text-center">
+                    <h6 class="fw-bold">Voto</h6>
+                    <div class="d-flex align-items-center gap-2">
+                        <span>4.5</span> 
+                        <mat-icon class="star-icon">star</mat-icon></div>
+                </div>
+            </div>
+
+            <div class="pb-4 d-flex flex-wrap gap-2">
+                <span class="badge rounded-pill text-bg-light">Animazione</span>
+                <span class="badge rounded-pill text-bg-light">Azione</span>
+                <span class="badge rounded-pill text-bg-light">Avventura</span>
+            </div>
+
+            <p>
+                <span class="fw-bold">Trama: </span>
+                Spider-Man: Across the Spider-Verse, film diretto da Joaquim Dos Santos, Kemp Powers e Justin K. Thompson, vede ancora una volta protagonista Miles Morales, ormai adulto e studente al college. Dopo essersi riunito con Gwen Stacy, l'amichevole Spider-Man di quartiere di Brooklyn viene trasportato nel Multiverso. Qui Mike incontra una squadra di Spider-Eroi, che ha il compito di proteggere l'esistenza. Ma quando gli eroi si ritrovano a dover affrontare una nuova e pericolosa minaccia, si ritrovano in disaccordo sul da farsi, arrivando perfino a scontrarsi. In quest'occasione Miles si ritrova contro tutti gli altri "Ragni" e dovrà ridefinire cosa significa per lui essere un eroe per poter salvare le persone che ama di più.
+            </p>
+
+            <div class="pb-4 pt-2">
+                <h6 class="fw-bold">Cast</h6>
+
+                <div class="d-flex justify-content-center">
+                    <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
+                        <div ngxSlickItem *ngFor="let actor of movie.cast" class="slide mx-3">
+                            <img [src]="actor.img" class="mb-3" [alt]="actor.name">
+                            <h6 class="text-center">{{ actor.name }}</h6>
+                        </div>
+                    </ngx-slick-carousel>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <div class="py-4 px-2 position-fixed bottom-0 w-100 start-0 end-0">
+                <button mat-raised-button color="primary" class="w-100">Prenota</button>
+            </div>
+
+        </div>
+    </div>
+</div>

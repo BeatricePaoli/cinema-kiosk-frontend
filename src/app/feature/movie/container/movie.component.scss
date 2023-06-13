@@ -1,0 +1,33 @@
+.movie-poster {
+    max-height: 80vh;
+    mask-image: linear-gradient(black, transparent);
+}
+
+.back-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.star-icon {
+    color: #ffc107;
+}
+
+.badge.rounded-pill {
+    padding: 5px 12px;
+}
+
+.slick-slider .slide {
+    width: 80px;
+
+    img {
+        height: 64px;
+        width: 64px;
+        border-radius: 50%;
+        margin: auto;
+    }
+}
+
+.spacer {
+    height: 34px;
+}
