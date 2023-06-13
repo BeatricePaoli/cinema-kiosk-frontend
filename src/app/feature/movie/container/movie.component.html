@@ -43,7 +43,7 @@
                 <h6 class="fw-bold">Cast</h6>
 
                 <div class="d-flex justify-content-center">
-                    <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
+                    <ngx-slick-carousel class="my-2" #slickModal="slick-carousel" [config]="slideConfig">
                         <div ngxSlickItem *ngFor="let actor of movie.cast" class="slide mx-3">
                             <img [src]="actor.img" class="mb-3" [alt]="actor.name">
                             <h6 class="text-center">{{ actor.name }}</h6>
