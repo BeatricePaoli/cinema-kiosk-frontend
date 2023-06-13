@@ -53,10 +53,9 @@
 
             <div class="d-flex justify-content-center">
                 <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
-                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie]" class="slide px-3">
-                        <img src="https://cinemaadriano.it/images/locandine_film/spider.jpg"
-                            class="w-100 mb-3 rounded-3" alt="Locandina film">
-                        <h6 class="text-center">Spider-man: Across the Spiderverse</h6>
+                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie.id]" class="slide px-3">
+                        <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name">
+                        <h6 class="text-center">{{ movie.name }}</h6>
                     </div>
                 </ngx-slick-carousel>
             </div>
@@ -69,10 +68,9 @@
 
             <div class="d-flex justify-content-center">
                 <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
-                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie]" class="px-3">
-                        <img src="https://cinemaadriano.it/images/locandine_film/spider.jpg"
-                            class="w-100 mb-3 rounded-3" alt="Locandina film">
-                        <h6 class="text-center">Spider-man: Across the Spiderverse</h6>
+                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie.id]" class="slide px-3">
+                        <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name" />
+                        <h6 class="text-center">{{ movie.name }}</h6>
                     </div>
                 </ngx-slick-carousel>
             </div>
