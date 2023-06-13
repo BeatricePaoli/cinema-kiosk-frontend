@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { SlideInOutAnimation } from 'src/app/shared/animations/slide-in-out.animation';
@@ -7,7 +7,6 @@ import { SlideInOutAnimation } from 'src/app/shared/animations/slide-in-out.anim
   selector: 'app-movie-list',
   templateUrl: './movie-list.component.html',
   styleUrls: ['./movie-list.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   animations: [SlideInOutAnimation]
 })
 export class MovieListComponent {

@@ -1,29 +1,17 @@
-.slick-slider {
-    width: 90%;
-    margin: 0 50px;
+.slick-slider .slide {
+    cursor: pointer;
 
-    .slide {
-        cursor: pointer;
-
-        &:hover {
-            opacity: 0.85;
-        }
+    &:hover {
+        opacity: 0.85;
     }
 
-    .slick-left, .slick-right {
-        position: absolute;
-        width: 3rem;
-        height: 3rem;
-        top: calc(50% - 3.5rem);
-        z-index: 2;
-        cursor: pointer;
+    img {
+        height: 200px;
     }
+}
 
-    .slick-left {
-        left: -30px;
-    }
-
-    .slick-right {
-        right: -30px;
+@media screen and (min-width: 576px) {
+    .slick-slider .slide img {
+        height: 240px;
     }
 }

@@ -1,0 +1,21 @@
+.slick-slider {
+    width: 90%;
+    margin: 0 50px;
+
+    .slick-left, .slick-right {
+        position: absolute;
+        width: 2rem;
+        height: 2rem;
+        top: calc(50% - 2.5rem);
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    .slick-left {
+        left: -30px;
+    }
+
+    .slick-right {
+        right: -30px;
+    }
+}
