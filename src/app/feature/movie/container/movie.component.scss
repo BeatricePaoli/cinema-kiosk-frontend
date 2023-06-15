@@ -1,6 +1,10 @@
-.movie-poster {
+.movie-poster-mobile {
     max-height: 80vh;
     mask-image: linear-gradient(black, transparent);
+}
+
+.movie-poster-desktop {
+    height: 260px;
 }
 
 .back-btn {
@@ -30,4 +34,28 @@
 
 .spacer {
     height: 34px;
+}
+
+@media screen and (min-width: 576px) {
+    .movie-poster-mobile {
+        max-height: auto;
+        mask-image: none;
+        
+        img {
+            display: none;
+        }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .spacer {
+        height: auto;
+    }
+
+    .book-btn-desktop {
+        position: relative !important;
+        width: 25% !important;
+        display: block;
+        padding: 0 !important;
+    }
 }
