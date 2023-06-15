@@ -2,7 +2,7 @@
     <button mat-mini-fab class="back-btn" routerLink="/movie-list">
         <mat-icon>chevron_left</mat-icon>
     </button>
-    <img class="w-100" src="https://cinemaadriano.it/images/locandine_film/spider.jpg" alt="Locandina film">
+    <img class="w-100" [src]="movie.img" [alt]="movie.name">
 </div>
 
 <div class="container py-2 py-sm-4">
@@ -11,32 +11,33 @@
 
             <div class="d-sm-flex gap-4 pb-sm-4">
 
-                <img class="d-none d-sm-block movie-poster-desktop"
-                    src="https://cinemaadriano.it/images/locandine_film/spider.jpg" alt="Locandina film">
+                <img class="d-none d-sm-block movie-poster-desktop" [src]="movie.img" [alt]="movie.name">
 
                 <div class="flex-grow-1">
 
                     <div class="d-sm-flex justify-content-between">
-                        <h2 class="fw-bold flex-grow-1">Spider-man: Across the Spiderverse</h2>
+                        <h2 class="fw-bold flex-grow-1">{{ movie.name }}</h2>
 
                         <div class="py-4 px-2 position-fixed bottom-0 w-100 start-0 end-0 z-3 book-btn-desktop">
-                            <button mat-raised-button color="accent" class="w-100">Prenota</button>
+                            <button mat-raised-button color="accent" class="w-100" [routerLink]="['/booking', movie.id]">
+                                Prenota
+                            </button>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center gap-4 py-4">
                         <div class="text-center">
                             <h6 class="fw-bold">Data di uscita</h6>
-                            <div>01/06/2023</div>
+                            <div>{{ movie.releaseDate }}</div>
                         </div>
                         <div class="text-center">
                             <h6 class="fw-bold">Durata</h6>
-                            <div>140 min</div>
+                            <div>{{ movie.duration }} min</div>
                         </div>
                         <div class="text-center">
                             <h6 class="fw-bold">Voto</h6>
                             <div class="d-flex align-items-center gap-2">
-                                <span>4.5</span>
+                                <span>{{ movie.score }}</span>
                                 <mat-icon class="star-icon">star</mat-icon>
                             </div>
                         </div>
@@ -44,9 +45,7 @@
 
                     <h6 class="fw-bold">Genere</h6>
                     <div class="pb-4 d-flex flex-wrap gap-2">
-                        <span class="badge rounded-pill text-bg-light">Animazione</span>
-                        <span class="badge rounded-pill text-bg-light">Azione</span>
-                        <span class="badge rounded-pill text-bg-light">Avventura</span>
+                        <span *ngFor="let genre of movie.genres" class="badge rounded-pill text-bg-light">{{ genre }}</span>
                     </div>
                 </div>
 
@@ -54,14 +53,7 @@
 
             <p>
                 <span class="fw-bold">Trama: </span>
-                Spider-Man: Across the Spider-Verse, film diretto da Joaquim Dos Santos, Kemp Powers e Justin K.
-                Thompson, vede ancora una volta protagonista Miles Morales, ormai adulto e studente al college. Dopo
-                essersi riunito con Gwen Stacy, l'amichevole Spider-Man di quartiere di Brooklyn viene trasportato nel
-                Multiverso. Qui Mike incontra una squadra di Spider-Eroi, che ha il compito di proteggere l'esistenza.
-                Ma quando gli eroi si ritrovano a dover affrontare una nuova e pericolosa minaccia, si ritrovano in
-                disaccordo sul da farsi, arrivando perfino a scontrarsi. In quest'occasione Miles si ritrova contro
-                tutti gli altri "Ragni" e dovrà ridefinire cosa significa per lui essere un eroe per poter salvare le
-                persone che ama di più.
+                {{ movie.plot }}
             </p>
 
             <div class="pb-4 pt-2">

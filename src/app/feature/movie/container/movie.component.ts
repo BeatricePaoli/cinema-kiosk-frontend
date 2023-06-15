@@ -8,6 +8,14 @@ import { Component } from '@angular/core';
 export class MovieComponent {
 
   movie: any = {
+    id: 1,
+    name: "Spider-man: Across the Spiderverse",
+    img: "https://cinemaadriano.it/images/locandine_film/spider.jpg",
+    releaseDate: "01/06/2023",
+    duration: 140,
+    score: 4.5,
+    genres: ["Animazione", "Azione", "Avventura"],
+    plot: "Spider-Man: Across the Spider-Verse, film diretto da Joaquim Dos Santos, Kemp Powers e Justin K. Thompson, vede ancora una volta protagonista Miles Morales, ormai adulto e studente al college. Dopo essersi riunito con Gwen Stacy, l'amichevole Spider-Man di quartiere di Brooklyn viene trasportato nel Multiverso. Qui Mike incontra una squadra di Spider-Eroi, che ha il compito di proteggere l'esistenza. Ma quando gli eroi si ritrovano a dover affrontare una nuova e pericolosa minaccia, si ritrovano in disaccordo sul da farsi, arrivando perfino a scontrarsi. In quest'occasione Miles si ritrova contro tutti gli altri \"Ragni\" e dovrà ridefinire cosa significa per lui essere un eroe per poter salvare le persone che ama di più.",
     cast: [
       {
         name: "Tizio Caio Cesare",
