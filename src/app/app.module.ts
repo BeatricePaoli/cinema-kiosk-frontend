@@ -11,6 +11,7 @@ import { ScreenModule } from './feature/screen/screen.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderModule } from './feature/header/header.module';
 import { MovieListModule } from './feature/movie-list/movie-list.module';
+import { BookingModule } from './feature/booking/booking.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { MovieListModule } from './feature/movie-list/movie-list.module';
     HeaderModule,
     MovieListModule,
     MovieListModule,
+    BookingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

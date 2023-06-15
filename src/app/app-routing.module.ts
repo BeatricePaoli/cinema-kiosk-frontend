@@ -22,6 +22,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'booking/:movieId',
+    loadChildren: () =>
+      import('./feature/booking/booking.module').then(
+        (m) => m.BookingModule
+      ),
+  },
+  {
     path: 'screen',
     loadChildren: () =>
       import('./feature/screen/screen.module').then(
