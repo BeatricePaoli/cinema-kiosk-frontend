@@ -3,6 +3,8 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { fabric } from 'fabric';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+// TODO: da spostare in generic module
+
 export const SEAT_SIZE = 20;
 export const PADDING = 5;
 export const SCREEN_PADDING = 80;

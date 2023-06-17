@@ -1,1 +1,120 @@
-<p>booking works!</p>
+<div class="container py-4">
+    <div class="row">
+        <div class="col">
+            <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+                <mat-stepper formArrayName="formArray" [orientation]="(orientation$ | async)!" linear>
+
+                    <mat-step formGroupName="0" [stepControl]="cinemaForm">
+                        <ng-template matStepLabel>Scegli il cinema</ng-template>
+
+                        <div
+                            class="d-flex justify-content-center align-items-center pt-3 gap-4 flex-wrap flex-md-nowrap">
+
+                            <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
+                                <mat-label>Città</mat-label>
+                                <input matInput formControlName="city" [matAutocomplete]="autoCity">
+                                <mat-autocomplete #autoCity="matAutocomplete" hideSingleSelectionIndicator>
+                                    <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+                                        {{ city }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="city?.invalid">
+                                    <div *ngIf="cityErrorRequired">Valore obbligatorio</div>
+                                    <div *ngIf="!cityErrorRequired && cityErrorValidOption">Valore non trovato,
+                                        selezionare una delle opzioni proposte</div>
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
+                                <mat-label>Cinema</mat-label>
+                                <input matInput formControlName="cinema" [matAutocomplete]="autoCinema">
+                                <mat-autocomplete #autoCinema="matAutocomplete" hideSingleSelectionIndicator>
+                                    <mat-option *ngFor="let cinema of filteredCinemas | async" [value]="cinema">
+                                        {{ cinema }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="cinema?.invalid">
+                                    <div *ngIf="cinemaErrorRequired">Valore obbligatorio</div>
+                                    <div *ngIf="!cinemaErrorRequired && cinemaErrorValidOption">Valore non trovato,
+                                        selezionare una delle opzioni proposte</div>
+                                </mat-error>
+                            </mat-form-field>
+
+                            <button mat-raised-button matStepperNext color="primary" type="button"
+                                [disabled]="!cinemaForm.valid">
+                                Avanti
+                            </button>
+
+                        </div>
+                    </mat-step>
+
+                    <mat-step formGroupName="1" [stepControl]="showForm">
+                        <ng-template matStepLabel>Scegli lo spettacolo</ng-template>
+
+                        <div class="d-flex justify-content-between align-items-center pt-3 gap-4 flex-wrap flex-column flex-md-row">
+
+                            <div class="d-flex justify-content-between gap-5">
+                                <div>
+                                    <label>Tipo proiezione</label>
+                                    <mat-radio-group class="d-flex flex-column gap-2" formControlName="projectionType">
+                                        <mat-radio-button *ngFor="let type of projTypes" [value]="type">
+                                            {{ type }}
+                                        </mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+    
+                                <div>
+                                    <label>Lingua</label>
+                                    <mat-radio-group class="d-flex flex-column gap-2" formControlName="language">
+                                        <mat-radio-button *ngFor="let lang of languages" [value]="lang">
+                                            {{ lang }}
+                                        </mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+
+                            <div>
+                                <mat-form-field dayFormat subscriptSizing="dynamic">
+                                    <mat-label>Giorno</mat-label>
+                                    <input matInput formControlName="date" [matDatepickerFilter]="boundFilterValidDates"
+                                        [matDatepicker]="picker" [min]="minShowDate" [max]="maxShowDate"
+                                        (dateChange)="onDateSelect($event)">
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+
+                                <div *ngIf="date?.value" class="pt-4">
+                                    <label>Spettacolo</label>
+                                    <mat-chip-listbox formControlName="showId">
+                                        <mat-chip-option *ngFor="let show of shows" color="primary" [value]="show.id"
+                                            (selectionChange)="onShowSelect($event)">
+                                            {{ show.startTime }}
+                                        </mat-chip-option>
+                                    </mat-chip-listbox>
+                                </div>
+
+                            </div>
+
+                            <button mat-raised-button matStepperNext color="primary" type="button"
+                                [disabled]="!showForm.valid">
+                                Avanti
+                            </button>
+
+                        </div>
+
+                    </mat-step>
+
+                    <mat-step formGroupName="2" [stepControl]="seatForm">
+                        <ng-template matStepLabel>Scegli i posti</ng-template>
+                        ...
+                        <button mat-raised-button matStepperNext color="primary" type="button"
+                            [disabled]="!seatForm.valid">
+                            Prenota
+                        </button>
+                    </mat-step>
+
+                </mat-stepper>
+            </form>
+        </div>
+    </div>
+</div>
