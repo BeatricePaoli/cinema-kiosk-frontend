@@ -106,7 +106,9 @@
 
                     <mat-step formGroupName="2" [stepControl]="seatForm">
                         <ng-template matStepLabel>Scegli i posti</ng-template>
-                        ...
+
+                        <app-seats-editor class="py-3" [editMode]="false"></app-seats-editor>
+
                         <button mat-raised-button matStepperNext color="primary" type="button"
                             [disabled]="!seatForm.valid">
                             Prenota

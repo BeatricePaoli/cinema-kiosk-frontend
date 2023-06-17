@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { fabric } from 'fabric';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-// TODO: da spostare in generic module
 
 export const SEAT_SIZE = 20;
 export const PADDING = 5;
@@ -18,6 +17,9 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
 
   @ViewChild('canvasContainer')
   canvasContainer?: ElementRef;
+
+  @Input()
+  editMode: boolean = false;
 
   canvas?: fabric.Canvas;
 
