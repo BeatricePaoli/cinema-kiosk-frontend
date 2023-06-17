@@ -6,7 +6,7 @@ import { MatChipSelectionChange } from '@angular/material/chips';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 import { Observable, map, startWith } from 'rxjs';
-import { AutocompleteValidator } from 'src/app/shared/validators/autocomplete.validator';
+import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
 
 const moment = _moment;
 
