@@ -17,6 +17,8 @@ const moment = _moment;
 })
 export class BookingComponent {
 
+  movieId: number = 1;
+
   orientation$: Observable<StepperOrientation>;
 
   cities: string[] = ['One', 'Two', 'Three'];
