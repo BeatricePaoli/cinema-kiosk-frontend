@@ -1,27 +1,80 @@
-<form [formGroup]="addSeatsForm" (ngSubmit)="onCreateBlock()">
-    <label for="blockRows">Righe</label>
-    <input type="number" id="blockRows" formControlName="blockRows" />
-    <label for="blockCols">Colonne</label>
-    <input type="number" id="blockCols" formControlName="blockCols" />
-    <button type="submit" [disabled]="!addSeatsForm.valid">Inserisci</button>
-</form>
+<div class="container py-5">
+    <div class="row">
+        <div class="col">
 
-<canvas id="fabricSurface" width="800" height="400" style="border: 1px solid #cccccc;"></canvas>
-<!-- <div #canvasContainer style="width: 50%; height: 80vh">
-    <canvas id="fabricSurface" style="border: 1px solid #cccccc;"></canvas>
-</div> -->
+            <div class="d-flex overflow-hidden">
 
-<button type="button" [disabled]="isUndoDisabled" (click)="undo()">Undo</button>
-<button type="button" [disabled]="isRedoDisabled" (click)="redo()">Redo</button>
+                <div class="d-flex flex-column justify-content-center bg-light">
+                    <button mat-icon-button matTooltip="Seleziona oggetti"
+                        [ngClass]="{'text-primary-500': mode === 'SELECT'}" (click)="onSelectModeClick()">
+                        <span class="material-symbols-outlined">
+                            arrow_selector_tool
+                        </span>
+                    </button>
+                    <button mat-icon-button matTooltip="Aggiungi posti" [ngClass]="{'text-primary-500': mode === 'ADD'}"
+                        (click)="onAddModeClick()">
+                        <span class="material-symbols-outlined">
+                            library_add
+                        </span>
+                    </button>
 
-<br>
+                    <hr class="mx-2">
 
-<form *ngIf="selectedSeat" [formGroup]="editSeatForm" (ngSubmit)="onEditSelectedSeat()">
-    <label for="label">Etichetta</label>
-    <input id="label" formControlName="label" />
-    <button type="submit" [disabled]="!editSeatForm.valid">Modifica</button>
-</form>
+                    <button mat-icon-button>
+                        <span class="material-symbols-outlined">
+                            drag_pan
+                        </span>
+                    </button>
+                    <button mat-icon-button matTooltip="Zoom">
+                        <mat-icon>zoom_in</mat-icon>
+                    </button>
 
-<br>
+                    <hr class="mx-2">
 
-<button (click)="onSaveScreen()">Salva schermo</button>
+                    <button mat-icon-button matTooltip="Annulla" [disabled]="isUndoDisabled" (click)="undo()">
+                        <span class="material-symbols-outlined">
+                            undo
+                        </span>
+                    </button>
+
+                    <button mat-icon-button matTooltip="Ripeti" [disabled]="isRedoDisabled" (click)="redo()">
+                        <span class="material-symbols-outlined">
+                            redo
+                        </span>
+                    </button>
+                </div>
+
+                <canvas id="fabricSurface" width="800" height="400" style="border: 1px solid #cccccc;"></canvas>
+
+                <div class="p-4 z-3 sidebar bg-light d-flex flex-column gap-3">
+                    <div class="flex-grow-1 d-flex flex-column gap-3">
+                        <h6>Totale posti: {{ totSeats }}</h6>
+
+                        <ng-container *ngIf="selectedSeat">
+                            <hr>
+                            <h6>Posto selezionato:</h6>
+
+                            <form class="d-flex gap-2 align-items-center justify-content-between"
+                                [formGroup]="editSeatForm" (ngSubmit)="onEditSelectedSeat()">
+                                <mat-form-field class="mw-100" appearance="outline" subscriptSizing="dynamic">
+                                    <mat-label>Etichetta</mat-label>
+                                    <input matInput formControlName="label">
+                                </mat-form-field>
+                                <button mat-raised-button type="submit"
+                                    [disabled]="!editSeatForm.valid">Modifica</button>
+                            </form>
+                        </ng-container>
+                    </div>
+
+                    <button mat-raised-button color="primary" (click)="onSaveScreen()">Salva schermo</button>
+                </div>
+
+            </div>
+
+            <!-- <div #canvasContainer style="width: 50%; height: 80vh">
+                <canvas id="fabricSurface" style="border: 1px solid #cccccc;"></canvas>
+            </div> -->
+
+        </div>
+    </div>
+</div>

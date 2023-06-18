@@ -3,10 +3,14 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { fabric } from 'fabric';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+enum EditorMode {
+  SELECT = "SELECT",
+  ADD = "ADD",
+}
 
-export const SEAT_SIZE = 20;
-export const PADDING = 5;
-export const SCREEN_PADDING = 80;
+const SEAT_SIZE = 20;
+const PADDING = 5;
+const SCREEN_PADDING = 80;
 
 @Component({
   selector: 'app-seats-editor',
@@ -22,6 +26,10 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
   editMode: boolean = false;
 
   canvas?: fabric.Canvas;
+
+  mode: EditorMode = EditorMode.SELECT;
+
+  totSeats: number = 0;
 
   // Dragging
   isDragging: boolean = false;
@@ -42,10 +50,12 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
   });
 
   // Create
-  addSeatsForm = new FormGroup({
-    blockRows: new FormControl(0, [Validators.required, Validators.min(1)]),
-    blockCols: new FormControl(0, [Validators.required, Validators.min(1)]),
-  });
+  isDrawing: boolean = false;
+  origX: number = 0;
+  origY: number = 0;
+  previousCols: number = 0;
+  previousRow: number = 0;
+  previewSeats: fabric.Group[] = [];
 
   constructor(private zone: NgZone,
     // private viewportRuler: ViewportRuler
@@ -62,7 +72,7 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
       var screen = new fabric.Text("Schermo", {
         fontSize: 30,
         fontWeight: 'bold',
-        fontFamily: 'Montserrat',
+        fontFamily: 'Montserrat, sans-serif',
         charSpacing: 1.2,
         fill: '#545252',
         top: PADDING,
@@ -99,6 +109,19 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
         this.lastPosX = evt.clientX;
         this.lastPosY = evt.clientY;
       }
+
+      if (this.mode === EditorMode.ADD) {
+        this.isDrawing = true;
+        const pointer = this.canvas?.getPointer(opt.e);
+        if (pointer) {
+          this.origX = pointer.x;
+          this.origY = pointer.y;
+          const width = Math.abs(pointer.x - this.origX);
+          const height = Math.abs(pointer.y - this.origY);
+          this.previewSeats = this.createSeatsBlock(this.origX, this.origY, width, height);
+          this.canvas?.add(...this.previewSeats);
+        }
+      }
     });
 
     this.canvas?.on('mouse:move', (opt) => {
@@ -111,12 +134,41 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
         this.lastPosX = e.clientX;
         this.lastPosY = e.clientY;
       }
+
+      if (this.mode === EditorMode.ADD && this.isDrawing) {
+        var pointer = this.canvas?.getPointer(opt.e);
+
+        if (pointer) {
+          const width = Math.abs(pointer.x - this.origX);
+          const height = Math.abs(pointer.y - this.origY);
+          const { blockRows, blockCols } = this.getSeatsRowColsToCreate(width, height);
+
+          if (blockRows !== this.previousRow || blockCols !== this.previousCols) {
+            this.canvas?.remove(...this.previewSeats);
+            this.previewSeats = this.createSeatsBlock(this.origX, this.origY, width, height);
+            this.canvas?.add(...this.previewSeats);
+          }
+        }
+      }
     });
 
     this.canvas?.on('mouse:up', () => {
       if (this.canvas?.viewportTransform && this.isDragging) {
         this.canvas?.setViewportTransform(this.canvas?.viewportTransform);
         this.isDragging = false;
+      }
+
+      if (this.mode === EditorMode.ADD && this.isDrawing) {
+        this.isDrawing = false;
+
+        this.zone.run(() => this.totSeats += this.previousCols * this.previousRow);
+        this.previousRow = 0;
+        this.previousCols = 0;
+
+        if (this.previewSeats.length > 0) {
+          this.zone.run(() => this.saveState());
+          this.previewSeats = [];
+        }
       }
     });
 
@@ -150,6 +202,7 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
   delete() {
     const selected = this.canvas?.getActiveObjects() ?? [];
     this.canvas?.remove(...selected);
+    this.totSeats -= selected.length;
     this.canvas?.requestRenderAll();
     this.saveState();
   }
@@ -196,6 +249,9 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
       this.canvas?.loadFromJSON(this.state, () => {
         this.canvas?.renderAll();
 
+        const objects = this.canvas?.getObjects();
+        this.totSeats = objects?.length! - 1;
+
         if (isUndo) {
           this.isRedoDisabled = false;
         } else {
@@ -223,48 +279,6 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
     }
   }
 
-  onCreateBlock() {
-    const { blockRows, blockCols } = this.addSeatsForm.value;
-
-    if (blockRows && blockCols) {
-      for (let i = 0; i < blockRows; i++) {
-
-        // lettere maiuscole
-        const letter = String.fromCharCode(65 + i % 26);
-        const rowLabel = i < 26 ? letter : letter + Math.trunc(i / 26);
-
-        const rowHeight = SCREEN_PADDING + (SEAT_SIZE + PADDING * 2) * i;
-
-        for (let j = 0; j < blockCols; j++) {
-          var rect = new fabric.Rect({
-            fill: 'pink',
-            originX: 'center',
-            originY: 'center',
-            width: SEAT_SIZE,
-            height: SEAT_SIZE,
-          });
-
-          var text = new fabric.Text(rowLabel + "-" + (j + 1), {
-            fontSize: 10,
-            fontWeight: 'bold',
-            fontFamily: 'Montserrat',
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-          });
-
-          var seat = new fabric.Group([rect, text], {
-            left: PADDING + j * (PADDING + SEAT_SIZE),
-            top: rowHeight,
-          });
-          this.canvas?.add(seat);
-        }
-      }
-
-      this.saveState();
-    }
-  }
-
   onEditSelectedSeat() {
     const label = this.editSeatForm.value.label;
     if (label && this.selectedSeat) {
@@ -279,6 +293,69 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
     // console.log(JSON.stringify(this.canvas));
     console.log(this.canvas?.toSVG()); // più piccolo
     // Deserialize: fabric.loadSVGFromURL vs fabric.loadSVGFromString
+  }
+
+  onSelectModeClick() {
+    this.mode = EditorMode.SELECT;
+  }
+
+  onAddModeClick() {
+    this.mode = EditorMode.ADD;
+  }
+
+  getSeatsRowColsToCreate(width: number, height: number) {
+    return {
+      blockRows: Math.trunc(height / (SEAT_SIZE + PADDING * 2)),
+      blockCols: Math.trunc(width / (SEAT_SIZE + PADDING)),
+    }
+  }
+
+  createSeatsBlock(startX: number, startY: number, width: number, height: number): fabric.Group[] {
+    if (width < SEAT_SIZE || height < SEAT_SIZE) {
+      return [];
+    }
+
+    const seats = [];
+
+    const { blockRows, blockCols } = this.getSeatsRowColsToCreate(width, height);
+    this.previousRow = blockRows;
+    this.previousCols = blockCols;
+
+    for (let i = 0; i < blockRows; i++) {
+
+      // lettere maiuscole
+      const letter = String.fromCharCode(65 + i % 26);
+      const rowLabel = i < 26 ? letter : letter + Math.trunc(i / 26);
+
+      const rowHeight = startY + (SEAT_SIZE + PADDING * 2) * i;
+
+      for (let j = 0; j < blockCols; j++) {
+        var rect = new fabric.Rect({
+          fill: 'pink',
+          originX: 'center',
+          originY: 'center',
+          width: SEAT_SIZE,
+          height: SEAT_SIZE,
+        });
+
+        var text = new fabric.Text(rowLabel + "-" + (j + 1), {
+          fontSize: 10,
+          fontWeight: 'bold',
+          fontFamily: 'Montserrat, sans-serif',
+          originX: 'center',
+          originY: 'center',
+          selectable: false,
+        });
+
+        var seat = new fabric.Group([rect, text], {
+          left: startX + j * (PADDING + SEAT_SIZE),
+          top: rowHeight,
+        });
+        seats.push(seat);
+      }
+    }
+
+    return seats;
   }
 
   // ngAfterViewInit(): void {
