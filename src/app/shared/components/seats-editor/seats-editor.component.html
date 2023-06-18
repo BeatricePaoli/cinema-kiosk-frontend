@@ -44,7 +44,9 @@
                     </button>
                 </div>
 
-                <canvas id="fabricSurface" width="800" height="400" style="border: 1px solid #cccccc;"></canvas>
+                <div #canvasContainer class="seat-canvas">
+                    <canvas id="fabricSurface" class="border"></canvas>
+                </div>
 
                 <div class="p-4 z-3 sidebar bg-light d-flex flex-column gap-3">
                     <div class="flex-grow-1 d-flex flex-column gap-3">
@@ -70,10 +72,6 @@
                 </div>
 
             </div>
-
-            <!-- <div #canvasContainer style="width: 50%; height: 80vh">
-                <canvas id="fabricSurface" style="border: 1px solid #cccccc;"></canvas>
-            </div> -->
 
         </div>
     </div>

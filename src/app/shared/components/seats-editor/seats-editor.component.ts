@@ -10,14 +10,13 @@ enum EditorMode {
 
 const SEAT_SIZE = 20;
 const PADDING = 5;
-const SCREEN_PADDING = 80;
 
 @Component({
   selector: 'app-seats-editor',
   templateUrl: './seats-editor.component.html',
   styleUrls: ['./seats-editor.component.scss']
 })
-export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
+export class SeatsEditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild('canvasContainer')
   canvasContainer?: ElementRef;
@@ -58,16 +57,18 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
   previewSeats: fabric.Group[] = [];
 
   constructor(private zone: NgZone,
-    // private viewportRuler: ViewportRuler
+    private viewportRuler: ViewportRuler
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
       this.canvas = new fabric.Canvas('fabricSurface', {
         selection: true,
         preserveObjectStacking: true,
         backgroundColor: "transparent"
       });
+
+      this.resizeCanvas();
 
       var screen = new fabric.Text("Schermo", {
         fontSize: 30,
@@ -85,7 +86,9 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
       // Salva stato iniziale
       this.saveState();
     });
+  }
 
+  ngOnInit(): void {
     this.canvas?.on('mouse:wheel', (opt: fabric.IEvent<WheelEvent>) => {
       var delta = opt.e.deltaY;
       var zoom = this.canvas?.getZoom() ?? 0;
@@ -193,9 +196,16 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
     // - @HostListener('window:resize', ['$event']) (più check)
     // - ResizeObserver (più verboso)
     // https://stackoverflow.com/questions/40659090/element-height-and-width-change-detection-in-angular-2
-    // this.viewportRuler.change(200).subscribe(() => this.zone.run(() => {
-    //   this.resizeCanvas();
-    // }));
+    this.viewportRuler.change(200).subscribe(() => this.zone.run(() => {
+      this.resizeCanvas();
+    }));
+  }
+
+  resizeCanvas() {
+    const width = this.canvasContainer?.nativeElement.offsetWidth;
+    const height = this.canvasContainer?.nativeElement.offsetHeight;
+    this.canvas?.setWidth(width);
+    this.canvas?.setHeight(height);
   }
 
   @HostListener('window:keyup.delete')
@@ -357,16 +367,4 @@ export class SeatsEditorComponent implements OnInit /*, AfterViewInit */ {
 
     return seats;
   }
-
-  // ngAfterViewInit(): void {
-  //   this.resizeCanvas();
-  // }
-
-  // resizeCanvas() {
-  //   const width = this.canvasContainer?.nativeElement.offsetWidth;
-  //   const height = this.canvasContainer?.nativeElement.offsetHeight;
-  //   this.canvas?.setWidth(width);
-  //   this.canvas?.setHeight(height);
-  //   // this.canvas?.renderAll();
-  // }
 }
