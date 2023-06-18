@@ -6,7 +6,7 @@
                     <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
                         <mat-label>Filtra per nome</mat-label>
                         <input matInput formControlName="movie">
-                        <mat-icon matSuffix class="cursor-pointer" (click)="onSubmit()">search</mat-icon>
+                        <mat-icon matSuffix matTooltip="Cerca" class="cursor-pointer" (click)="onSubmit()">search</mat-icon>
                     </mat-form-field>
                     <button mat-icon-button matTooltip="Filtri aggiuntivi" matBadge="2"
                         matBadgeSize="small" matBadgePosition="after" matBadgeColor="accent"
