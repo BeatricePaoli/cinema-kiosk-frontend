@@ -20,7 +20,7 @@
 
                     <hr class="mx-2">
 
-                    <button mat-icon-button>
+                    <!-- <button mat-icon-button>
                         <span class="material-symbols-outlined">
                             drag_pan
                         </span>
@@ -29,7 +29,7 @@
                         <mat-icon>zoom_in</mat-icon>
                     </button>
 
-                    <hr class="mx-2">
+                    <hr class="mx-2"> -->
 
                     <button mat-icon-button matTooltip="Annulla" [disabled]="isUndoDisabled" (click)="undo()">
                         <span class="material-symbols-outlined">
@@ -71,6 +71,33 @@
                     <button mat-raised-button color="primary" (click)="onSaveScreen()">Salva schermo</button>
                 </div>
 
+            </div>
+
+            <div class="bg-light p-2 d-flex justify-content-center gap-4 flex-wrap">
+                <div>
+                    <span class="fw-bold">Scroll Mouse</span>
+                    <span class="ml-2"> - Zoom in/out</span>
+                </div>
+
+                <div>
+                    <span class="fw-bold">Ctrl + Click + Drag</span>
+                    <span class="ml-2"> - Sposta visuale</span>
+                </div>
+
+                <div>
+                    <span class="fw-bold">Ctrl + Z</span>
+                    <span class="ml-2"> - Annulla</span>
+                </div>
+
+                <div>
+                    <span class="fw-bold">Ctrl + Y</span>
+                    <span class="ml-2"> - Ripeti</span>
+                </div>
+
+                <div *ngIf="selectedSeat">
+                    <span class="fw-bold">Canc</span>
+                    <span class="ml-2"> - Cancella</span>
+                </div>
             </div>
 
         </div>
