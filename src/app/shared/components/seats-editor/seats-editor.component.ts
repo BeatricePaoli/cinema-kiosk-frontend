@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, NgZone, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, NgZone, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { fabric } from 'fabric';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -16,13 +16,22 @@ const PADDING = 5;
   templateUrl: './seats-editor.component.html',
   styleUrls: ['./seats-editor.component.scss']
 })
-export class SeatsEditorComponent implements OnInit, AfterViewInit {
+export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('canvasContainer')
   canvasContainer?: ElementRef;
 
   @Input()
-  editMode: boolean = false;
+  screenSVG?: string;
+
+  @Input()
+  creativeMode: boolean = false;
+
+  @Input()
+  seatsTaken: string[] = [];
+
+  @Output()
+  selectedSeats: EventEmitter<string[]> = new EventEmitter<string[]>();
 
   canvas?: fabric.Canvas;
 
@@ -172,10 +181,6 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit {
       this.zone.run(() => this.selectedSeat = null);
     });
 
-    // TODO: Check se è veramente più performante rispetto a
-    // - @HostListener('window:resize', ['$event']) (più check)
-    // - ResizeObserver (più verboso)
-    // https://stackoverflow.com/questions/40659090/element-height-and-width-change-detection-in-angular-2
     this.viewportRuler.change(200).subscribe(() => this.zone.run(() => {
       this.resizeCanvas();
     }));
@@ -201,6 +206,29 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit {
       // Salva stato iniziale
       this.saveState();
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['screenSVG'] && changes['screenSVG'].currentValue) {
+      this.loadSVGFromUrl(changes['screenSVG'].currentValue);
+    }
+  }
+
+  loadSVGFromUrl(url: string) {
+    fabric.loadSVGFromURL(url, (objects) => {
+      this.canvas?.remove(...this.canvas?.getObjects());
+      this.canvas?.add(...objects);
+      this.resetActionState();
+      this.saveState();
+      this.totSeats = objects.length - 1;
+    });
+  }
+
+  resetActionState() {
+    this.undoStack = [];
+    this.redoStack = [];
+    this.isUndoDisabled = true;
+    this.isRedoDisabled = true;
   }
 
   resizeCanvas() {

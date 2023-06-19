@@ -6,7 +6,7 @@ export class AutocompleteValidator {
             if (validOptions.indexOf(control.value) > -1) {
                 return null;
             }
-            return { 'validOption': { value: control.value } }
+            return { validOption: { value: control.value } }
         }
     }
 }

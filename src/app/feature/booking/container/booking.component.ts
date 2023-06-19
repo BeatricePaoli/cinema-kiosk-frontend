@@ -1,12 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation } from '@angular/cdk/stepper';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipSelectionChange } from '@angular/material/chips';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as _moment from 'moment';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, Subscription, map, startWith } from 'rxjs';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
+import { MultipleValidator } from 'src/app/core/validators/multiple.validator';
 
 const moment = _moment;
 
@@ -15,11 +16,12 @@ const moment = _moment;
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.scss']
 })
-export class BookingComponent {
+export class BookingComponent implements OnInit, OnDestroy {
 
   movieId: number = 1;
 
-  orientation$: Observable<StepperOrientation>;
+  screenSVG: string = "/assets/images/screen_test.svg";
+  seatsTaken: string[] = ['A1', 'A2', 'C2'];
 
   cities: string[] = ['One', 'Two', 'Three'];
   filteredCities: Observable<string[]> = new Observable<string[]>;
@@ -67,12 +69,17 @@ export class BookingComponent {
         showId: new FormControl<number | null>(null, Validators.required),
       }),
       new FormGroup({
-        adultsSeats: new FormControl<number | null>(null, Validators.required),
-        childrenSeats: new FormControl<number | null>(null, Validators.required),
+        adultsSeats: new FormControl<number | null>(null),
+        childrenSeats: new FormControl<number | null>(null),
         seats: new FormArray([], Validators.minLength(1))
-      }),
+      }, { validators: MultipleValidator.atLeastOneRequired('adultsSeats', 'childrenSeats') }),
     ]),
   });
+
+  selectedSeatsTotalError: boolean = false;
+
+  orientation$: Observable<StepperOrientation>;
+  subs: Subscription[] = [];
 
   get formArray() {
     return this.bookingForm.get('formArray');
@@ -118,21 +125,40 @@ export class BookingComponent {
     return this.showForm.get('date');
   }
 
+  get adultsSeats() {
+    return this.seatForm.get('adultsSeats');
+  }
+
+  get childrenSeats() {
+    return this.seatForm.get('childrenSeats');
+  }
+
+  get seatsErrorRequired() {
+    return this.seatForm?.errors ? this.seatForm?.errors!['atLeastOneRequired'] : null;
+  }
+
   constructor(private breakpointObserver: BreakpointObserver) {
     this.orientation$ = this.breakpointObserver.observe('(min-width: 768px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
   }
 
   ngOnInit() {
-    this.filteredCities = this.cinemaForm.get('city')!.valueChanges.pipe(
+    this.filteredCities = this.city!.valueChanges.pipe(
       startWith(''),
       map(value => this.autoCompletefilter(value || '', this.cities)),
     );
 
-    this.filteredCinemas = this.cinemaForm.get('cinema')!.valueChanges.pipe(
+    this.filteredCinemas = this.cinema!.valueChanges.pipe(
       startWith(''),
       map(value => this.autoCompletefilter(value || '', this.cinemas)),
     );
+
+    this.subs.push(this.adultsSeats!.valueChanges.subscribe(value => this.computeSeatsErrors()));
+    this.subs.push(this.childrenSeats!.valueChanges.subscribe(value => this.computeSeatsErrors()));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   private autoCompletefilter(value: string, list: string[]): string[] {
@@ -152,6 +178,18 @@ export class BookingComponent {
 
   onShowSelect(event: MatChipSelectionChange) {
     console.log("chip toggle")
+  }
+
+  onSeatSelected(seats: string[]) {
+    this.seatForm.patchValue({
+      seats: seats
+    });
+    this.computeSeatsErrors();
+  }
+
+  computeSeatsErrors() {
+    const { adultsSeats, childrenSeats, seats } = this.seatForm.value;
+    this.selectedSeatsTotalError = adultsSeats + childrenSeats !== seats.length;
   }
 
   onSubmit() {
