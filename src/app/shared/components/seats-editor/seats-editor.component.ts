@@ -60,35 +60,15 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit {
     private viewportRuler: ViewportRuler
   ) { }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.zone.runOutsideAngular(() => {
       this.canvas = new fabric.Canvas('fabricSurface', {
         selection: true,
         preserveObjectStacking: true,
         backgroundColor: "transparent"
       });
-
-      this.resizeCanvas();
-
-      var screen = new fabric.Text("Schermo", {
-        fontSize: 30,
-        fontWeight: 'bold',
-        fontFamily: 'Montserrat, sans-serif',
-        charSpacing: 1.2,
-        fill: '#545252',
-        top: PADDING,
-        left: 0.5 * this.canvas.getWidth() - 75, // Numero magico per farlo stare al centro, pazienza per i18n
-        selectable: false,
-        hoverCursor: 'default'
-      });
-      this.canvas.add(screen);
-
-      // Salva stato iniziale
-      this.saveState();
     });
-  }
 
-  ngOnInit(): void {
     this.canvas?.on('mouse:wheel', (opt: fabric.IEvent<WheelEvent>) => {
       var delta = opt.e.deltaY;
       var zoom = this.canvas?.getZoom() ?? 0;
@@ -199,6 +179,28 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit {
     this.viewportRuler.change(200).subscribe(() => this.zone.run(() => {
       this.resizeCanvas();
     }));
+  }
+
+  ngAfterViewInit(): void {
+    this.resizeCanvas();
+
+    if (this.canvas) {
+      var screen = new fabric.Text("Schermo", {
+        fontSize: 30,
+        fontWeight: 'bold',
+        fontFamily: 'Montserrat, sans-serif',
+        charSpacing: 1.2,
+        fill: '#545252',
+        top: PADDING,
+        left: 0.5 * this.canvas.getWidth() - 75, // Numero magico per farlo stare al centro, pazienza per i18n
+        selectable: false,
+        hoverCursor: 'default'
+      });
+      this.canvas.add(screen);
+
+      // Salva stato iniziale
+      this.saveState();
+    }
   }
 
   resizeCanvas() {
