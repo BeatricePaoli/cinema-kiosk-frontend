@@ -34,7 +34,7 @@ export class BookingComponent implements OnInit, OnDestroy {
   projTypes: string[] = ['2D', '3D'];
   languages: string[] = ['Italiano', 'English'];
 
-  dates: string[] = [ '2023-06-20' ];
+  dates: string[] = ['2023-06-20'];
   minShowDate = moment('2023-06-10');
   maxShowDate = moment('2023-06-20');
 
@@ -55,7 +55,12 @@ export class BookingComponent implements OnInit, OnDestroy {
       id: 4,
       startTime: '23:30'
     }
-  ]
+  ];
+
+  tickets: any = {
+    adults: 9,
+    children: 7
+  };
 
   bookingForm = new FormGroup({
     movieId: new FormControl<number | null>(null, Validators.required),
@@ -79,6 +84,7 @@ export class BookingComponent implements OnInit, OnDestroy {
   });
 
   selectedSeatsTotalError: boolean = false;
+  price: number = 0;
 
   orientation$: Observable<StepperOrientation>;
   subs: Subscription[] = [];
@@ -127,6 +133,10 @@ export class BookingComponent implements OnInit, OnDestroy {
     return this.showForm.get('date');
   }
 
+  get showId() {
+    return this.showForm.get('showId');
+  }
+
   get adultsSeats() {
     return this.seatForm.get('adultsSeats');
   }
@@ -137,6 +147,10 @@ export class BookingComponent implements OnInit, OnDestroy {
 
   get seatsErrorRequired() {
     return this.seatForm?.errors ? this.seatForm?.errors!['atLeastOneRequired'] : null;
+  }
+
+  get seats() {
+    return this.seatForm.get('seats');
   }
 
   constructor(private breakpointObserver: BreakpointObserver) {
@@ -155,8 +169,23 @@ export class BookingComponent implements OnInit, OnDestroy {
       map(value => this.autoCompletefilter(value || '', this.cinemas)),
     );
 
-    this.subs.push(this.adultsSeats!.valueChanges.subscribe(value => this.computeSeatsErrors()));
-    this.subs.push(this.childrenSeats!.valueChanges.subscribe(value => this.computeSeatsErrors()));
+    this.subs.push(this.adultsSeats!.valueChanges.subscribe(value => {
+      const { childrenSeats, seats } = this.seatForm.value;
+      this.selectedSeatsTotalError = value + childrenSeats !== seats.length;
+
+      if (this.tickets) {
+        this.price = value * this.tickets.adults + childrenSeats * this.tickets.children;
+      }
+    }));
+
+    this.subs.push(this.childrenSeats!.valueChanges.subscribe(value => {
+      const { adultsSeats, seats } = this.seatForm.value;
+      this.selectedSeatsTotalError = adultsSeats + value !== seats.length;
+
+      if (this.tickets) {
+        this.price = adultsSeats * this.tickets.adults + value * this.tickets.children;
+      }
+    }));
   }
 
   ngOnDestroy(): void {
@@ -190,16 +219,22 @@ export class BookingComponent implements OnInit, OnDestroy {
     this.seatForm.patchValue({
       seats: seats
     });
-    this.computeSeatsErrors();
-  }
 
-  computeSeatsErrors() {
-    const { adultsSeats, childrenSeats, seats } = this.seatForm.value;
+    const { adultsSeats, childrenSeats } = this.seatForm.value;
     this.selectedSeatsTotalError = adultsSeats + childrenSeats !== seats.length;
   }
 
-  onSubmit() {
+  getDateFormatted(date: moment.Moment) {
+    return date ? date.format('DD/MM/YYYY') : '';
+  }
 
+  getShowStartTime(showId: number) {
+    const filtered = this.shows.filter(s => s.id === showId);
+    return filtered.length > 0 ? filtered[0].startTime : '';
+  }
+
+  onSubmit() {
+    console.log("Submitted")
   }
 
 }
