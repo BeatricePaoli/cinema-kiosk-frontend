@@ -58,6 +58,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   editSeatForm = new FormGroup({
     label: new FormControl('', [Validators.required, Validators.minLength(1)]),
   });
+  showDeleteCtrl: boolean = false;
 
   // Create
   isDrawing: boolean = false;
@@ -177,7 +178,8 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
       this.zone.run(() => {
         console.log("we")
         if (this.creativeMode) {
-          this.setSelectedSeat(opt)
+          this.setSelectedSeat(opt);
+          this.showDeleteCtrl = true;
         }
       });
     });
@@ -185,7 +187,8 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
     this.canvas?.on('selection:updated', (opt) => {
       this.zone.run(() => {
         if (this.creativeMode) {
-          this.setSelectedSeat(opt)
+          this.setSelectedSeat(opt);
+          this.showDeleteCtrl = true;
         }
       });
     });
@@ -193,7 +196,8 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
     this.canvas?.on('selection:cleared', () => {
       this.zone.run(() => {
         if (this.creativeMode) {
-          this.selectedSeat = null
+          this.selectedSeat = null;
+          this.showDeleteCtrl = false;
         }
       });
     });
