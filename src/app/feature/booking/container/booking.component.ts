@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { StepperOrientation } from '@angular/cdk/stepper';
+import { StepperOrientation, StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipSelectionChange } from '@angular/material/chips';
@@ -20,7 +20,9 @@ export class BookingComponent implements OnInit, OnDestroy {
 
   movieId: number = 1;
 
-  screenSVG: string = "/assets/images/screen_test.svg";
+  selectedStepIndex: number = 0;
+
+  screenUrl: string = "assets/mocks/screen_test.json";
   seatsTaken: string[] = ['A1', 'A2', 'C2'];
 
   cities: string[] = ['One', 'Two', 'Three'];
@@ -178,6 +180,10 @@ export class BookingComponent implements OnInit, OnDestroy {
 
   onShowSelect(event: MatChipSelectionChange) {
     console.log("chip toggle")
+  }
+
+  onStepChanged(event: StepperSelectionEvent) {
+    this.selectedStepIndex = event.selectedIndex;
   }
 
   onSeatSelected(seats: string[]) {

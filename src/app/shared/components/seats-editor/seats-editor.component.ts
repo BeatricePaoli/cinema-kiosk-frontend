@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { fabric } from 'fabric';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 enum EditorMode {
   SELECT = "SELECT",
@@ -22,7 +23,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   canvasContainer?: ElementRef;
 
   @Input()
-  screenSVG?: string;
+  screenUrl?: string;
 
   @Input()
   creativeMode: boolean = false;
@@ -66,7 +67,8 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   previewSeats: fabric.Group[] = [];
 
   constructor(private zone: NgZone,
-    private viewportRuler: ViewportRuler
+    private viewportRuler: ViewportRuler,
+    private httpClient: HttpClient // TODO: TEMP
   ) { }
 
   ngOnInit(): void {
@@ -102,7 +104,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
         this.lastPosY = evt.clientY;
       }
 
-      if (this.mode === EditorMode.ADD) {
+      if (this.creativeMode && this.mode === EditorMode.ADD) {
         this.isDrawing = true;
         const pointer = this.canvas?.getPointer(opt.e);
         if (pointer) {
@@ -127,7 +129,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
         this.lastPosY = e.clientY;
       }
 
-      if (this.mode === EditorMode.ADD && this.isDrawing) {
+      if (this.creativeMode && this.mode === EditorMode.ADD && this.isDrawing) {
         var pointer = this.canvas?.getPointer(opt.e);
 
         if (pointer) {
@@ -150,7 +152,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
         this.isDragging = false;
       }
 
-      if (this.mode === EditorMode.ADD && this.isDrawing) {
+      if (this.creativeMode && this.mode === EditorMode.ADD && this.isDrawing) {
         this.isDrawing = false;
 
         this.zone.run(() => this.totSeats += this.previousCols * this.previousRow);
@@ -170,15 +172,28 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
     });
 
     this.canvas?.on('selection:created', (opt) => {
-      this.zone.run(() => this.setSelectedSeat(opt));
+      this.zone.run(() => {
+        console.log("we")
+        if (this.creativeMode) {
+          this.setSelectedSeat(opt)
+        }
+      });
     });
 
     this.canvas?.on('selection:updated', (opt) => {
-      this.zone.run(() => this.setSelectedSeat(opt));
+      this.zone.run(() => {
+        if (this.creativeMode) {
+          this.setSelectedSeat(opt)
+        }
+      });
     });
 
     this.canvas?.on('selection:cleared', () => {
-      this.zone.run(() => this.selectedSeat = null);
+      this.zone.run(() => {
+        if (this.creativeMode) {
+          this.selectedSeat = null
+        }
+      });
     });
 
     this.viewportRuler.change(200).subscribe(() => this.zone.run(() => {
@@ -209,19 +224,41 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['screenSVG'] && changes['screenSVG'].currentValue) {
-      this.loadSVGFromUrl(changes['screenSVG'].currentValue);
+    if (changes['screenUrl'] && changes['screenUrl'].currentValue) {
+      this.loadCanvas(changes['screenUrl'].currentValue);
     }
   }
 
-  loadSVGFromUrl(url: string) {
-    fabric.loadSVGFromURL(url, (objects) => {
-      this.canvas?.remove(...this.canvas?.getObjects());
-      this.canvas?.add(...objects);
-      this.resetActionState();
-      this.saveState();
-      this.totSeats = objects.length - 1;
+  loadCanvas(url: string) {
+    this.httpClient.get(url).subscribe(json => {
+      JSON.stringify(json);
+
+      this.canvas?.loadFromJSON(json, () => {
+
+        if (!this.creativeMode) {
+          this.canvas?.forEachObject(o => {
+            o.lockMovementX = true;
+            o.lockMovementY = true;
+            o.lockRotation = true;
+            o.lockScalingFlip = true;
+            o.lockScalingX = true;
+            o.lockScalingY = true;
+            o.lockSkewingX = true;
+            o.lockSkewingY = true;
+            o.hasControls = false;
+            o.hoverCursor = 'pointer';
+          });
+
+          this.canvas!.selection = false;
+        } else {
+          this.resetActionState();
+          this.saveState();
+          this.totSeats = this.canvas?.getObjects() ? this.canvas?.getObjects().length - 1 : 0;
+        }
+
+      });
     });
+
   }
 
   resetActionState() {
@@ -240,23 +277,25 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
   @HostListener('window:keyup.delete')
   delete() {
-    const selected = this.canvas?.getActiveObjects() ?? [];
-    this.canvas?.remove(...selected);
-    this.totSeats -= selected.length;
-    this.canvas?.requestRenderAll();
-    this.saveState();
+    if (this.creativeMode) {
+      const selected = this.canvas?.getActiveObjects() ?? [];
+      this.canvas?.remove(...selected);
+      this.totSeats -= selected.length;
+      this.canvas?.requestRenderAll();
+      this.saveState();
+    }
   }
 
   @HostListener('window:keydown.control.z')
   undo() {
-    if (!this.isUndoDisabled) {
+    if (this.creativeMode && !this.isUndoDisabled) {
       this.replay(true);
     }
   }
 
   @HostListener('window:keydown.control.y')
   redo() {
-    if (!this.isRedoDisabled) {
+    if (this.creativeMode && !this.isRedoDisabled) {
       this.replay(false);
     }
   }
@@ -330,9 +369,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onSaveScreen() {
-    // console.log(JSON.stringify(this.canvas));
-    console.log(this.canvas?.toSVG()); // più piccolo
-    // Deserialize: fabric.loadSVGFromURL vs fabric.loadSVGFromString
+    console.log(JSON.stringify(this.canvas));
   }
 
   onSelectModeClick() {
@@ -371,7 +408,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
       for (let j = 0; j < blockCols; j++) {
         var rect = new fabric.Rect({
-          fill: 'pink',
+          fill: '#cdc3d9',
           originX: 'center',
           originY: 'center',
           width: SEAT_SIZE,

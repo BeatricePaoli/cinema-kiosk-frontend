@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col">
             <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
-                <mat-stepper formArrayName="formArray" [orientation]="(orientation$ | async)!" linear>
+                <mat-stepper formArrayName="formArray" [orientation]="(orientation$ | async)!" linear (selectionChange)="onStepChanged($event)">
 
                     <mat-step formGroupName="0" [stepControl]="cinemaForm">
                         <ng-template matStepLabel>Scegli il cinema</ng-template>
@@ -132,7 +132,7 @@
                             Selezionare almeno un biglietto
                         </div>
 
-                        <app-seats-editor class="py-3" [creativeMode]="false" [screenSVG]="screenSVG"
+                        <app-seats-editor *ngIf="selectedStepIndex === 2" class="py-3" [creativeMode]="false" [screenUrl]="screenUrl"
                             [seatsTaken]="seatsTaken" (selectedSeats)="onSeatSelected($event)"></app-seats-editor>
                         
                         <div *ngIf="selectedSeatsTotalError" class="mat-mdc-form-field-error">

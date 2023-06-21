@@ -12,6 +12,7 @@ import { BookingModule } from './feature/booking/booking.module';
 import { HeaderModule } from './feature/header/header.module';
 import { MovieListModule } from './feature/movie-list/movie-list.module';
 import { ScreenModule } from './feature/screen/screen.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ScreenModule } from './feature/screen/screen.module';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    HttpClientModule,
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([]),
     StoreRouterConnectingModule.forRoot(),
