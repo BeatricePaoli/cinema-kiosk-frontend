@@ -3,15 +3,16 @@ Funzionalità Seat Editor
 - (optional) Touch gestures
 - edit / view mode
 
-Pagine da fare (WIP)
-- movie-list 
-- movie
-- booking
+Pagine da fare
+- ticket screen
 - booking-list
 - user?
 
-- login 
+- login
+
 - theater-list
 - theater
 - screen
-...
+- scheduling
+
+- cashier page

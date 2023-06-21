@@ -23,7 +23,7 @@ export class BookingComponent implements OnInit, OnDestroy {
   selectedStepIndex: number = 0;
 
   screenUrl: string = "assets/mocks/screen_test.json";
-  seatsTaken: string[] = ['A1', 'A2', 'C2'];
+  seatsTaken: string[] = ['A-1', 'A-2', 'C-2'];
 
   cities: string[] = ['One', 'Two', 'Three'];
   filteredCities: Observable<string[]> = new Observable<string[]>;
@@ -73,7 +73,7 @@ export class BookingComponent implements OnInit, OnDestroy {
       new FormGroup({
         adultsSeats: new FormControl<number | null>(null),
         childrenSeats: new FormControl<number | null>(null),
-        seats: new FormArray([], Validators.minLength(1))
+        seats: new FormControl([], Validators.minLength(1))
       }, { validators: MultipleValidator.atLeastOneRequired('adultsSeats', 'childrenSeats') }),
     ]),
   });

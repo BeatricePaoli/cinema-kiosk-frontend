@@ -68,6 +68,9 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   previousRow: number = 0;
   previewSeats: fabric.Group[] = [];
 
+  // Booking
+  selectedSeatsInternal: string[] = [];
+
   constructor(private zone: NgZone,
     private viewportRuler: ViewportRuler,
     private httpClient: HttpClient // TODO: TEMP
@@ -88,7 +91,6 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
       zoom *= 0.999 ** delta; // fidati funziona (vedi es. CG)
 
       // Valori di max e min
-      console.log(zoom)
       if (zoom > 4) zoom = 4;
       if (zoom < 0.7) zoom = 0.7;
 
@@ -176,10 +178,11 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
     this.canvas?.on('selection:created', (opt) => {
       this.zone.run(() => {
-        console.log("we")
         if (this.creativeMode) {
-          this.setSelectedSeat(opt);
+          this.setSelectedSeatToEdit(opt);
           this.showDeleteCtrl = true;
+        } else {
+          this.setSelectedSeatToBook(opt);
         }
       });
     });
@@ -187,8 +190,10 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
     this.canvas?.on('selection:updated', (opt) => {
       this.zone.run(() => {
         if (this.creativeMode) {
-          this.setSelectedSeat(opt);
+          this.setSelectedSeatToEdit(opt);
           this.showDeleteCtrl = true;
+        } else {
+          this.setSelectedSeatToBook(opt);
         }
       });
     });
@@ -233,6 +238,10 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
     if (changes['screenUrl'] && changes['screenUrl'].currentValue) {
       this.loadCanvas(changes['screenUrl'].currentValue);
     }
+
+    if (changes['seatsTaken'] && changes['seatsTaken'].currentValue) {
+      this.setSeatsTaken(changes['seatsTaken'].currentValue);
+    }
   }
 
   loadCanvas(url: string) {
@@ -272,6 +281,27 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
       });
     });
 
+  }
+
+  setSeatsTaken(seatsTaken: string[]) {
+    if (seatsTaken.length > 0) {
+      this.canvas?.forEachObject(o => {
+        if (o instanceof fabric.Group) {
+          const group = o as fabric.Group;
+          const seat = group.getObjects()[0] as fabric.Rect;
+          const text = group.getObjects()[1] as fabric.IText;
+
+          if (text.text && seatsTaken.includes(text.text)) {
+            seat.fill = '#bfbdbd';
+            text.fill = '#000',
+              group.selectable = false;
+            group.dirty = true;
+          }
+        }
+      });
+
+      this.canvas?.renderAll();
+    }
   }
 
   centerViewportOnScreen(screenText: fabric.Text) {
@@ -374,13 +404,39 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  setSelectedSeat(opt: fabric.IEvent<MouseEvent>) {
+  setSelectedSeatToEdit(opt: fabric.IEvent<MouseEvent>) {
     if (opt.selected && opt.selected.length === 1) {
       this.selectedSeat = opt.selected[0] as fabric.Group;
       const text = this.selectedSeat.getObjects()[1] as fabric.IText;
       this.editSeatForm.patchValue({
         label: text.text
       });
+    }
+  }
+
+  setSelectedSeatToBook(opt: fabric.IEvent<MouseEvent>) {
+    if (opt.selected) {
+      const group = opt.selected[0] as fabric.Group;
+      const seat = group.getObjects()[0] as fabric.Rect;
+      const text = group.getObjects()[1] as fabric.IText;
+
+      if (text.text) {
+        const index = this.selectedSeatsInternal.findIndex(t => t === text.text);
+
+        if (index > -1) {
+          seat.fill = '#8a74a5';
+          group.dirty = true;
+          this.selectedSeatsInternal.splice(index, 1);
+        } else {
+          seat.fill = '#620dff';
+          group.dirty = true;
+          this.selectedSeatsInternal.push(text.text);
+        }
+
+        this.selectedSeats.emit(this.selectedSeatsInternal);
+        this.canvas?.discardActiveObject();
+        this.canvas?.renderAll();
+      }
     }
   }
 
@@ -434,7 +490,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
       for (let j = 0; j < blockCols; j++) {
         var rect = new fabric.Rect({
-          fill: '#cdc3d9',
+          fill: '#8a74a5',
           originX: 'center',
           originY: 'center',
           width: SEAT_SIZE,
@@ -445,6 +501,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
           fontSize: 10,
           fontWeight: 'bold',
           fontFamily: 'Montserrat, sans-serif',
+          fill: "#fff",
           originX: 'center',
           originY: 'center',
           selectable: false,
