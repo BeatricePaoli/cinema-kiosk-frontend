@@ -11,6 +11,7 @@ enum EditorMode {
 
 const SEAT_SIZE = 20;
 const PADDING = 5;
+const HALF_SCREEN = 75;
 
 @Component({
   selector: 'app-seats-editor',
@@ -213,7 +214,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
         charSpacing: 1.2,
         fill: '#545252',
         top: PADDING,
-        left: 0.5 * this.canvas.getWidth() - 75, // Numero magico per farlo stare al centro, pazienza per i18n
+        left: 0.5 * this.canvas.getWidth() - HALF_SCREEN,
         selectable: false,
         hoverCursor: 'default'
       });
@@ -248,9 +249,16 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
             o.lockSkewingY = true;
             o.hasControls = false;
             o.hoverCursor = 'pointer';
+
+            // Centra viewport in base a label 'Schermo'
+            if (o instanceof fabric.Text) {
+              this.centerViewportOnScreen(o);
+            }
           });
 
           this.canvas!.selection = false;
+
+          this.setSeatsTaken(this.seatsTaken);
         } else {
           this.resetActionState();
           this.saveState();
@@ -260,6 +268,19 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
       });
     });
 
+  }
+
+  centerViewportOnScreen(screenText: fabric.Text) {
+    if (screenText.left && screenText.top) {
+      const zoomLevel = 1.1;
+      const objectLeft = screenText.left;
+      const objectTop = screenText.top;
+
+      const newLeft = (-objectLeft * zoomLevel) + this.canvas!.width! / 2 - HALF_SCREEN;
+      const newTop = (-objectTop * zoomLevel);
+
+      this.canvas?.setViewportTransform([zoomLevel, 0, 0, zoomLevel, newLeft, newTop]);
+    }
   }
 
   resetActionState() {
