@@ -86,8 +86,9 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
       zoom *= 0.999 ** delta; // fidati funziona (vedi es. CG)
 
       // Valori di max e min
-      if (zoom > 20) zoom = 20;
-      if (zoom < 0.01) zoom = 0.01;
+      console.log(zoom)
+      if (zoom > 4) zoom = 4;
+      if (zoom < 0.7) zoom = 0.7;
 
       // this.canvas?.setZoom(zoom); // Zoom generico
       this.canvas?.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom); // Zoom su cursore
