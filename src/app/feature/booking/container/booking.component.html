@@ -8,7 +8,8 @@
     <div class="row">
         <div class="col">
             <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
-                <mat-stepper formArrayName="formArray" [orientation]="(orientation$ | async)!" linear (selectionChange)="onStepChanged($event)">
+                <mat-stepper formArrayName="formArray" [orientation]="(orientation$ | async)!" linear
+                    (selectionChange)="onStepChanged($event)">
 
                     <mat-step formGroupName="0" [stepControl]="cinemaForm">
                         <ng-template matStepLabel>Scegli il cinema</ng-template>
@@ -127,14 +128,15 @@
 
                         </div>
 
-                        <div *ngIf="seatsErrorRequired && (adultsSeats!.dirty || childrenSeats!.dirty)" 
+                        <div *ngIf="seatsErrorRequired && (adultsSeats!.dirty || childrenSeats!.dirty)"
                             class="mat-mdc-form-field-error pt-2">
                             Selezionare almeno un biglietto
                         </div>
 
-                        <app-seats-editor *ngIf="selectedStepIndex === 2" class="py-3" [creativeMode]="false" [screenUrl]="screenUrl"
-                            [seatsTaken]="seatsTaken" (selectedSeats)="onSeatSelected($event)"></app-seats-editor>
-                        
+                        <app-seats-editor *ngIf="selectedStepIndex === 2" class="py-3" [creativeMode]="false"
+                            [screenUrl]="screenUrl" [seatsTaken]="seatsTaken"
+                            (selectedSeats)="onSeatSelected($event)"></app-seats-editor>
+
                         <div *ngIf="selectedSeatsTotalError" class="mat-mdc-form-field-error">
                             Il numero di posti selezionati non corrisponde al numero di biglietti scelti
                         </div>
@@ -148,39 +150,49 @@
                     <mat-step>
                         <ng-template matStepLabel>Riepilogo</ng-template>
 
-                        <div class="d-flex justify-content-center flex-column pt-3 gap-4">
+                        <div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3">
+                            <img class="movie-poster-desktop" [src]="movie.img" [alt]="movie.name">
 
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Cinema</span>
-                                <span>{{ cinema?.value }} ({{ city?.value }})</span>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-center flex-column gap-4">
+
+                                    <h5 class="fw-bold">{{ movie.name }}</h5>
+
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Cinema</span>
+                                        <span>{{ cinema?.value }} ({{ city?.value }})</span>
+                                    </div>
+    
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Spettacolo</span>
+                                        <span>{{ getDateFormatted(date?.value) }} - {{ getShowStartTime(showId?.value)
+                                            }}</span>
+                                    </div>
+    
+                                    <div *ngIf="adultsSeats?.value" class="d-flex justify-content-between">
+                                        <span class="fw-bold">Adulti</span>
+                                        <span>{{ adultsSeats?.value }}</span>
+                                    </div>
+    
+                                    <div *ngIf="childrenSeats?.value" class="d-flex justify-content-between">
+                                        <span class="fw-bold">Bambini</span>
+                                        <span>{{ childrenSeats?.value }}</span>
+                                    </div>
+    
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Posti</span>
+                                        <span>{{ seats?.value.join(', ') }}</span>
+                                    </div>
+    
+                                </div>
+    
+                                <button mat-raised-button color="primary" type="submit" class="px-5 mt-4">
+                                    Prenota
+                                    <span class="ps-2">{{ price | currency:'EUR' }}</span>
+                                </button>
                             </div>
-
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Spettacolo</span>
-                                <span>{{ getDateFormatted(date?.value) }} - {{ getShowStartTime(showId?.value) }}</span>
-                            </div>
-
-                            <div *ngIf="adultsSeats?.value" class="d-flex justify-content-between">
-                                <span class="fw-bold">Adulti</span>
-                                <span>{{ adultsSeats?.value }}</span>
-                            </div>
-
-                            <div *ngIf="childrenSeats?.value" class="d-flex justify-content-between">
-                                <span class="fw-bold">Bambini</span>
-                                <span>{{ childrenSeats?.value }}</span>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Posti</span>
-                                <span>{{ seats?.value.join(', ') }}</span>
-                            </div>
-
                         </div>
 
-                        <button mat-raised-button color="primary" type="submit" class="px-5 mt-5">
-                            Prenota
-                            <span class="ps-2">{{ price | currency:'EUR' }}</span>
-                        </button>
                     </mat-step>
 
                 </mat-stepper>

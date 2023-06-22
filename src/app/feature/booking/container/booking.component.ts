@@ -19,6 +19,11 @@ const moment = _moment;
 export class BookingComponent implements OnInit, OnDestroy {
 
   movieId: number = 1;
+  movie: any = {
+    id: 1,
+    name: "Spider-man: Across the Spiderverse",
+    img: "https://cinemaadriano.it/images/locandine_film/spider.jpg",
+  };
 
   selectedStepIndex: number = 0;
 
