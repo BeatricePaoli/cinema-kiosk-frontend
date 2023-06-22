@@ -13,6 +13,7 @@ import { HeaderModule } from './feature/header/header.module';
 import { MovieListModule } from './feature/movie-list/movie-list.module';
 import { ScreenModule } from './feature/screen/screen.module';
 import { HttpClientModule } from '@angular/common/http';
+import { TheaterListModule } from './feature/theater-list/theater-list.module';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
     MovieListModule,
     MovieListModule,
     BookingModule,
+    TheaterListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,7 +1,10 @@
 Funzionalità Seat Editor
 - (optional) Selezione tipo di labeling: lettere, numeri, asc, desc, alternazione pari/dispari ...
 - (optional) Touch gestures
-- edit / view mode
+
+Fix/Aggiunte
+- sistemare form biglietti (variabili)
+- legenda view mode
 
 Pagine da fare
 - ticket screen

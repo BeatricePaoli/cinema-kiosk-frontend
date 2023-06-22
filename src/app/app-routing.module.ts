@@ -29,6 +29,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'theater-list',
+    loadChildren: () =>
+      import('./feature/theater-list/theater-list.module').then(
+        (m) => m.TheaterListModule
+      ),
+  },
+  {
     path: 'screen',
     loadChildren: () =>
       import('./feature/screen/screen.module').then(
