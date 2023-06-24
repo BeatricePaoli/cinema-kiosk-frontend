@@ -103,6 +103,11 @@ $angular-default-theme: mat.define-light-theme(
 	background-color: mat.get-color-from-palette($angular-primary, 500);
 }
 
+.mat-mdc-dialog-container .mdc-dialog__title,
+.mat-mdc-dialog-container .mdc-dialog__content {
+  font-family: 'Montserrat', sans-serif !important; 
+}
+
 .mat-badge-small .mat-badge-content {
   font-size: 12px;
 }

@@ -1,0 +1,10 @@
+<div class="h-100 d-flex flex-column justify-content-between gap-3 p-3">
+	<h2 mat-dialog-title class="fw-bold fs-3">{{ title }}</h2>
+
+	<mat-dialog-content class="flex-grow-1">{{ content }}</mat-dialog-content>
+
+	<mat-dialog-actions class="gap-3" align="end">
+        <button *ngIf="backBtn" mat-raised-button (click)="onCancelClick()">{{ backBtn }}</button>
+        <button *ngIf="confirmBtn" mat-raised-button color="warn" (click)="onConfirmClick()">{{ confirmBtn }}</button>
+    </mat-dialog-actions>
+</div>
