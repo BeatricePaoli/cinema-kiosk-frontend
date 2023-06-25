@@ -1,99 +1,22 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
+import { ActionModalComponent, ActionModalData, ActionModalOutput } from 'src/app/shared/components/action-modal/action-modal.component';
 
 @Component({
   selector: 'app-theater',
   templateUrl: './theater.component.html',
-  styleUrls: ['./theater.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./theater.component.scss']
 })
 export class TheaterComponent implements OnInit {
 
   theaterId?: number;
 
-  theater: any = {
-    id: 1,
-    name: "Cinema 1",
-    address: {
-      id: 1,
-      street: "Via Pinco Pallino",
-      number: "8",
-      city: "Firenze",
-      country: "Italia"
-    },
-    screens: [
-      {
-        id: 1,
-        name: "Sala a"
-      },
-      {
-        id: 2,
-        name: "Sala b"
-      }
-    ]
-  };
+  theater: any;
 
-  theaterForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    city: new FormControl('', Validators.required),
-    country: new FormControl('', Validators.required),
-    street: new FormControl('', Validators.required),
-    number: new FormControl('', Validators.required),
-    zipCode: new FormControl('', Validators.required),
-  });
-
-  get name() {
-    return this.theaterForm.get('name');
-  }
-
-  get nameErrorRequired() {
-    return this.name?.errors ? this.name?.errors!['required'] : null;
-  }
-
-  get city() {
-    return this.theaterForm.get('city');
-  }
-
-  get cityErrorRequired() {
-    return this.city?.errors ? this.city?.errors!['required'] : null;
-  }
-
-  get country() {
-    return this.theaterForm.get('country');
-  }
-
-  get countryErrorRequired() {
-    return this.country?.errors ? this.country?.errors!['required'] : null;
-  }
-
-  get street() {
-    return this.theaterForm.get('street');
-  }
-
-  get streetErrorRequired() {
-    return this.street?.errors ? this.street?.errors!['required'] : null;
-  }
-
-  get number() {
-    return this.theaterForm.get('number');
-  }
-
-  get numberErrorRequired() {
-    return this.number?.errors ? this.number?.errors!['required'] : null;
-  }
-
-  get zipCode() {
-    return this.theaterForm.get('zipCode');
-  }
-
-  get zipCodeErrorRequired() {
-    return this.zipCode?.errors ? this.zipCode?.errors!['required'] : null;
-  }
-
-  constructor(private store: Store) { }
+  constructor(private store: Store, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.store.select(RouterSelectors.selectParams).pipe(take(1)).subscribe(params => {
@@ -102,21 +25,53 @@ export class TheaterComponent implements OnInit {
         if (!Number.isNaN(id)) {
           this.theaterId = id;
 
-          this.theaterForm.patchValue({
-            name: this.theater.name,
-            city: this.theater.address.city,
-            country: this.theater.address.country,
-            street: this.theater.address.street,
-            number: this.theater.address.number,
-            zipCode: this.theater.address.zipCode,
-          });
+          this.theater = {
+            id: 1,
+            name: "Cinema 1",
+            address: {
+              id: 1,
+              street: "Via Pinco Pallino",
+              number: "8",
+              city: "Firenze",
+              country: "Italia"
+            },
+            screens: [
+              {
+                id: 1,
+                name: "Sala a",
+                totalSeats: 140
+              },
+              {
+                id: 2,
+                name: "Sala b",
+                totalSeats: 245
+              }
+            ]
+          };
+
         }
       }
     })
   }
 
-  onSubmit() {
+  onSubmit(formValues: any) {
+    console.log(formValues);
+  }
 
+  onScreenDelete(screen: any) {
+    this.dialog.open<ActionModalComponent, ActionModalData, ActionModalOutput>(ActionModalComponent, {
+      height: '50vh',
+      data: {
+        title: "Conferma cancellazione",
+        content: `Sei sicuro di voler cancellare la sala ${screen.name}?`,
+        backBtn: "Annulla",
+        confirmBtn: "Cancella",
+      },
+    }).afterClosed().pipe(take(1)).subscribe(output => {
+      if (output?.result) {
+        this.theater.screens = this.theater.screens.filter((s: any) => s.id === screen.id);
+      }
+    });
   }
 
 }

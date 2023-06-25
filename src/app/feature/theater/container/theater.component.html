@@ -1,77 +1,26 @@
+<div class="position-relative">
+    <button mat-mini-fab class="back-btn" routerLink="/theater-list">
+        <mat-icon>chevron_left</mat-icon>
+    </button>
+</div>
+
 <div class="container pt-5">
     <div class="row">
         <div class="col">
 
-            <h3 class="fw-bold">Dati di: {{ theater.name }}</h3>
+            <h3 class="fw-bold">{{ theater ? theater.name : 'Nuovo cinema' }}</h3>
 
-            <form [formGroup]="theaterForm" (ngSubmit)="onSubmit()">
-                <div class="py-4 d-flex gap-4 flex-wrap align-items-center">
+            <app-theater-form [theater]="theater" (onSave)="onSubmit($event)"></app-theater-form>
 
-                    <div class="w-100">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Nome</mat-label>
-                            <input matInput formControlName="name">
-    
-                            <mat-error *ngIf="name?.invalid">
-                                <div *ngIf="nameErrorRequired">Valore obbligatorio</div>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
+            <ng-container *ngIf="theater">
+                <h3 class="fw-bold">Sale</h3>
 
-                    <h5 class="w-100 fw-bold mb-0">Indirizzo</h5>
+                <app-screen-list [screens]="theater.screens" (onDelete)="onScreenDelete($event)"></app-screen-list>
 
-                    <mat-form-field class="flex-grow-1 flex-sm-grow-0" appearance="outline">
-                        <mat-label>Città</mat-label>
-                        <input matInput formControlName="city">
+                <h3 class="pt-4 fw-bold">Biglietti</h3>
 
-                        <mat-error *ngIf="city?.invalid">
-                            <div *ngIf="cityErrorRequired">Valore obbligatorio</div>
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field class="flex-grow-1 flex-sm-grow-0" appearance="outline">
-                        <mat-label>Nazione</mat-label>
-                        <input matInput formControlName="country">
-
-                        <mat-error *ngIf="country?.invalid">
-                            <div *ngIf="countryErrorRequired">Valore obbligatorio</div>
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field class="flex-grow-1" appearance="outline">
-                        <mat-label>Via</mat-label>
-                        <input matInput formControlName="street">
-
-                        <mat-error *ngIf="street?.invalid">
-                            <div *ngIf="streetErrorRequired">Valore obbligatorio</div>
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 140px;" appearance="outline">
-                        <mat-label>Numero civico</mat-label>
-                        <input matInput formControlName="number">
-
-                        <mat-error *ngIf="number?.invalid">
-                            <div *ngIf="numberErrorRequired">Valore obbligatorio</div>
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 125px;" appearance="outline">
-                        <mat-label>CAP</mat-label>
-                        <input matInput formControlName="zipCode">
-
-                        <mat-error *ngIf="zipCode?.invalid">
-                            <div *ngIf="zipCodeErrorRequired">Valore obbligatorio</div>
-                        </mat-error>
-                    </mat-form-field>
-
-                    <div class="w-100 text-end">
-                        <button mat-raised-button color="primary" type="submit"
-                        [disabled]="!theaterForm.valid">Salva</button>
-                    </div>
-
-                </div>
-            </form>
+                <app-ticket-list></app-ticket-list>
+            </ng-container>
 
         </div>
     </div>
