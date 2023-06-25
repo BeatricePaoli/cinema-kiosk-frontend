@@ -1,7 +1,4 @@
 import { NgModule } from '@angular/core';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
 import { RouterModule, Routes } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -26,9 +23,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     StoreModule.forFeature(fromTheaterList.theaterListFeatureKey, fromTheaterList.reducer),
     EffectsModule.forFeature([TheaterListEffects]),
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
   ]
 })
 export class TheaterListModule { }

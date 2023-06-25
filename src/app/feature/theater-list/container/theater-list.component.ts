@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,8 +9,7 @@ import { ActionModalComponent, ActionModalData, ActionModalOutput } from 'src/ap
 @Component({
   selector: 'app-theater-list',
   templateUrl: './theater-list.component.html',
-  styleUrls: ['./theater-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./theater-list.component.scss']
 })
 export class TheaterListComponent implements OnInit {
 
