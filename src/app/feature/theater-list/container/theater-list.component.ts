@@ -25,7 +25,8 @@ export class TheaterListComponent implements OnInit {
         id: 1,
         street: "Via Pinco Pallino",
         number: "8",
-        city: "Firenze"
+        city: "Firenze",
+        country: "Italia"
       },
       screens: [
         {
@@ -45,7 +46,8 @@ export class TheaterListComponent implements OnInit {
         id: 1,
         street: "Via Pinco Pallino",
         number: "8",
-        city: "Firenze"
+        city: "Firenze",
+        country: "Italia"
       },
       screens: [
         {

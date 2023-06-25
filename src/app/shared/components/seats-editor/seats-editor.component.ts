@@ -56,7 +56,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   // Edit
   selectedSeat: fabric.Group | null = null;
   editSeatForm = new FormGroup({
-    label: new FormControl('', [Validators.required, Validators.minLength(1)]),
+    label: new FormControl('', Validators.required),
   });
   showDeleteCtrl: boolean = false;
 
