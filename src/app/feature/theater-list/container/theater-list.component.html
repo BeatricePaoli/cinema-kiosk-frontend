@@ -4,7 +4,7 @@
 
             <div class="d-flex justify-content-between">
                 <h3 class="fw-bold">Lista cinema</h3>
-                <button mat-raised-button color="primary">Aggiungi</button>
+                <button mat-raised-button color="primary" [routerLink]="['/theater-list', 'new']">Aggiungi</button>
             </div>
 
             <div class="overflow-x-auto pb-4">
@@ -29,7 +29,7 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Azioni </th>
                         <td mat-cell *matCellDef="let row">
                             <div class="d-flex justify-content-center">
-                                <button mat-icon-button color="primary" matTooltip="Modifica">
+                                <button mat-icon-button color="primary" matTooltip="Modifica" [routerLink]="['/theater-list', row.id]">
                                     <mat-icon>edit</mat-icon>
                                 </button>
                                 <button mat-icon-button color="primary" matTooltip="Cancella" (click)="onCancelClicked(row)">

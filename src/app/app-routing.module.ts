@@ -36,6 +36,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'theater-list/:theaterId',
+    loadChildren: () =>
+      import('./feature/theater/theater.module').then(
+        (m) => m.TheaterModule
+      ),
+  },
+  {
     path: 'screen',
     loadChildren: () =>
       import('./feature/screen/screen.module').then(
