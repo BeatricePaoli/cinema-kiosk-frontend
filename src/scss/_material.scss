@@ -93,8 +93,8 @@ $angular-default-theme: mat.define-light-theme(
 }
 
 ::-webkit-scrollbar {
-	height: .5rem;
-	width: .5rem;
+	height: .65rem;
+	width: .65rem;
 	background-color: #F5F5F5;
 }
 
@@ -129,6 +129,10 @@ $angular-default-theme: mat.define-light-theme(
   .mat-sort-header-container {
     justify-content: center;
   }
+}
+
+.mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-error-wrapper {
+  top: -15px !important;
 }
 
 .text-primary-500 {
