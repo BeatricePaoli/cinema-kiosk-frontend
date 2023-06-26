@@ -1,105 +1,92 @@
-<div class="container py-5">
-    <div class="row">
-        <div class="col">
+<div class="d-flex overflow-hidden">
 
-            <div class="d-flex overflow-hidden">
+    <div *ngIf="creativeMode" class="d-flex flex-column justify-content-center bg-light">
+        <button mat-icon-button matTooltip="Seleziona oggetti" [ngClass]="{'text-primary-500': mode === 'SELECT'}"
+            (click)="onSelectModeClick()">
+            <span class="material-symbols-outlined">
+                arrow_selector_tool
+            </span>
+        </button>
+        <button mat-icon-button matTooltip="Aggiungi posti" [ngClass]="{'text-primary-500': mode === 'ADD'}"
+            (click)="onAddModeClick()">
+            <span class="material-symbols-outlined">
+                library_add
+            </span>
+        </button>
 
-                <div *ngIf="creativeMode" class="d-flex flex-column justify-content-center bg-light">
-                    <button mat-icon-button matTooltip="Seleziona oggetti"
-                        [ngClass]="{'text-primary-500': mode === 'SELECT'}" (click)="onSelectModeClick()">
-                        <span class="material-symbols-outlined">
-                            arrow_selector_tool
-                        </span>
-                    </button>
-                    <button mat-icon-button matTooltip="Aggiungi posti" [ngClass]="{'text-primary-500': mode === 'ADD'}"
-                        (click)="onAddModeClick()">
-                        <span class="material-symbols-outlined">
-                            library_add
-                        </span>
-                    </button>
+        <hr class="mx-2">
 
-                    <hr class="mx-2">
+        <button mat-icon-button matTooltip="Annulla" [disabled]="isUndoDisabled" (click)="undo()">
+            <span class="material-symbols-outlined">
+                undo
+            </span>
+        </button>
 
-                    <!-- <button mat-icon-button>
-                        <span class="material-symbols-outlined">
-                            drag_pan
-                        </span>
-                    </button>
-                    <button mat-icon-button matTooltip="Zoom">
-                        <mat-icon>zoom_in</mat-icon>
-                    </button>
+        <button mat-icon-button matTooltip="Ripeti" [disabled]="isRedoDisabled" (click)="redo()">
+            <span class="material-symbols-outlined">
+                redo
+            </span>
+        </button>
+    </div>
 
-                    <hr class="mx-2"> -->
+    <div #canvasContainer class="seat-canvas" [ngClass]="{'w-100': !creativeMode}">
+        <canvas id="fabricSurface" class="border"></canvas>
+    </div>
 
-                    <button mat-icon-button matTooltip="Annulla" [disabled]="isUndoDisabled" (click)="undo()">
-                        <span class="material-symbols-outlined">
-                            undo
-                        </span>
-                    </button>
+    <div *ngIf="creativeMode" class="p-4 z-3 sidebar bg-light d-flex flex-column gap-3">
+        <div class="flex-grow-1 d-flex flex-column gap-3">
+            <form id="screenForm" [formGroup]="screenForm" (ngSubmit)="onSaveScreen()">
+                <mat-form-field class="mw-100" appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Nome Sala</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+            </form>
 
-                    <button mat-icon-button matTooltip="Ripeti" [disabled]="isRedoDisabled" (click)="redo()">
-                        <span class="material-symbols-outlined">
-                            redo
-                        </span>
-                    </button>
-                </div>
+            <h6 class="pt-2">Totale posti: {{ totSeats }}</h6>
 
-                <div #canvasContainer class="seat-canvas" [ngClass]="{'w-100': !creativeMode}">
-                    <canvas id="fabricSurface" class="border"></canvas>
-                </div>
+            <ng-container *ngIf="selectedSeat">
+                <hr>
+                <h6>Posto selezionato:</h6>
 
-                <div *ngIf="creativeMode" class="p-4 z-3 sidebar bg-light d-flex flex-column gap-3">
-                    <div class="flex-grow-1 d-flex flex-column gap-3">
-                        <h6>Totale posti: {{ totSeats }}</h6>
-
-                        <ng-container *ngIf="selectedSeat">
-                            <hr>
-                            <h6>Posto selezionato:</h6>
-
-                            <form class="d-flex gap-2 align-items-center justify-content-between"
-                                [formGroup]="editSeatForm" (ngSubmit)="onEditSelectedSeat()">
-                                <mat-form-field class="mw-100" appearance="outline" subscriptSizing="dynamic">
-                                    <mat-label>Etichetta</mat-label>
-                                    <input matInput formControlName="label">
-                                </mat-form-field>
-                                <button mat-raised-button type="submit"
-                                    [disabled]="!editSeatForm.valid">Modifica</button>
-                            </form>
-                        </ng-container>
-                    </div>
-
-                    <button mat-raised-button color="primary" (click)="onSaveScreen()">Salva schermo</button>
-                </div>
-
-            </div>
-
-            <div class="bg-light p-2 d-flex justify-content-center gap-4 flex-wrap">
-                <div>
-                    <span class="fw-bold">Scroll Mouse</span>
-                    <span class="ml-2"> - Zoom in/out</span>
-                </div>
-
-                <div>
-                    <span class="fw-bold">Ctrl + Click + Drag</span>
-                    <span class="ml-2"> - Sposta visuale</span>
-                </div>
-
-                <div *ngIf="creativeMode">
-                    <span class="fw-bold">Ctrl + Z</span>
-                    <span class="ml-2"> - Annulla</span>
-                </div>
-
-                <div *ngIf="creativeMode">
-                    <span class="fw-bold">Ctrl + Y</span>
-                    <span class="ml-2"> - Ripeti</span>
-                </div>
-
-                <div *ngIf="creativeMode && showDeleteCtrl">
-                    <span class="fw-bold">Canc</span>
-                    <span class="ml-2"> - Cancella</span>
-                </div>
-            </div>
-
+                <form class="d-flex gap-2 align-items-center justify-content-between" [formGroup]="editSeatForm"
+                    (ngSubmit)="onEditSelectedSeat()">
+                    <mat-form-field class="mw-100" appearance="outline" subscriptSizing="dynamic">
+                        <mat-label>Etichetta</mat-label>
+                        <input matInput formControlName="label">
+                    </mat-form-field>
+                    <button mat-raised-button type="submit" [disabled]="!editSeatForm.valid">Modifica</button>
+                </form>
+            </ng-container>
         </div>
+
+        <button mat-raised-button color="primary" type="submit" form="screenForm" [disabled]="!screenForm.valid">Salva sala</button>
+    </div>
+
+</div>
+
+<div class="bg-light p-2 d-flex justify-content-center gap-4 flex-wrap">
+    <div>
+        <span class="fw-bold">Scroll Mouse</span>
+        <span class="ml-2"> - Zoom in/out</span>
+    </div>
+
+    <div>
+        <span class="fw-bold">Ctrl + Click + Drag</span>
+        <span class="ml-2"> - Sposta visuale</span>
+    </div>
+
+    <div *ngIf="creativeMode">
+        <span class="fw-bold">Ctrl + Z</span>
+        <span class="ml-2"> - Annulla</span>
+    </div>
+
+    <div *ngIf="creativeMode">
+        <span class="fw-bold">Ctrl + Y</span>
+        <span class="ml-2"> - Ripeti</span>
+    </div>
+
+    <div *ngIf="creativeMode && showDeleteCtrl">
+        <span class="fw-bold">Canc</span>
+        <span class="ml-2"> - Cancella</span>
     </div>
 </div>

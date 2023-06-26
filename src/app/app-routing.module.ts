@@ -43,7 +43,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'screen',
+    path: 'theater-list/:theaterId/screen-list/:screenId',
     loadChildren: () =>
       import('./feature/screen/screen.module').then(
         (m) => m.ScreenModule

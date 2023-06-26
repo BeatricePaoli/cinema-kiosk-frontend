@@ -133,9 +133,11 @@
                             Selezionare almeno un biglietto
                         </div>
 
-                        <app-seats-editor *ngIf="selectedStepIndex === 2" class="py-3" [creativeMode]="false"
+                        <div class="py-5">
+                            <app-seats-editor *ngIf="selectedStepIndex === 2" [creativeMode]="false"
                             [screenUrl]="screenUrl" [seatsTaken]="seatsTaken"
                             (selectedSeats)="onSeatSelected($event)"></app-seats-editor>
+                        </div>
 
                         <div *ngIf="selectedSeatsTotalError" class="mat-mdc-form-field-error">
                             Il numero di posti selezionati non corrisponde al numero di biglietti scelti

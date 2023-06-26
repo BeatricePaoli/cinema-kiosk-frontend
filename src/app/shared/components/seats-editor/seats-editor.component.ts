@@ -24,6 +24,9 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   canvasContainer?: ElementRef;
 
   @Input()
+  screen?: any;
+
+  @Input()
   screenUrl?: string;
 
   @Input()
@@ -34,6 +37,9 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Output()
   selectedSeats: EventEmitter<string[]> = new EventEmitter<string[]>();
+
+  @Output()
+  onSave: EventEmitter<any> = new EventEmitter<any>();
 
   canvas?: fabric.Canvas;
 
@@ -70,6 +76,11 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
   // Booking
   selectedSeatsInternal: string[] = [];
+
+  // Screen
+  screenForm = new FormGroup({
+    name: new FormControl('', Validators.required),
+  });
 
   constructor(private zone: NgZone,
     private viewportRuler: ViewportRuler,
@@ -235,6 +246,15 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['screen'] && changes['screen'].currentValue) {
+      const screen = changes['screen'].currentValue;
+      this.loadCanvas(screen.url);
+
+      this.screenForm.patchValue({
+        name: screen.name
+      });
+    }
+
     if (changes['screenUrl'] && changes['screenUrl'].currentValue) {
       this.loadCanvas(changes['screenUrl'].currentValue);
     }
@@ -273,6 +293,13 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
           this.setSeatsTaken(this.seatsTaken);
         } else {
+          this.canvas?.forEachObject(o => {
+            // Centra viewport in base a label 'Schermo'
+            if (o instanceof fabric.Text) {
+              this.centerViewportOnScreen(o);
+            }
+          });
+
           this.resetActionState();
           this.saveState();
           this.totSeats = this.canvas?.getObjects() ? this.canvas?.getObjects().length - 1 : 0;
@@ -451,7 +478,10 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onSaveScreen() {
-    console.log(JSON.stringify(this.canvas));
+    this.onSave.emit({
+      ...this.screenForm.value,
+      json: JSON.stringify(this.canvas),
+    })
   }
 
   onSelectModeClick() {
