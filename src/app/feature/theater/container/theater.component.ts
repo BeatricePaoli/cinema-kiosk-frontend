@@ -46,6 +46,38 @@ export class TheaterComponent implements OnInit {
                 name: "Sala b",
                 totalSeats: 245
               }
+            ],
+            tickets: [
+              {
+                id: 1,
+                name: "Adulti",
+                price: 9,
+                projectionType: "2D",
+                availableOnline: true,
+                days: [0, 1, 2, 3, 4, 5, 6, 7],
+                fromTime: "14:00",
+                toTime: "23:59"
+              },
+              {
+                id: 2,
+                name: "Bambini",
+                price: 7,
+                projectionType: "2D",
+                availableOnline: true,
+                days: [0, 1, 2, 3, 4, 5, 6, 7],
+                fromTime: "14:00",
+                toTime: "23:59"
+              },
+              {
+                id: 3,
+                name: "Sconto a",
+                price: 4.5,
+                projectionType: "2D",
+                availableOnline: false,
+                days: [2],
+                fromTime: "14:00",
+                toTime: "19:00"
+              }
             ]
           };
 
@@ -54,7 +86,7 @@ export class TheaterComponent implements OnInit {
     })
   }
 
-  onSubmit(formValues: any) {
+  onTheaterSubmit(formValues: any) {
     console.log(formValues);
   }
 
@@ -72,6 +104,10 @@ export class TheaterComponent implements OnInit {
         this.theater.screens = this.theater.screens.filter((s: any) => s.id === screen.id);
       }
     });
+  }
+
+  onTicketsSubmit(formValues: any) {
+    console.log(formValues);
   }
 
 }
