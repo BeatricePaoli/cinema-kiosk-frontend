@@ -1,0 +1,9 @@
+.body-height {
+    height: calc(100vh - 56px);
+}
+
+@media screen and (min-width: 600px) {
+    .body-height {
+        height: calc(100vh - 64px);
+    }
+}

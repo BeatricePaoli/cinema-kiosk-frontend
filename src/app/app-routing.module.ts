@@ -56,6 +56,13 @@ const routes: Routes = [
         (m) => m.ScreenModule
       ),
   },
+  {
+    path: '**',
+    loadChildren: () =>
+      import('./feature/error/error.module').then(
+        (m) => m.ErrorModule
+      ),
+  },
 ];
 
 @NgModule({
