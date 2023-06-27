@@ -1,0 +1,15 @@
+.h-0 {
+    height: 0;
+}
+
+tr.accordion-row:not(.accordion-expanded-row):hover {
+    background: whitesmoke;
+}
+
+tr.accordion-row.accordion-expanded-row {
+    background: whitesmoke;
+}
+
+.accordion-row td {
+    border-bottom-width: 0;
+}
