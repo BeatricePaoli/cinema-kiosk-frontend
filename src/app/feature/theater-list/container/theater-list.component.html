@@ -29,6 +29,9 @@
                         <th mat-header-cell *matHeaderCellDef> Azioni </th>
                         <td mat-cell *matCellDef="let row">
                             <div class="d-flex justify-content-center">
+                                <button mat-icon-button color="primary" matTooltip="Gestisci spettacoli" [routerLink]="['/theater-list', row.id, 'scheduling']">
+                                    <mat-icon>edit_calendar</mat-icon>
+                                </button>
                                 <button mat-icon-button color="primary" matTooltip="Modifica" [routerLink]="['/theater-list', row.id]">
                                     <mat-icon>edit</mat-icon>
                                 </button>

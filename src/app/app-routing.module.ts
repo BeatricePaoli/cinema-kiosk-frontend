@@ -64,6 +64,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'theater-list/:theaterId/scheduling',
+    loadChildren: () =>
+      import('./feature/scheduling/scheduling.module').then(
+        (m) => m.SchedulingModule
+      ),
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./feature/error/error.module').then(
