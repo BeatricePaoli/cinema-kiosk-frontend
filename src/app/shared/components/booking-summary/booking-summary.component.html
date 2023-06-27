@@ -33,7 +33,7 @@
 
         </div>
 
-        <button *ngIf="toComplete" mat-raised-button color="primary" class="px-5 mt-4" (click)="onSubmit()">
+        <button *ngIf="toComplete" mat-raised-button color="primary" class="px-5 mt-4">
             Prenota
             <span class="ps-2">{{ booking?.price | currency:'EUR' }}</span>
         </button>

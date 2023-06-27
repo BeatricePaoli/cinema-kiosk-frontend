@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import * as _moment from 'moment';
 
 const moment = _moment;
@@ -16,12 +16,5 @@ export class BookingSummaryComponent {
 
   @Input()
   toComplete: boolean = false;
-
-  @Output()
-  onBook: EventEmitter<void> = new EventEmitter<void>();
-
-  onSubmit() {
-    this.onBook.emit();
-  }
 
 }
