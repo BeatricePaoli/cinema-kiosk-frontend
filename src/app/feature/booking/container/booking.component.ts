@@ -89,6 +89,8 @@ export class BookingComponent implements OnInit, OnDestroy {
   });
 
   selectedSeatsTotalError: boolean = false;
+
+  booking: any;
   price: number = 0;
 
   orientation$: Observable<StepperOrientation>;
@@ -212,12 +214,26 @@ export class BookingComponent implements OnInit, OnDestroy {
     console.log("Load shows or filter");
   }
 
-  onShowSelect(event: MatChipSelectionChange) {
-    console.log("chip toggle")
-  }
-
   onStepChanged(event: StepperSelectionEvent) {
     this.selectedStepIndex = event.selectedIndex;
+
+    if (this.selectedStepIndex === 3) {
+      const cinemaVals = this.cinemaForm.value;
+      const showVals = this.showForm.value;
+      const seatsVals = this.seatForm.value;
+
+      this.booking = {
+        ...cinemaVals,
+        ...showVals,
+        ...seatsVals,
+        startTime: this.getShowStartTime(showVals.showId),
+        date: showVals.date.toISOString(),
+        price: this.price,
+        movie: {
+          ...this.movie,
+        }
+      };
+    }
   }
 
   onSeatSelected(seats: string[]) {
@@ -227,10 +243,6 @@ export class BookingComponent implements OnInit, OnDestroy {
 
     const { adultsSeats, childrenSeats } = this.seatForm.value;
     this.selectedSeatsTotalError = adultsSeats + childrenSeats !== seats.length;
-  }
-
-  getDateFormatted(date: moment.Moment) {
-    return date ? date.format('DD/MM/YYYY') : '';
   }
 
   getShowStartTime(showId: number) {

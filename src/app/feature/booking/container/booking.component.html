@@ -93,8 +93,7 @@
                                 <div *ngIf="date?.value" class="pt-4">
                                     <label>Spettacolo</label>
                                     <mat-chip-listbox formControlName="showId">
-                                        <mat-chip-option *ngFor="let show of shows" color="primary" [value]="show.id"
-                                            (selectionChange)="onShowSelect($event)">
+                                        <mat-chip-option *ngFor="let show of shows" color="primary" [value]="show.id">
                                             {{ show.startTime }}
                                         </mat-chip-option>
                                     </mat-chip-listbox>
@@ -152,48 +151,7 @@
                     <mat-step>
                         <ng-template matStepLabel>Riepilogo</ng-template>
 
-                        <div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3">
-                            <img class="movie-poster-desktop" [src]="movie.img" [alt]="movie.name">
-
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-center flex-column gap-4">
-
-                                    <h5 class="fw-bold">{{ movie.name }}</h5>
-
-                                    <div class="d-flex justify-content-between">
-                                        <span class="fw-bold">Cinema</span>
-                                        <span>{{ cinema?.value }} ({{ city?.value }})</span>
-                                    </div>
-    
-                                    <div class="d-flex justify-content-between">
-                                        <span class="fw-bold">Spettacolo</span>
-                                        <span>{{ getDateFormatted(date?.value) }} - {{ getShowStartTime(showId?.value)
-                                            }}</span>
-                                    </div>
-    
-                                    <div *ngIf="adultsSeats?.value" class="d-flex justify-content-between">
-                                        <span class="fw-bold">Adulti</span>
-                                        <span>{{ adultsSeats?.value }}</span>
-                                    </div>
-    
-                                    <div *ngIf="childrenSeats?.value" class="d-flex justify-content-between">
-                                        <span class="fw-bold">Bambini</span>
-                                        <span>{{ childrenSeats?.value }}</span>
-                                    </div>
-    
-                                    <div class="d-flex justify-content-between">
-                                        <span class="fw-bold">Posti</span>
-                                        <span>{{ seats?.value.join(', ') }}</span>
-                                    </div>
-    
-                                </div>
-    
-                                <button mat-raised-button color="primary" type="submit" class="px-5 mt-4">
-                                    Prenota
-                                    <span class="ps-2">{{ price | currency:'EUR' }}</span>
-                                </button>
-                            </div>
-                        </div>
+                        <app-booking-summary [booking]="booking" [toComplete]="true"></app-booking-summary>
 
                     </mat-step>
 

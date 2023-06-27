@@ -14,6 +14,7 @@ import { I18nPaginator } from '../core/services/i18n-paginator.service';
 import { ActionModalComponent } from './components/action-modal/action-modal.component';
 import { SeatsEditorComponent } from './components/seats-editor/seats-editor.component';
 import { DayFormatDatepickerDirective } from './directives/day-format-datepicker.directive';
+import { BookingSummaryComponent } from './components/booking-summary/booking-summary.component';
 
 const IMPORTS = [
   CommonModule,
@@ -37,6 +38,7 @@ const DIRECTIVES = [
 const COMPONENTS = [
   SeatsEditorComponent,
   ActionModalComponent,
+  BookingSummaryComponent,
 ]
 
 @NgModule({

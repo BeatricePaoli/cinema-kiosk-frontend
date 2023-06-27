@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3">
+    <img class="movie-poster-desktop" [src]="booking?.movie.img" [alt]="booking?.movie.name">
+
+    <div class="flex-grow-1">
+        <div class="d-flex justify-content-center flex-column gap-4">
+
+            <h5 class="fw-bold">{{ booking?.movie.name }}</h5>
+
+            <div class="d-flex justify-content-between">
+                <span class="fw-bold">Cinema</span>
+                <span>{{ booking?.cinema }} ({{ booking?.city }})</span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <span class="fw-bold">Spettacolo</span>
+                <span>{{ booking?.date | date: 'dd/MM/YYYY' }} - {{ booking?.startTime }}</span>
+            </div>
+
+            <div *ngIf="booking?.adultsSeats" class="d-flex justify-content-between">
+                <span class="fw-bold">Adulti</span>
+                <span>{{ booking?.adultsSeats }}</span>
+            </div>
+
+            <div *ngIf="booking?.childrenSeats" class="d-flex justify-content-between">
+                <span class="fw-bold">Bambini</span>
+                <span>{{ booking?.childrenSeats }}</span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <span class="fw-bold">Posti</span>
+                <span>{{ booking?.seats?.join(', ') }}</span>
+            </div>
+
+        </div>
+
+        <button *ngIf="toComplete" mat-raised-button color="primary" class="px-5 mt-4" (click)="onSubmit()">
+            Prenota
+            <span class="ps-2">{{ booking?.price | currency:'EUR' }}</span>
+        </button>
+    </div>
+
+</div>
+
+<div *ngIf="booking?.barcode" class="pt-4 barcode-container">
+    <img [src]="booking.barcode" alt="Barcode" />
+</div>
