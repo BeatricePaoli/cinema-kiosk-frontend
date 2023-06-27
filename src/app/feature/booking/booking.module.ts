@@ -1,8 +1,4 @@
 import { NgModule } from '@angular/core';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule, Routes } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -29,10 +25,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     StoreModule.forFeature(fromBooking.bookingFeatureKey, fromBooking.reducer),
     EffectsModule.forFeature([BookingEffects]),
-    MatStepperModule,
-    MatRadioModule,
-    MatDatepickerModule,
-    MatChipsModule,
   ]
 })
 export class BookingModule { }

@@ -22,10 +22,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'booking/:movieId',
+    path: 'booking-form/:movieId',
     loadChildren: () =>
-      import('./feature/booking/booking.module').then(
-        (m) => m.BookingModule
+      import('./feature/booking-form/booking-form.module').then(
+        (m) => m.BookingFormModule
       ),
   },
   {
@@ -33,6 +33,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./feature/booking-list/booking-list.module').then(
         (m) => m.BookingListModule
+      ),
+  },
+  {
+    path: 'booking-list/:bookingId',
+    loadChildren: () =>
+      import('./feature/booking/booking.module').then(
+        (m) => m.BookingModule
       ),
   },
   {
