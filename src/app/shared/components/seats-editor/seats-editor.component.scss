@@ -6,3 +6,28 @@
 .sidebar {
     min-width: 281px;
 }
+
+.legend-item {
+    display: flex;
+    align-items: center;
+
+    .legend-square {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        margin-right: 5px;
+    }
+}
+
+.bg-selected {
+    background-color: #620dff;
+}
+
+.bg-available {
+    background-color: #8a74a5;
+}
+
+.bg-disabled {
+    background-color: #bfbdbd;
+}

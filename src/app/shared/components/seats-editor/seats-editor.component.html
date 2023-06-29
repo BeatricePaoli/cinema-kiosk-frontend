@@ -64,6 +64,21 @@
 
 </div>
 
+<div *ngIf="!this.creativeMode" class="bg-light p-2 d-flex justify-content-center gap-4 flex-wrap">
+    <div class="legend-item">
+        <span class="legend-square bg-selected"></span>
+        <span> = Selezionato</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-square bg-available"></span>
+        <span> = Libero</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-square bg-disabled"></span>
+        <span> = Non disponibile</span>
+    </div>
+</div>
+
 <div class="bg-light p-2 d-flex justify-content-center gap-4 flex-wrap">
     <div>
         <span class="fw-bold">Scroll Mouse</span>
