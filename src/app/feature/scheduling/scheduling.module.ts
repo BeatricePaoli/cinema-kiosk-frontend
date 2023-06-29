@@ -6,6 +6,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { SchedulingComponent } from './container/scheduling.component';
 import { SchedulingEffects } from './store/effects/scheduling.effects';
 import * as fromScheduling from './store/reducers/scheduling.reducer';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 const routes: Routes = [
@@ -23,7 +24,8 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature(fromScheduling.schedulingFeatureKey, fromScheduling.reducer),
-    EffectsModule.forFeature([SchedulingEffects])
+    EffectsModule.forFeature([SchedulingEffects]),
+    MatDatepickerModule,
   ]
 })
 export class SchedulingModule { }

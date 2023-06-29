@@ -1,7 +1,7 @@
 import { ValidatorFn, AbstractControl } from "@angular/forms"
 
 export class AutocompleteValidator {
-    static validOption(validOptions: Array<string>): ValidatorFn {
+    static validOption(validOptions: Array<any>): ValidatorFn {
         return (control: AbstractControl): { [key: string]: any } | null => {
             if (validOptions.indexOf(control.value) > -1) {
                 return null;

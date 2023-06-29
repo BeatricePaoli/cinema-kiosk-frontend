@@ -1,0 +1,18 @@
+.scheduling-table {
+    .mat-mdc-form-field {
+        margin-top: 20px;
+        margin-bottom: 32px;
+    }
+
+    .time-cell {
+        margin: 20px 0;
+        max-height: 130px;
+        overflow-y: auto;
+        width: 215px;
+
+        .mat-mdc-form-field {
+            margin-top: 0 !important;
+            margin-bottom: 20px !important;
+        }
+    }
+}
