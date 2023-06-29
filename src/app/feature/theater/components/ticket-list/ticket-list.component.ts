@@ -3,8 +3,8 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import * as _moment from 'moment';
-import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 import { Days, ProjectionType } from 'src/app/core/models/tickets';
+import { customTimepickerTheme } from 'src/app/core/timepicker.theme';
 
 
 const moment = _moment;
@@ -39,17 +39,7 @@ export class TicketListComponent implements OnChanges {
   displayedColumns: string[] = ['name', 'price', 'projectionType', 'availableOnline', 'days', 'fromTime', 'toTime', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
-  customTheme: NgxMaterialTimepickerTheme = {
-    container: {
-      buttonColor: '#b8838b'
-    },
-    dial: {
-      dialBackgroundColor: '#b8838b',
-    },
-    clockFace: {
-      clockHandColor: '#b8838b',
-    }
-  };
+  customTheme = customTimepickerTheme;
 
   get tickets() {
     return (this.ticketForm.get('tickets') as FormArray);
