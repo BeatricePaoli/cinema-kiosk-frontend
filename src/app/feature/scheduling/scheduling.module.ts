@@ -7,6 +7,7 @@ import { SchedulingComponent } from './container/scheduling.component';
 import { SchedulingEffects } from './store/effects/scheduling.effects';
 import * as fromScheduling from './store/reducers/scheduling.reducer';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ErrorListModalComponent } from './components/error-list-modal/error-list-modal.component';
 
 
 const routes: Routes = [
@@ -18,7 +19,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    SchedulingComponent
+    SchedulingComponent,
+    ErrorListModalComponent
   ],
   imports: [
     SharedModule,

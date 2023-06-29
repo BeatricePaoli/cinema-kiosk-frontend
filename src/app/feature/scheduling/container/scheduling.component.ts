@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import * as _moment from 'moment';
@@ -7,6 +8,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { ProjectionType } from 'src/app/core/models/tickets';
 import { customTimepickerTheme } from 'src/app/core/timepicker.theme';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
+import { ErrorListModalComponent, ErrorListModalData } from '../components/error-list-modal/error-list-modal.component';
 
 const moment = _moment;
 
@@ -91,13 +93,15 @@ export class SchedulingComponent implements OnInit {
   projTypes = Object.values(ProjectionType);
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['date', 'movie', 'screen', 'projectionType', 'languages', 'shows', 'actions'];
+  displayedColumns: string[] = ['date', 'movie', 'screen', 'projectionType', 'language', 'shows', 'actions'];
 
   customTheme = customTimepickerTheme;
 
   get schedulings() {
     return (this.schedulingForm.get('schedulings') as FormArray);
   }
+
+  constructor(public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.initSearchForm();
@@ -247,7 +251,42 @@ export class SchedulingComponent implements OnInit {
   }
 
   onSaveClicked(index: number) {
-    console.log(this.schedulings.value[index])
+    console.log(this.schedulings.value[index]);
+
+    this.dialog.open<ErrorListModalComponent, ErrorListModalData>(ErrorListModalComponent, {
+      data: {
+        schedulings: [
+          {
+            date: moment().toISOString(),
+            movie: {
+              id: 1,
+              name: "Spider-man: Across the Spiderverse",
+            },
+            screen: {
+              id: 1,
+              name: "Sala a"
+            },
+            projectionType: ProjectionType.is2D,
+            language: "Italiano",
+            shows: ['17:30', '20:30']
+          },
+          {
+            date: moment().toISOString(),
+            movie: {
+              id: 1,
+              name: "Spider-man: Across the Spiderverse",
+            },
+            screen: {
+              id: 1,
+              name: "Sala a"
+            },
+            projectionType: ProjectionType.is2D,
+            language: "Italiano",
+            shows: ['17:30']
+          }
+        ]
+      },
+    })
   }
 
   // TODO: inutilizzato
