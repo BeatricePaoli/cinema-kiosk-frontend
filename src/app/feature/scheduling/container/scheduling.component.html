@@ -40,148 +40,150 @@
                     <button mat-raised-button type="button" (click)="onAddClicked()">Aggiungi spettacoli</button>
                 </div>
 
-                <div class="overflow-x-auto pb-4 mb-4">
-                    <table mat-table [dataSource]="dataSource" class="mt-3 scheduling-table">
+                <div class="mb-4">
+                    <div class="overflow-x-auto">
+                        <table mat-table [dataSource]="dataSource" class="mt-3 scheduling-table">
 
-                        <ng-container matColumnDef="date">
-                            <th mat-header-cell *matHeaderCellDef> Data </th>
-                            <td mat-cell *matCellDef="let row">
-                                <mat-form-field style="width: 150px;" dayFormat appearance="outline">
-                                    <mat-label>Data</mat-label>
-                                    <input matInput [formControl]="row.get('date')" [matDatepicker]="picker">
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-
-                                    <mat-error *ngIf="row.get('date')?.invalid">
-                                        <div *ngIf="getErrorRequired(row.get('date'))">Valore obbligatorio</div>
-                                    </mat-error>
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="movie">
-                            <th mat-header-cell *matHeaderCellDef> Film </th>
-                            <td mat-cell *matCellDef="let row; let i = index;">
-                                <mat-form-field style="width: 240px;" appearance="outline">
-                                    <mat-label>Film</mat-label>
-                                    <input matInput [formControl]="row.get('movieId')" [matAutocomplete]="autoMovie">
-                                    <mat-autocomplete #autoMovie="matAutocomplete"
-                                        [displayWith]="boundDisplayMovieAutoFn" hideSingleSelectionIndicator>
-                                        <mat-option *ngFor="let movie of filteredMovies[i] | async" [value]="movie.id">
-                                            {{ movie.name }}
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                    <mat-error *ngIf="row.get('movieId')?.invalid">
-                                        <div *ngIf="getErrorRequired(row.get('movieId'))">Valore obbligatorio</div>
-                                        <div
-                                            *ngIf="!getErrorRequired(row.get('movieId')) && getErrorValidOption(row.get('movieId'))">
-                                            Valore non trovato,
-                                            selezionare una delle opzioni proposte</div>
-                                    </mat-error>
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="screen">
-                            <th mat-header-cell *matHeaderCellDef> Sala </th>
-                            <td mat-cell *matCellDef="let row">
-                                <mat-form-field style="width: 180px;" appearance="outline">
-                                    <mat-label>Sala</mat-label>
-                                    <mat-select [formControl]="row.get('screenId')">
-                                        <mat-option *ngFor="let screen of screens" [value]="screen.id">
-                                            {{ screen.name }}
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-error *ngIf="row.get('screenId')?.invalid">
-                                        <div *ngIf="getErrorRequired(row.get('screenId'))">Valore obbligatorio</div>
-                                    </mat-error>
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="projectionType">
-                            <th mat-header-cell *matHeaderCellDef> Tipo proiezione </th>
-                            <td mat-cell *matCellDef="let row">
-                                <mat-form-field style="width: 160px;" appearance="outline">
-                                    <mat-label>Tipo proiezione</mat-label>
-                                    <mat-select [formControl]="row.get('projectionType')">
-                                        <mat-option *ngFor="let projType of projTypes" [value]="projType">
-                                            {{ projType }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="language">
-                            <th mat-header-cell *matHeaderCellDef> Lingua </th>
-                            <td mat-cell *matCellDef="let row">
-                                <mat-form-field style="width: 150px;" appearance="outline">
-                                    <mat-label>Lingua</mat-label>
-                                    <input matInput [formControl]="row.get('language')">
-
-                                    <mat-error *ngIf="row.get('language')?.invalid">
-                                        <div *ngIf="getErrorRequired(row.get('language'))">Valore obbligatorio</div>
-                                    </mat-error>
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="shows">
-                            <th mat-header-cell *matHeaderCellDef> Orari spettacoli </th>
-                            <td mat-cell *matCellDef="let row">
-                                <div class="time-cell">
-
-                                    <div class="d-flex gap-1" *ngFor="let timeRow of row.get('shows').controls; let i = index;">
-                                        <mat-form-field
-                                            style="width: 100px;" appearance="outline" subscriptSizing="dynamic">
-                                            <mat-label>Orario</mat-label>
-                                            <input matInput [ngxTimepicker]="showTime"
-                                                [formControl]="timeRow.get('show')" [format]="24" />
-                                            <ngx-material-timepicker #showTime
-                                                [theme]="customTheme"></ngx-material-timepicker>
-
-                                            <mat-error *ngIf="timeRow.get('show')?.invalid">
-                                                <div *ngIf="getErrorRequired(timeRow.get('show'))">Valore obbligatorio
-                                                </div>
-                                            </mat-error>
-                                        </mat-form-field>
-
-                                        <button mat-icon-button type="button" (click)="deleteShow(row.get('shows'), i)">
-                                            <mat-icon>remove</mat-icon>
+                            <ng-container matColumnDef="date">
+                                <th mat-header-cell *matHeaderCellDef> Data </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-form-field style="width: 150px;" dayFormat appearance="outline">
+                                        <mat-label>Data</mat-label>
+                                        <input matInput [formControl]="row.get('date')" [matDatepicker]="picker">
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+    
+                                        <mat-error *ngIf="row.get('date')?.invalid">
+                                            <div *ngIf="getErrorRequired(row.get('date'))">Valore obbligatorio</div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="movie">
+                                <th mat-header-cell *matHeaderCellDef> Film </th>
+                                <td mat-cell *matCellDef="let row; let i = index;">
+                                    <mat-form-field style="width: 200px;" appearance="outline">
+                                        <mat-label>Film</mat-label>
+                                        <input matInput [formControl]="row.get('movieId')" [matAutocomplete]="autoMovie">
+                                        <mat-autocomplete #autoMovie="matAutocomplete"
+                                            [displayWith]="boundDisplayMovieAutoFn" hideSingleSelectionIndicator>
+                                            <mat-option *ngFor="let movie of filteredMovies[i] | async" [value]="movie.id">
+                                                {{ movie.name }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="row.get('movieId')?.invalid">
+                                            <div *ngIf="getErrorRequired(row.get('movieId'))">Valore obbligatorio</div>
+                                            <div
+                                                *ngIf="!getErrorRequired(row.get('movieId')) && getErrorValidOption(row.get('movieId'))">
+                                                Valore non trovato,
+                                                selezionare una delle opzioni proposte</div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="screen">
+                                <th mat-header-cell *matHeaderCellDef> Sala </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-form-field style="width: 130px;" appearance="outline">
+                                        <mat-label>Sala</mat-label>
+                                        <mat-select [formControl]="row.get('screenId')">
+                                            <mat-option *ngFor="let screen of screens" [value]="screen.id">
+                                                {{ screen.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="row.get('screenId')?.invalid">
+                                            <div *ngIf="getErrorRequired(row.get('screenId'))">Valore obbligatorio</div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="projectionType">
+                                <th mat-header-cell *matHeaderCellDef> Tipo proiezione </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-form-field style="width: 150px;" appearance="outline">
+                                        <mat-label>Tipo proiezione</mat-label>
+                                        <mat-select [formControl]="row.get('projectionType')">
+                                            <mat-option *ngFor="let projType of projTypes" [value]="projType">
+                                                {{ projType }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="language">
+                                <th mat-header-cell *matHeaderCellDef> Lingua </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-form-field style="width: 120px;" appearance="outline">
+                                        <mat-label>Lingua</mat-label>
+                                        <input matInput [formControl]="row.get('language')">
+    
+                                        <mat-error *ngIf="row.get('language')?.invalid">
+                                            <div *ngIf="getErrorRequired(row.get('language'))">Valore obbligatorio</div>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="shows">
+                                <th mat-header-cell *matHeaderCellDef> Orari spettacoli </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <div class="time-cell">
+    
+                                        <div class="d-flex gap-1" *ngFor="let timeRow of row.get('shows').controls; let i = index;">
+                                            <mat-form-field
+                                                style="width: 100px;" appearance="outline" subscriptSizing="dynamic">
+                                                <mat-label>Orario</mat-label>
+                                                <input matInput [ngxTimepicker]="showTime"
+                                                    [formControl]="timeRow.get('show')" [format]="24" />
+                                                <ngx-material-timepicker #showTime
+                                                    [theme]="customTheme"></ngx-material-timepicker>
+    
+                                                <mat-error *ngIf="timeRow.get('show')?.invalid">
+                                                    <div *ngIf="getErrorRequired(timeRow.get('show'))">Valore obbligatorio
+                                                    </div>
+                                                </mat-error>
+                                            </mat-form-field>
+    
+                                            <button mat-icon-button type="button" (click)="deleteShow(row.get('shows'), i)">
+                                                <mat-icon>remove</mat-icon>
+                                            </button>
+                                            <button *ngIf="i === row.get('shows').controls.length - 1" mat-icon-button type="button" (click)="addShow(row.get('shows'))">
+                                                <mat-icon>add</mat-icon>
+                                            </button>
+                                        </div>
+    
+                                    </div>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef> Azioni </th>
+                                <td mat-cell *matCellDef="let row; let i = index">
+                                    <div class="d-flex justify-content-center">
+                                        <button mat-icon-button type="button" color="primary" matTooltip="Salva"
+                                            [disabled]="!row.valid" (click)="onSaveClicked(i)">
+                                            <mat-icon>save</mat-icon>
                                         </button>
-                                        <button *ngIf="i === row.get('shows').controls.length - 1" mat-icon-button type="button" (click)="addShow(row.get('shows'))">
-                                            <mat-icon>add</mat-icon>
+                                        <button mat-icon-button type="button" color="primary" matTooltip="Cancella"
+                                            (click)="onCancelClicked(i)">
+                                            <mat-icon>delete</mat-icon>
                                         </button>
                                     </div>
-
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="actions">
-                            <th mat-header-cell *matHeaderCellDef> Azioni </th>
-                            <td mat-cell *matCellDef="let row; let i = index">
-                                <div class="d-flex justify-content-center">
-                                    <button mat-icon-button type="button" color="primary" matTooltip="Salva"
-                                        [disabled]="!row.valid" (click)="onSaveClicked(i)">
-                                        <mat-icon>save</mat-icon>
-                                    </button>
-                                    <button mat-icon-button type="button" color="primary" matTooltip="Cancella"
-                                        (click)="onCancelClicked(i)">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="text-center py-3" colspan="7">Nessun dato trovato.</td>
-                        </tr>
-                    </table>
+                                </td>
+                            </ng-container>
+    
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="text-center py-3" colspan="7">Nessun dato trovato.</td>
+                            </tr>
+                        </table>
+                    </div>
 
                     <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
 
