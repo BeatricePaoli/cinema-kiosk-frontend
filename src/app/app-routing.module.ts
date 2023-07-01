@@ -71,6 +71,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'cash-desk',
+    loadChildren: () =>
+      import('./feature/cash-desk/cash-desk.module').then(
+        (m) => m.CashDeskModule
+      ),
+  },
+  {
     path: '**',
     loadChildren: () =>
       import('./feature/error/error.module').then(
