@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './screen-list.component.html',
   styleUrls: ['./screen-list.component.scss']
 })
-export class ScreenListComponent implements OnChanges {
+export class ScreenListComponent implements OnChanges, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -22,12 +22,20 @@ export class ScreenListComponent implements OnChanges {
   displayedColumns: string[] = ['name', 'totalSeats', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
+  ngAfterViewInit(): void {
+    this.initTable();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['screens'] && changes['screens'].currentValue) {
-      this.dataSource = new MatTableDataSource(changes['screens'].currentValue);
-      this.dataSource.paginator = this.paginator!;
-      this.dataSource.sort = this.sort!;
+      this.initTable();
     }
+  }
+
+  initTable() {
+    this.dataSource = new MatTableDataSource(this.screens);
+    this.dataSource.paginator = this.paginator!;
+    this.dataSource.sort = this.sort!;
   }
 
   onCancelClicked(screen: any) {

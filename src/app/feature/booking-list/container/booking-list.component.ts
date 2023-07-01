@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CollapseAnimation } from 'src/app/core/animations/collapse.animation';
 
@@ -13,7 +12,6 @@ import { CollapseAnimation } from 'src/app/core/animations/collapse.animation';
 export class BookingListComponent {
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
-  @ViewChild(MatSort) sort?: MatSort;
 
   bookings: any[] = [
     {
@@ -42,7 +40,7 @@ export class BookingListComponent {
       cinema: "Two",
       projectionType: "3D",
       language: "Italiano",
-      date: "2023-06-19T22:00:00.000Z",
+      date: "2023-06-17T22:00:00.000Z",
       showId: 1,
       adultsSeats: 2,
       childrenSeats: null,
@@ -53,8 +51,8 @@ export class BookingListComponent {
       price: 9,
       movie: {
         id: 1,
-        name: "Spider-man: Across the Spiderverse",
-        img: "https://cinemaadriano.it/images/locandine_film/spider.jpg"
+        name: "Elemental",
+        img: "https://cinemaadriano.it/images/locandine_film/elemental.jpg"
       },
       barcode: 'assets/mocks/barcode.gif'
     },
@@ -63,7 +61,7 @@ export class BookingListComponent {
       cinema: "Two",
       projectionType: "3D",
       language: "Italiano",
-      date: "2023-06-19T22:00:00.000Z",
+      date: "2023-06-15T22:00:00.000Z",
       showId: 1,
       adultsSeats: 1,
       childrenSeats: null,
@@ -93,7 +91,6 @@ export class BookingListComponent {
   initTable() {
     this.dataSource = new MatTableDataSource(this.bookings);
     this.dataSource.paginator = this.paginator!;
-    this.dataSource.sort = this.sort!;
   }
 
 }

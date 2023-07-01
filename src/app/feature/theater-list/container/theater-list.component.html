@@ -16,12 +16,12 @@
                     </ng-container>
     
                     <ng-container matColumnDef="address">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Indirizzo </th>
+                        <th mat-header-cell *matHeaderCellDef> Indirizzo </th>
                         <td mat-cell *matCellDef="let row"> {{ row.address.street }}, {{ row.address.number }} - {{ row.address.city }} </td>
                     </ng-container>
     
                     <ng-container matColumnDef="screens">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> N° schermi </th>
+                        <th mat-header-cell *matHeaderCellDef> N° schermi </th>
                         <td mat-cell *matCellDef="let row"> {{ row.screens.length }} </td>
                     </ng-container>
     
