@@ -15,8 +15,16 @@ export class BookingComponent {
     language: "Italiano",
     date: "2023-06-19T22:00:00.000Z",
     showId: 1,
-    adultsSeats: 1,
-    childrenSeats: null,
+    tickets: [
+      {
+        name: "Adulti",
+        quantity: 1
+      },
+      {
+        name: "Bambini",
+        quantity: 1
+      }
+    ],
     seats: [
       "A-3"
     ],

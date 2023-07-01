@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import * as _moment from 'moment';
 import { Observable, Subscription, map, startWith } from 'rxjs';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
-import { MultipleValidator } from 'src/app/core/validators/multiple.validator';
 
 const moment = _moment;
 
@@ -62,10 +61,18 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     }
   ];
 
-  tickets: any = {
-    adults: 9,
-    children: 7
-  };
+  ticketsList: any[] = [
+    {
+      id: 1,
+      name: "Adulti",
+      price: 9
+    },
+    {
+      id: 1,
+      name: "Bambini",
+      price: 7
+    },
+  ]
 
   bookingForm = new FormGroup({
     movieId: new FormControl<number | null>(null, Validators.required),
@@ -81,10 +88,9 @@ export class BookingFormComponent implements OnInit, OnDestroy {
         showId: new FormControl<number | null>(null, Validators.required),
       }),
       new FormGroup({
-        adultsSeats: new FormControl<number | null>(null),
-        childrenSeats: new FormControl<number | null>(null),
+        tickets: new FormArray([], Validators.minLength(1)),
         seats: new FormControl([], Validators.minLength(1))
-      }, { validators: MultipleValidator.atLeastOneRequired('adultsSeats', 'childrenSeats') }),
+      }),
     ]),
   });
 
@@ -144,16 +150,8 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     return this.showForm.get('showId');
   }
 
-  get adultsSeats() {
-    return this.seatForm.get('adultsSeats');
-  }
-
-  get childrenSeats() {
-    return this.seatForm.get('childrenSeats');
-  }
-
-  get seatsErrorRequired() {
-    return this.seatForm?.errors ? this.seatForm?.errors!['atLeastOneRequired'] : null;
+  get tickets() {
+    return (this.seatForm.get('tickets') as FormArray);
   }
 
   get seats() {
@@ -179,22 +177,25 @@ export class BookingFormComponent implements OnInit, OnDestroy {
       map(value => this.autoCompletefilter(value || '', this.cinemas)),
     );
 
-    this.subs.push(this.adultsSeats!.valueChanges.subscribe(value => {
-      const { childrenSeats, seats } = this.seatForm.value;
-      this.selectedSeatsTotalError = value + childrenSeats !== seats.length;
+    this.addTicketsForm();
+  }
 
-      if (this.tickets) {
-        this.price = value * this.tickets.adults + childrenSeats * this.tickets.children;
-      }
-    }));
+  addTicketsForm() {
+    this.ticketsList.forEach(ticket => {
+      this.tickets!.push(
+        new FormGroup({
+          name: new FormControl(ticket.name, Validators.required),
+          price: new FormControl(ticket.price, Validators.required),
+          quantity: new FormControl(0),
+        })
+      );
+    });
 
-    this.subs.push(this.childrenSeats!.valueChanges.subscribe(value => {
-      const { adultsSeats, seats } = this.seatForm.value;
-      this.selectedSeatsTotalError = adultsSeats + value !== seats.length;
+    this.subs.push(this.tickets.valueChanges.subscribe((values: any[]) => {
+      this.price = values.reduce((sum, value) => sum + (value.price * value.quantity), 0);
 
-      if (this.tickets) {
-        this.price = adultsSeats * this.tickets.adults + value * this.tickets.children;
-      }
+      const { seats } = this.seatForm.value;
+      this.selectedSeatsTotalError = seats.length !== values.reduce((sum, value) => sum + value.quantity, 0);
     }));
   }
 
@@ -244,13 +245,25 @@ export class BookingFormComponent implements OnInit, OnDestroy {
       seats: seats
     });
 
-    const { adultsSeats, childrenSeats } = this.seatForm.value;
-    this.selectedSeatsTotalError = adultsSeats + childrenSeats !== seats.length;
+    const tickets = this.seatForm.value.tickets as any[];
+    this.selectedSeatsTotalError = seats.length !== tickets.reduce((sum, value) => sum + value.quantity, 0);
   }
 
   getShowStartTime(showId: number) {
     const filtered = this.shows.filter(s => s.id === showId);
     return filtered.length > 0 ? filtered[0].startTime : '';
+  }
+
+  getTicketsControls() {
+    return this.tickets.controls as FormControl[];
+  }
+
+  getTicketProperty(fc: FormControl, prop: string) {
+    return fc.get(prop)! as FormControl;
+  }
+
+  seatErrorRequired() {
+    return this.tickets.controls.some(t => t.dirty) && this.tickets.controls.every(t => t.value.quantity === 0);
   }
 
   onSubmit() {

@@ -16,15 +16,12 @@
                 <span>{{ booking?.date | date: 'dd/MM/YYYY' }} - {{ booking?.startTime }}</span>
             </div>
 
-            <div *ngIf="booking?.adultsSeats" class="d-flex justify-content-between">
-                <span class="fw-bold">Adulti</span>
-                <span>{{ booking?.adultsSeats }}</span>
-            </div>
-
-            <div *ngIf="booking?.childrenSeats" class="d-flex justify-content-between">
-                <span class="fw-bold">Bambini</span>
-                <span>{{ booking?.childrenSeats }}</span>
-            </div>
+            <ng-container *ngFor="let ticket of booking?.tickets">
+                <div *ngIf="ticket.quantity" class="d-flex justify-content-between">
+                    <span class="fw-bold">{{ ticket.name }}</span>
+                    <span>{{ ticket.quantity }}</span>
+                </div>
+            </ng-container>
 
             <div class="d-flex justify-content-between">
                 <span class="fw-bold">Posti</span>

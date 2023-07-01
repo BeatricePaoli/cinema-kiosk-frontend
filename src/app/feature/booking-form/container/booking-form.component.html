@@ -113,21 +113,16 @@
                     <mat-step formGroupName="2" [stepControl]="seatForm">
                         <ng-template matStepLabel>Scegli i posti</ng-template>
 
-                        <div class="d-flex justify-content-center align-items-center pt-3 gap-4 flex-wrap flex-md-nowrap">
+                        <div class="d-flex justify-content-center align-items-center pt-3 gap-4 flex-wrap">
 
-                            <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
-                                <mat-label>Adulti</mat-label>
-                                <input matInput formControlName="adultsSeats" type="number">
-                            </mat-form-field>
-
-                            <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
-                                <mat-label>Bambini</mat-label>
-                                <input matInput formControlName="childrenSeats" type="number">
+                            <mat-form-field *ngFor="let ticket of getTicketsControls()" class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
+                                <mat-label>{{ ticket.get('name')?.value }}</mat-label>
+                                <input matInput [formControl]="getTicketProperty(ticket, 'quantity')" type="number" min="0">
                             </mat-form-field>
 
                         </div>
 
-                        <div *ngIf="seatsErrorRequired && (adultsSeats!.dirty || childrenSeats!.dirty)"
+                        <div *ngIf="seatErrorRequired()"
                             class="mat-mdc-form-field-error pt-2">
                             Selezionare almeno un biglietto
                         </div>
@@ -143,7 +138,7 @@
                         </div>
 
                         <button mat-raised-button matStepperNext color="primary" type="button"
-                            [disabled]="!seatForm.valid || selectedSeatsTotalError">
+                            [disabled]="!seatForm.valid || selectedSeatsTotalError || price === 0">
                             Avanti
                         </button>
                     </mat-step>
