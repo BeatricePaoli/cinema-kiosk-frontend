@@ -1,0 +1,42 @@
+@use '@angular/material' as mat;
+
+@import "material";
+
+.cash-desk-height {
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.show-container {
+    padding: 10px 15px;
+    border-left: 5px solid transparent;
+    cursor: pointer;
+
+    &.active {
+        border-left: 5px solid mat.get-color-from-palette($angular-primary, 500);
+        background-color: #fff;
+    }
+
+    .blob {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        flex-shrink: 0;
+
+        &.green {
+            background-color: #acf143;
+        }
+
+        &.orange {
+            background-color: #ffbe48;
+        }
+
+        &.red {
+            background-color: #ff2020;
+        }
+    }
+}
+
+.bg-grey {
+    background-color: #fafafa;
+}
