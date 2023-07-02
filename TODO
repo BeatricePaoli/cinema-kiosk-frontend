@@ -1,21 +1,12 @@
-Funzionalità Seat Editor
-- (optional) Selezione tipo di labeling: lettere, numeri, asc, desc, alternazione pari/dispari ...
+Funzionalità Seat Editor:
+- (optional) Selezione tipo di labeling (lettere, numeri, asc, desc, alternazione pari/dispari ...)
 - (optional) Touch gestures
 
-Fix/Aggiunte
-- sistemare form biglietti (variabili)
-- legenda view mode
-
-Pagine da fare
-- ticket screen
-- booking-list
+Pagine da fare:
 - user?
-
 - login
 
-- theater-list
-- theater
-- screen
-- scheduling
-
-- cashier page
+Step successivi:
+- backend
+- azioni, service
+- profilazione
