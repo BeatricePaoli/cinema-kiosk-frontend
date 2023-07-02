@@ -33,7 +33,8 @@ export class TheaterComponent implements OnInit {
               street: "Via Pinco Pallino",
               number: "8",
               city: "Firenze",
-              country: "Italia"
+              country: "Italia",
+              zipCode: 10000
             },
             screens: [
               {
