@@ -41,7 +41,12 @@
             "allowedCommonJsDependencies": [
               "fabric",
               "moment"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/scss"
+              ]
+            }
           },
           "configurations": {
             "production": {

@@ -1,13 +1,13 @@
 <div class="d-flex overflow-hidden">
 
     <div *ngIf="creativeMode" class="d-flex flex-column justify-content-center bg-light">
-        <button mat-icon-button matTooltip="Seleziona oggetti" [ngClass]="{'text-primary-500': mode === 'SELECT'}"
+        <button mat-icon-button matTooltip="Seleziona oggetti" [ngClass]="{'text-primary-A100': mode === 'SELECT'}"
             (click)="onSelectModeClick()">
             <span class="material-symbols-outlined">
                 arrow_selector_tool
             </span>
         </button>
-        <button mat-icon-button matTooltip="Aggiungi posti" [ngClass]="{'text-primary-500': mode === 'ADD'}"
+        <button mat-icon-button matTooltip="Aggiungi posti" [ngClass]="{'text-primary-A100': mode === 'ADD'}"
             (click)="onAddModeClick()">
             <span class="material-symbols-outlined">
                 library_add
