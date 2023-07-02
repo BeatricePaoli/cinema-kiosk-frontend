@@ -6,16 +6,18 @@
                     <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
                         <mat-label>Filtra per nome</mat-label>
                         <input matInput formControlName="movie">
-                        <mat-icon matSuffix matTooltip="Cerca" class="cursor-pointer" (click)="onSubmit()">search</mat-icon>
+                        <mat-icon matSuffix matTooltip="Cerca" class="cursor-pointer"
+                            (click)="onSubmit()">search</mat-icon>
                     </mat-form-field>
-                    <button mat-icon-button matTooltip="Filtri aggiuntivi" matBadge="2"
-                        matBadgeSize="small" matBadgePosition="after" matBadgeColor="accent"
-                        (click)="onToggleAccordion()">
+                    <button mat-icon-button matTooltip="Filtri aggiuntivi" [matBadge]="additionalFiltersTot"
+                        [matBadgeHidden]="!additionalFiltersTot" matBadgeSize="small" matBadgePosition="after"
+                        matBadgeColor="accent" (click)="onToggleAccordion()">
                         <mat-icon>tune</mat-icon>
                     </button>
                 </div>
 
-                <div [@slideInOut]="animationState" class="d-flex justify-content-center align-items-center pt-3 gap-3 flex-wrap">
+                <div [@slideInOut]="animationState"
+                    class="d-flex justify-content-center align-items-center pt-3 gap-3 flex-wrap">
                     <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
                         <mat-label>Città</mat-label>
                         <input matInput formControlName="city" [matAutocomplete]="autoCity">
@@ -38,13 +40,14 @@
 
                     <div>
                         <button mat-raised-button class="me-3" type="reset">Reset</button>
-                        <button mat-raised-button color="primary" type="submit" [disabled]="!searchForm.valid">Filtra</button>
+                        <button mat-raised-button color="primary" type="submit"
+                            [disabled]="!searchForm.valid">Filtra</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-    
+
     <div class="row">
         <div class="col">
             <h3>Al Cinema</h3>

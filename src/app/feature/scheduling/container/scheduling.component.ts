@@ -150,7 +150,6 @@ export class SchedulingComponent implements OnInit {
         screenId: new FormControl(scheduling ? scheduling.screen.id : null, Validators.required),
         projectionType: new FormControl(scheduling ? scheduling.projectionType : ProjectionType.is2D, Validators.required),
         language: new FormControl(scheduling ? scheduling.language : null, Validators.required),
-        // shows: new FormControl(scheduling ? scheduling.shows : [], Validators.minLength(1)),
         shows: new FormArray(scheduling
           ? scheduling.shows.map((s: any) => {
             return new FormGroup({

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, Subscription, map, startWith } from 'rxjs';
 import { SlideInOutAnimation } from 'src/app/core/animations/slide-in-out.animation';
 
 @Component({
@@ -16,6 +16,8 @@ export class MovieListComponent {
     city: new FormControl(''),
     cinema: new FormControl('')
   });
+
+  additionalFiltersTot: number = 0;
 
   cities: string[] = ['One', 'Two', 'Three'];
   filteredCities: Observable<string[]> = new Observable<string[]>;
@@ -93,6 +95,8 @@ export class MovieListComponent {
     ]
   };
 
+  subs: Subscription[] = [];
+
   ngOnInit() {
     this.filteredCities = this.searchForm.get('city')!.valueChanges.pipe(
       startWith(''),
@@ -103,6 +107,26 @@ export class MovieListComponent {
       startWith(''),
       map(value => this.autoCompletefilter(value || '', this.cinemas)),
     );
+
+    this.subs.push(this.searchForm.get('city')!.valueChanges.subscribe((value: any) => {
+      if (value && value != '') {
+        this.additionalFiltersTot += 1;
+      } else {
+        this.additionalFiltersTot -= 1;
+      }
+    }));
+
+    this.subs.push(this.searchForm.get('cinema')!.valueChanges.subscribe((value: any) => {
+      if (value && value != '') {
+        this.additionalFiltersTot += 1;
+      } else {
+        this.additionalFiltersTot -= 1;
+      }
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   private autoCompletefilter(value: string, list: string[]): string[] {
