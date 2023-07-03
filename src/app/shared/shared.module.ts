@@ -17,8 +17,8 @@ import { I18nPaginator } from '../core/services/i18n-paginator.service';
 import { ActionModalComponent } from './components/action-modal/action-modal.component';
 import { BookingSummaryComponent } from './components/booking-summary/booking-summary.component';
 import { SeatsEditorComponent } from './components/seats-editor/seats-editor.component';
-import { DayFormatDatepickerDirective } from './directives/day-format-datepicker.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { DayFormatDatepickerDirective } from './directives/day-format-datepicker.directive';
 
 const IMPORTS = [
   CommonModule,

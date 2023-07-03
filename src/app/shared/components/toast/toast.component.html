@@ -1,0 +1,11 @@
+<div *ngFor="let toast of toasts; let i = index" class="toast-wrapper" [ngClass]="getStatusClass(toast)"
+    [class.hide]="!toast.show">
+    <div><mat-icon>{{ getMatIcon(toast) }}</mat-icon></div>
+
+    <div class="flex-grow-1">
+        <div class="fw-bold">{{ getTitle(toast) }}</div>
+        <div>{{ toast.message }}</div>
+    </div>
+
+    <mat-icon class="cursor-pointer close" (click)="dismiss(i)">close</mat-icon>
+</div>
