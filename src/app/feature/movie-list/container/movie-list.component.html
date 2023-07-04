@@ -1,3 +1,6 @@
+<app-toast [toast]="toast$ | async"></app-toast>
+<app-spinner *ngIf="isLoading$ | async"></app-spinner>
+
 <div class="container py-5">
     <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
         <div class="row mb-5">
@@ -9,9 +12,9 @@
                         <mat-icon matSuffix matTooltip="Cerca" class="cursor-pointer"
                             (click)="onSubmit()">search</mat-icon>
                     </mat-form-field>
-                    <button mat-icon-button matTooltip="Filtri aggiuntivi" [matBadge]="additionalFiltersTot"
-                        [matBadgeHidden]="!additionalFiltersTot" matBadgeSize="small" matBadgePosition="after"
-                        matBadgeColor="accent" (click)="onToggleAccordion()">
+                    <button mat-icon-button type="button" matTooltip="Filtri aggiuntivi"
+                        [matBadge]="additionalFiltersTot" [matBadgeHidden]="!additionalFiltersTot" matBadgeSize="small"
+                        matBadgePosition="after" matBadgeColor="accent" (click)="onToggleAccordion()">
                         <mat-icon>tune</mat-icon>
                     </button>
                 </div>
@@ -48,33 +51,37 @@
         </div>
     </form>
 
-    <div class="row">
-        <div class="col">
-            <h3>Al Cinema</h3>
+    <ng-container *ngIf="!(isLoading$ | async)">
+        <div class="row">
+            <div class="col">
+                <h3>Al Cinema</h3>
 
-            <div class="d-flex justify-content-center">
-                <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
-                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie.id]" class="slide px-3">
-                        <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name">
-                        <h6 class="text-center">{{ movie.name }}</h6>
-                    </div>
-                </ngx-slick-carousel>
+                <div class="d-flex justify-content-center">
+                    <ngx-slick-carousel class="py-4" #slickCurrent="slick-carousel" [config]="slideConfig">
+                        <div ngxSlickItem *ngFor="let movie of currentMovies$ | async" [routerLink]="['./', movie.id]"
+                            class="slide px-3">
+                            <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name">
+                            <h6 class="text-center">{{ movie.name }}</h6>
+                        </div>
+                    </ngx-slick-carousel>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col">
-            <h3>Prossimamente</h3>
+        <div class="row">
+            <div class="col">
+                <h3>Prossimamente</h3>
 
-            <div class="d-flex justify-content-center">
-                <ngx-slick-carousel class="py-4" #slickModal="slick-carousel" [config]="slideConfig">
-                    <div ngxSlickItem *ngFor="let movie of movies" [routerLink]="['./', movie.id]" class="slide px-3">
-                        <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name" />
-                        <h6 class="text-center">{{ movie.name }}</h6>
-                    </div>
-                </ngx-slick-carousel>
+                <div class="d-flex justify-content-center">
+                    <ngx-slick-carousel class="py-4" #slickFuture="slick-carousel" [config]="slideConfig">
+                        <div ngxSlickItem *ngFor="let movie of futureMovies$ | async" [routerLink]="['./', movie.id]"
+                            class="slide px-3">
+                            <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name" />
+                            <h6 class="text-center">{{ movie.name }}</h6>
+                        </div>
+                    </ngx-slick-carousel>
+                </div>
             </div>
         </div>
-    </div>
+    </ng-container>
 </div>

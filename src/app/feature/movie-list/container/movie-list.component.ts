@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable, Subscription, map, startWith } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription, map, of, startWith } from 'rxjs';
 import { SlideInOutAnimation } from 'src/app/core/animations/slide-in-out.animation';
+import { Movie, MovieFilter } from 'src/app/core/models/movie';
+import { TheaterFilter } from 'src/app/core/models/theater';
+import { Toast } from 'src/app/core/models/toast';
+import { MovieListActions } from '../store/actions/movie-list.actions';
+import * as MovieListSelectors from '../store/selectors/movie-list.selectors';
 
 @Component({
   selector: 'app-movie-list',
@@ -19,51 +25,21 @@ export class MovieListComponent {
 
   additionalFiltersTot: number = 0;
 
-  cities: string[] = ['One', 'Two', 'Three'];
+  theaterFilter: TheaterFilter | null = null;
+
+  cities: string[] = [];
   filteredCities: Observable<string[]> = new Observable<string[]>;
 
-  cinemas: string[] = ['One', 'Two', 'Three'];
+  cinemas: string[] = [];
   filteredCinemas: Observable<string[]> = new Observable<string[]>;
 
   animationState = 'out';
 
-  movies: any[] = [
-    {
-      id: 1,
-      name: "Spider-man: Across the Spiderverse",
-      img: "https://cinemaadriano.it/images/locandine_film/spider.jpg"
-    },
-    {
-      id: 1,
-      name: "Transformers. il Risveglio",
-      img: "https://cinemaadriano.it/images/locandine_film/transformers.jpg"
-    },
-    {
-      id: 1,
-      name: "La sirenetta",
-      img: "https://cinemaadriano.it/images/locandine_film/sirenetta.jpg"
-    },
-    {
-      id: 1,
-      name: "Blueback",
-      img: "https://cinemaadriano.it/images/locandine_film/blue.jpg"
-    },
-    {
-      id: 1,
-      name: "The Flash",
-      img: "https://cinemaadriano.it/images/locandine_film/flash.jpg"
-    },
-    {
-      id: 1,
-      name: "Elemental",
-      img: "https://cinemaadriano.it/images/locandine_film/elemental.jpg"
-    },
-    {
-      id: 1,
-      name: "Indiana Jones e il Quadrante del Destino",
-      img: "https://cinemaadriano.it/images/locandine_film/indiana.jpg"
-    }
-  ];
+  currentMovies$: Observable<Movie[]> = of([]);
+  futureMovies$: Observable<Movie[]> = of([]);
+
+  isLoading$: Observable<boolean> = of(false);
+  toast$: Observable<Toast | null> = of(null);
 
   slideConfig = {
     slidesToShow: 5,
@@ -97,7 +73,35 @@ export class MovieListComponent {
 
   subs: Subscription[] = [];
 
+  constructor(private store: Store) { }
+
   ngOnInit() {
+    // this.store.dispatch(MovieListActions.setIsLoading({ isLoading: true }));
+    this.store.dispatch(MovieListActions.loadMovieList({ filter: {} }));
+    this.store.dispatch(MovieListActions.loadFilter());
+
+    this.currentMovies$ = this.store.select(MovieListSelectors.selectCurrentMovies);
+    this.futureMovies$ = this.store.select(MovieListSelectors.selectFutureMovies);
+    this.isLoading$ = this.store.select(MovieListSelectors.selectIsLoading);
+    this.toast$ = this.store.select(MovieListSelectors.selectToast);
+
+    this.subs.push(this.store.select(MovieListSelectors.selectTheaterFilter).subscribe(filter => {
+      if (filter) {
+        this.setupSearchFilters(filter);
+      }
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+  }
+
+  private setupSearchFilters(filter: TheaterFilter) {
+    this.theaterFilter = filter;
+    this.cities = filter.cities.map(c => c.name);
+    this.cinemas = [];
+    filter.cities.forEach(city => this.cinemas = this.cinemas.concat(city.theaters));
+
     this.filteredCities = this.searchForm.get('city')!.valueChanges.pipe(
       startWith(''),
       map(value => this.autoCompletefilter(value || '', this.cities)),
@@ -108,25 +112,20 @@ export class MovieListComponent {
       map(value => this.autoCompletefilter(value || '', this.cinemas)),
     );
 
-    this.subs.push(this.searchForm.get('city')!.valueChanges.subscribe((value: any) => {
-      if (value && value != '') {
-        this.additionalFiltersTot += 1;
-      } else {
-        this.additionalFiltersTot -= 1;
-      }
+    this.subs.push(this.searchForm.get('city')!.valueChanges.subscribe((value: string | null) => {
+      const valid = this.theaterFilter?.cities.find(c => c.name === value);
+      this.cinemas = valid ? valid.theaters : [];
+      
+      // Trigger di valueChanges per aggiornare filteredCinemas
+      this.searchForm.patchValue({
+        cinema: this.searchForm.get('cinema')?.value
+      });
     }));
 
-    this.subs.push(this.searchForm.get('cinema')!.valueChanges.subscribe((value: any) => {
-      if (value && value != '') {
-        this.additionalFiltersTot += 1;
-      } else {
-        this.additionalFiltersTot -= 1;
-      }
-    }));
-  }
-
-  ngOnDestroy(): void {
-    this.subs.forEach(s => s.unsubscribe());
+    this.subs.push(this.searchForm.valueChanges.subscribe(values => {
+      const { city, cinema } = values; 
+      this.additionalFiltersTot = (city && city !== '' ? 1 : 0) + (cinema && cinema !== '' ? 1 : 0);
+    }))
   }
 
   private autoCompletefilter(value: string, list: string[]): string[] {
@@ -139,6 +138,12 @@ export class MovieListComponent {
   }
 
   onSubmit() {
-    console.log(this.searchForm.value);
+    const values = this.searchForm.value;
+    const filter: MovieFilter = {
+      movie: values.movie ?? undefined,
+      city: values.city ?? undefined,
+      cinema: values.cinema ?? undefined,
+    };
+    this.store.dispatch(MovieListActions.loadMovieList({ filter }));
   }
 }
