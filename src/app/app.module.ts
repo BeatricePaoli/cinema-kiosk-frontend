@@ -12,7 +12,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CustomSerializer } from './core/router/custom-route-serializer';
 import { HeaderModule } from './feature/header/header.module';
-import { ToastComponent } from './shared/components/toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +39,6 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     HeaderModule,
-    ToastComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

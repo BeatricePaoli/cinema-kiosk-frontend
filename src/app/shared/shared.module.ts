@@ -19,6 +19,7 @@ import { BookingSummaryComponent } from './components/booking-summary/booking-su
 import { SeatsEditorComponent } from './components/seats-editor/seats-editor.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { DayFormatDatepickerDirective } from './directives/day-format-datepicker.directive';
+import { ToastComponent } from './components/toast/toast.component';
 
 const IMPORTS = [
   CommonModule,
@@ -47,6 +48,7 @@ const COMPONENTS = [
   ActionModalComponent,
   BookingSummaryComponent,
   SpinnerComponent,
+  ToastComponent,
 ]
 
 @NgModule({

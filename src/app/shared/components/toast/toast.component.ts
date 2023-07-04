@@ -1,6 +1,4 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { Toast, ToastStatus } from 'src/app/core/models/toast';
 
 export interface ToastInternal extends Toast {
@@ -11,8 +9,6 @@ export interface ToastInternal extends Toast {
   selector: 'app-toast',
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.scss'],
-  standalone: true,
-  imports: [CommonModule, MatIconModule],
 })
 export class ToastComponent {
 
