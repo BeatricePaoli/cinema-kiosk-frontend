@@ -77,6 +77,20 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "mock": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.mock.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -89,6 +103,9 @@
             },
             "development": {
               "browserTarget": "cinema-kiosk:build:development"
+            },
+            "mock": {
+              "browserTarget": "cinema-kiosk:build:mock"
             }
           },
           "defaultConfiguration": "development"

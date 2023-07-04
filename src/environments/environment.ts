@@ -5,6 +5,7 @@ const baseUrl = 'http://localhost:8081/api';
 export const environment = {
   ...commonEnvironment,
   production: false,
+  mock: false,
 
   apiUrl: baseUrl,
   adminApiUrl: baseUrl + '/admin',
