@@ -8,7 +8,6 @@ export const MovieListActions = createActionGroup({
     'Load MovieList': props<{ filter: MovieFilter }>(),
     'Load MovieList Success': props<{ response: MovieSearchResponse }>(),
     'Load MovieList Failure': emptyProps(),
-    // 'Set IsLoading': props<{ isLoading: boolean }>(),
     'Load Filter': emptyProps(),
     'Load Filter Success': props<{ response: TheaterFilter }>(),
     'Load Filter Failure': emptyProps(),

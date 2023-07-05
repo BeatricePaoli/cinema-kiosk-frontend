@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription, map, of, startWith } from 'rxjs';
@@ -15,7 +15,7 @@ import * as MovieListSelectors from '../store/selectors/movie-list.selectors';
   styleUrls: ['./movie-list.component.scss'],
   animations: [SlideInOutAnimation]
 })
-export class MovieListComponent {
+export class MovieListComponent implements OnInit, OnDestroy {
 
   searchForm = new FormGroup({
     movie: new FormControl(''),
@@ -76,7 +76,6 @@ export class MovieListComponent {
   constructor(private store: Store) { }
 
   ngOnInit() {
-    // this.store.dispatch(MovieListActions.setIsLoading({ isLoading: true }));
     this.store.dispatch(MovieListActions.loadMovieList({ filter: {} }));
     this.store.dispatch(MovieListActions.loadFilter());
 

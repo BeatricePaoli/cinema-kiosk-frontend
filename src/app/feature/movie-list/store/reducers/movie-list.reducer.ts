@@ -48,23 +48,15 @@ export const reducer = createReducer(
       isLoading: false,
     };
   }),
-  // on(MovieListActions.setIsLoading, (state, { isLoading }) => {
-  //   return {
-  //     ...state,
-  //     isLoading,
-  //   };
-  // }),
   on(MovieListActions.loadFilter, (state) => {
     return {
       ...state,
-      // isLoading: true,
     }
   }),
   on(MovieListActions.loadFilterSuccess, (state, { response }) => {
     return {
       ...state,
       filter: response,
-      // isLoading: false,
     }
   }),
   on(MovieListActions.loadFilterFailure, (state) => {
@@ -74,7 +66,6 @@ export const reducer = createReducer(
         message: "Errore durante il recupero dei filtri.",
         status: ToastStatus.ERROR,
       },
-      // isLoading: false,
     };
   }),
 );
