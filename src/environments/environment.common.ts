@@ -3,5 +3,6 @@ export const commonEnvironment = {
     mock: false,
 
     movies: '/movies',
+    movie: '/movies/{id}',
     theaterFilter: '/theater/filter',
 };

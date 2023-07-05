@@ -13,4 +13,15 @@ export interface Movie {
     id: string;
     name: string;
     img: string;
+    releaseDate: Date;
+    duration: number;
+    score: number;
+    genres: string[];
+    plot: string;
+    cast: Actor[];
+}
+
+export interface Actor {
+    name: string;
+    img: string;
 }

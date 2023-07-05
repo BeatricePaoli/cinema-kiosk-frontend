@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, delay } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MovieFilter, MovieSearchResponse } from '../../models/movie';
+import { Movie, MovieFilter, MovieSearchResponse } from '../../models/movie';
 import { UrlCreator } from '../url-creator';
 
 @Injectable({
@@ -15,7 +15,13 @@ export class MovieService {
   searchMovies(filter: MovieFilter): Observable<MovieSearchResponse> {
     let url = environment.movies;
     url = UrlCreator.of(url).createUrl();
-    return this.http.post<MovieSearchResponse>(url, filter).pipe(delay(1000));
+    return this.http.post<MovieSearchResponse>(url, filter);
+  }
+
+  getMovie(id: number): Observable<Movie> {
+    let url = environment.movie;
+    url = UrlCreator.of(url).addPathVariable('id', id).createUrl();
+    return this.http.get<Movie>(url);
   }
 
 }
