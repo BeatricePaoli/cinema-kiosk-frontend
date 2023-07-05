@@ -78,11 +78,16 @@ const routes: Routes = [
       ),
   },
   {
-    path: '**',
+    path: 'error',
     loadChildren: () =>
       import('./feature/error/error.module').then(
         (m) => m.ErrorModule
       ),
+  },
+  {
+    path: '**',
+    redirectTo: 'error',
+    pathMatch: 'full',
   },
 ];
 
