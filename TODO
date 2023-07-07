@@ -2,6 +2,15 @@ Funzionalità Seat Editor:
 - (optional) Selezione tipo di labeling (lettere, numeri, asc, desc, alternazione pari/dispari ...)
 - (optional) Touch gestures
 
+Funzionalità Cashier Page
+- lettura barcode
+
+Funzionalità Movie List
+- paginazione?
+
+Funzionalità generali
+- migliorare schermate d'errore ovunque
+
 Pagine da fare:
 - user?
 - login
