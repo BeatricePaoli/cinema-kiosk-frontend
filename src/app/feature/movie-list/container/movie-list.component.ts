@@ -8,6 +8,7 @@ import { TheaterFilter } from 'src/app/core/models/theater';
 import { Toast } from 'src/app/core/models/toast';
 import { MovieListActions } from '../store/actions/movie-list.actions';
 import * as MovieListSelectors from '../store/selectors/movie-list.selectors';
+import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -35,8 +36,8 @@ export class MovieListComponent implements OnInit, OnDestroy {
 
   animationState = 'out';
 
-  currentMovies$: Observable<Movie[]> = of([]);
-  futureMovies$: Observable<Movie[]> = of([]);
+  currentMovies: Movie[] = [];
+  futureMovies: Movie[] = [];
 
   isLoading$: Observable<boolean> = of(false);
   toast$: Observable<Toast | null> = of(null);
@@ -44,7 +45,6 @@ export class MovieListComponent implements OnInit, OnDestroy {
   slideConfig = {
     slidesToShow: 5,
     swipeToSlide: true,
-    lazyLoad: 'ondemand', // TODO: check se funziona (non sembra, generare thumbnail a backend) + implementare vero lazy load array
     dots: false,
     infinite: false,
     prevArrow: '<img class="slick-left" src="assets/images/icons/chevron_left.svg">',
@@ -73,14 +73,29 @@ export class MovieListComponent implements OnInit, OnDestroy {
 
   subs: Subscription[] = [];
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private imgSanitizer: ImgSanitizerService) { }
 
   ngOnInit() {
     this.store.dispatch(MovieListActions.loadMovieList({ filter: {} }));
     this.store.dispatch(MovieListActions.loadFilter());
 
-    this.currentMovies$ = this.store.select(MovieListSelectors.selectCurrentMovies);
-    this.futureMovies$ = this.store.select(MovieListSelectors.selectFutureMovies);
+    this.subs.push(this.store.select(MovieListSelectors.selectCurrentMovies).subscribe(movies => {
+      this.currentMovies = movies.map(m => {
+        return {
+          ...m,
+          img: this.imgSanitizer.sanitizeImg(m.img.toString()),
+        };
+      });
+    }));
+    this.subs.push(this.store.select(MovieListSelectors.selectFutureMovies).subscribe(movies => {
+      this.futureMovies = movies.map(m => {
+        return {
+          ...m,
+          img: this.imgSanitizer.sanitizeImg(m.img.toString()),
+        };
+      });
+    }));
+
     this.isLoading$ = this.store.select(MovieListSelectors.selectIsLoading);
     this.toast$ = this.store.select(MovieListSelectors.selectToast);
 

@@ -58,9 +58,9 @@
 
                 <div class="d-flex justify-content-center">
                     <ngx-slick-carousel class="py-4" #slickCurrent="slick-carousel" [config]="slideConfig">
-                        <div ngxSlickItem *ngFor="let movie of currentMovies$ | async" [routerLink]="['./', movie.id]"
+                        <div ngxSlickItem *ngFor="let movie of currentMovies" [routerLink]="['./', movie.id]"
                             class="slide px-3">
-                            <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name">
+                            <img [src]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name">
                             <h6 class="text-center">{{ movie.name }}</h6>
                         </div>
                     </ngx-slick-carousel>
@@ -74,9 +74,9 @@
 
                 <div class="d-flex justify-content-center">
                     <ngx-slick-carousel class="py-4" #slickFuture="slick-carousel" [config]="slideConfig">
-                        <div ngxSlickItem *ngFor="let movie of futureMovies$ | async" [routerLink]="['./', movie.id]"
+                        <div ngxSlickItem *ngFor="let movie of futureMovies" [routerLink]="['./', movie.id]"
                             class="slide px-3">
-                            <img [attr.data-lazy]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name" />
+                            <img [src]="movie.img" class="w-100 mb-3 rounded-3" [alt]="movie.name" />
                             <h6 class="text-center">{{ movie.name }}</h6>
                         </div>
                     </ngx-slick-carousel>

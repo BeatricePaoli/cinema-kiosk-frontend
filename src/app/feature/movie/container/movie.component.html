@@ -21,7 +21,7 @@
                     <div class="d-sm-flex justify-content-between">
                         <h2 class="fw-bold flex-grow-1">{{ movie.name }}</h2>
 
-                        <div class="py-4 px-2 position-fixed bottom-0 w-100 start-0 end-0 z-3 book-btn-desktop">
+                        <div *ngIf="showBookingBtn()" class="py-4 px-2 position-fixed bottom-0 w-100 start-0 end-0 z-3 book-btn-desktop">
                             <button mat-raised-button color="accent" class="w-100" [routerLink]="['/booking-form', movie.id]">
                                 Prenota
                             </button>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="text-center">
                             <h6 class="fw-bold">Durata</h6>
-                            <div>{{ movie.duration }} min</div>
+                            <div>{{ movie.durationMins }} min</div>
                         </div>
                         <div class="text-center">
                             <h6 class="fw-bold">Voto</h6>
@@ -56,7 +56,7 @@
 
             <p>
                 <span class="fw-bold">Trama: </span>
-                {{ movie.plot }}
+                {{ movie.description }}
             </p>
 
             <div class="pb-4 pt-2">
@@ -64,7 +64,7 @@
 
                 <div class="d-flex justify-content-center">
                     <ngx-slick-carousel class="my-2" #slickModal="slick-carousel" [config]="slideConfig">
-                        <div ngxSlickItem *ngFor="let actor of movie.cast" class="slide mx-3">
+                        <div ngxSlickItem *ngFor="let actor of movie.actors" class="slide mx-3">
                             <img [src]="actor.img" class="mb-3" [alt]="actor.name">
                             <h6 class="text-center">{{ actor.name }}</h6>
                         </div>

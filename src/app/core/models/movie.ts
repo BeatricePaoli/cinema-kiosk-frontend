@@ -1,3 +1,5 @@
+import { SafeUrl } from "@angular/platform-browser";
+
 export interface MovieFilter {
     movie?: string;
     city?: string;
@@ -12,16 +14,16 @@ export interface MovieSearchResponse {
 export interface Movie {
     id: string;
     name: string;
-    img: string;
+    img: string | SafeUrl;
     releaseDate: Date;
-    duration: number;
+    durationMins: number;
     score: number;
     genres: string[];
-    plot: string;
-    cast: Actor[];
+    description: string;
+    actors: Actor[];
 }
 
 export interface Actor {
     name: string;
-    img: string;
+    img: string | SafeUrl;
 }

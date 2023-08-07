@@ -6,6 +6,7 @@ import { Toast } from 'src/app/core/models/toast';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { MovieActions } from '../store/actions/movie.actions';
 import * as MovieSelectors from '../store/selectors/movie.selectors';
+import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
 
 @Component({
   selector: 'app-movie',
@@ -30,7 +31,7 @@ export class MovieComponent implements OnInit, OnDestroy {
 
   subs: Subscription[] = [];
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private imgSanitizer: ImgSanitizerService) { }
 
   ngOnInit() {
     this.store.select(RouterSelectors.selectParams).pipe(take(1)).subscribe(params => {
@@ -43,8 +44,23 @@ export class MovieComponent implements OnInit, OnDestroy {
     this.toast$ = this.store.select(MovieSelectors.selectToast);
 
     this.subs.push(this.store.select(MovieSelectors.selectMovie).subscribe(movie => {
-      this.movie = movie;
+      if (movie) {
+        this.movie = {
+          ...movie,
+          img: this.imgSanitizer.sanitizeImg(movie.img.toString()),
+          actors: movie.actors.map(a => {
+            return {
+              ...a,
+              img: this.imgSanitizer.sanitizeImg(a.img.toString()),
+            }
+          })
+        };
+      }
     }));
+  }
+
+  showBookingBtn() {
+    return this.movie && this.movie.releaseDate <= new Date();
   }
 
   ngOnDestroy(): void {
