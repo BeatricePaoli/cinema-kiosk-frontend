@@ -1,26 +1,41 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap } from 'rxjs/operators';
-import { Observable, EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { MovieService } from 'src/app/core/services/movie/movie.service';
+import { TheaterService } from 'src/app/core/services/theater/theater.service';
 import { BookingFormActions } from '../actions/booking-form.actions';
 
 
 @Injectable()
 export class BookingFormEffects {
 
-  loadBookingForms$ = createEffect(() => {
+  loadFilter$ = createEffect(() => {
     return this.actions$.pipe(
 
-      ofType(BookingFormActions.loadBookingForms),
-      concatMap(() =>
-        /** An EMPTY observable only emits completion. Replace with your own observable API request */
-        EMPTY.pipe(
-          map(data => BookingFormActions.loadBookingFormsSuccess({ data })),
-          catchError(error => of(BookingFormActions.loadBookingFormsFailure({ error }))))
+      ofType(BookingFormActions.loadFilter),
+      switchMap((action) => this.theaterService.getFilters(action.movieId)
+        .pipe(
+          map(data => BookingFormActions.loadFilterSuccess({ response: data })),
+          catchError(error => of(BookingFormActions.loadFilterFailure())))
+      )
+    );
+  });
+
+  loadMovies$ = createEffect(() => {
+    return this.actions$.pipe(
+
+      ofType(BookingFormActions.loadMovie),
+      switchMap((action) => this.movieService.getMovie(action.id)
+        .pipe(
+          map(data => BookingFormActions.loadMovieSuccess({ response: data })),
+          catchError(error => of(BookingFormActions.loadMovieFailure())))
       )
     );
   });
 
 
-  constructor(private actions$: Actions) {}
+  constructor(private actions$: Actions, 
+    private movieService: MovieService,
+    private theaterService: TheaterService) {}
 }

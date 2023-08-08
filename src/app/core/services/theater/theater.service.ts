@@ -12,9 +12,13 @@ export class TheaterService {
 
   constructor(private http: HttpClient) { }
 
-  getFilters(): Observable<TheaterFilter> {
+  getFilters(movieId?: number): Observable<TheaterFilter> {
     let url = environment.theaterFilter;
-    url = UrlCreator.of(url).createUrl();
+    if (movieId) {
+      url = UrlCreator.of(url).addQueryParam("movieId", movieId).createUrl();
+    } else {
+      url = UrlCreator.of(url).createUrl();
+    }
     return this.http.get<TheaterFilter>(url);
   }
 }

@@ -139,7 +139,7 @@ export class MovieListComponent implements OnInit, OnDestroy {
     this.subs.push(this.searchForm.valueChanges.subscribe(values => {
       const { city, cinema } = values; 
       this.additionalFiltersTot = (city && city !== '' ? 1 : 0) + (cinema && cinema !== '' ? 1 : 0);
-    }))
+    }));
   }
 
   private autoCompletefilter(value: string, list: string[]): string[] {

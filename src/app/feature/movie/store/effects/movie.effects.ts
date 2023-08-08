@@ -9,7 +9,7 @@ import { MovieActions } from '../actions/movie.actions';
 @Injectable()
 export class MovieEffects {
 
-  loadMovies$ = createEffect(() => {
+  loadMovie$ = createEffect(() => {
     return this.actions$.pipe(
 
       ofType(MovieActions.loadMovie),

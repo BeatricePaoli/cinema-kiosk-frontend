@@ -4,9 +4,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import * as _moment from 'moment';
-import { Observable, Subscription, map, startWith } from 'rxjs';
+import { Observable, Subscription, map, of, startWith, take } from 'rxjs';
+import { Movie } from 'src/app/core/models/movie';
+import { TheaterFilter } from 'src/app/core/models/theater';
+import { Toast } from 'src/app/core/models/toast';
+import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
+import { BookingFormActions } from '../store/actions/booking-form.actions';
+import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
 
 const moment = _moment;
 
@@ -17,22 +24,19 @@ const moment = _moment;
 })
 export class BookingFormComponent implements OnInit, OnDestroy {
 
-  movieId: number = 1;
-  movie: any = {
-    id: 1,
-    name: "Spider-man: Across the Spiderverse",
-    img: "https://cinemaadriano.it/images/locandine_film/spider.jpg",
-  };
+  movie: Movie | null = null;
 
   selectedStepIndex: number = 0;
 
   screenUrl: string = "assets/mocks/screen_test.json";
   seatsTaken: string[] = ['A-1', 'A-2', 'C-2'];
 
-  cities: string[] = ['One', 'Two', 'Three'];
+  theaterFilter: TheaterFilter | null = null;
+
+  cities: string[] = [];
   filteredCities: Observable<string[]> = new Observable<string[]>;
 
-  cinemas: string[] = ['One', 'Two', 'Three'];
+  cinemas: string[] = [];
   filteredCinemas: Observable<string[]> = new Observable<string[]>;
 
   projTypes: string[] = ['2D', '3D'];
@@ -99,6 +103,9 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   booking: any;
   price: number = 0;
 
+  isLoading$: Observable<boolean> = of(false);
+  toast$: Observable<Toast | null> = of(null);
+
   orientation$: Observable<StepperOrientation>;
   subs: Subscription[] = [];
 
@@ -161,21 +168,32 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private router: Router,
+    private store: Store,
   ) {
     this.orientation$ = this.breakpointObserver.observe('(min-width: 768px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
   }
 
   ngOnInit() {
-    this.filteredCities = this.city!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.autoCompletefilter(value || '', this.cities)),
-    );
+    this.store.select(RouterSelectors.selectParams).pipe(take(1)).subscribe(params => {
+      if (params && params.movieId) {
+        this.store.dispatch(BookingFormActions.loadFilter({ movieId: params.movieId }));
+        this.store.dispatch(BookingFormActions.loadMovie({ id: params.movieId }));
+      } 
+    });
 
-    this.filteredCinemas = this.cinema!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.autoCompletefilter(value || '', this.cinemas)),
-    );
+    this.isLoading$ = this.store.select(BookingFormSelectors.selectIsLoading);
+    this.toast$ = this.store.select(BookingFormSelectors.selectToast);
+
+    this.subs.push(this.store.select(BookingFormSelectors.selectTheaterFilter).subscribe(filter => {
+      if (filter) {
+        this.setupSearchFilters(filter);
+      }
+    }));
+
+    this.subs.push(this.store.select(BookingFormSelectors.selectMovie).subscribe(movie => {
+      this.movie = movie;
+    }));
 
     this.addTicketsForm();
   }
@@ -199,13 +217,45 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     }));
   }
 
-  ngOnDestroy(): void {
-    this.subs.forEach(s => s.unsubscribe());
+  // TODO: molto simile a MovieListComponent
+  private setupSearchFilters(filter: TheaterFilter) {
+    this.theaterFilter = filter;
+    this.cities = filter.cities.map(c => c.name);
+    this.cinemas = [];
+    filter.cities.forEach(city => this.cinemas = this.cinemas.concat(city.theaters));
+
+    // Update parameters for the AutocompleteValidator
+    this.city?.setValidators([Validators.required, AutocompleteValidator.validOption(this.cities)]);
+    this.cinema?.setValidators([Validators.required, AutocompleteValidator.validOption(this.cinemas)]);
+
+    this.filteredCities = this.cinemaForm.get('city')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.autoCompletefilter(value || '', this.cities)),
+    );
+
+    this.filteredCinemas = this.cinemaForm.get('cinema')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.autoCompletefilter(value || '', this.cinemas)),
+    );
+
+    this.subs.push(this.cinemaForm.get('city')!.valueChanges.subscribe((value: string | null) => {
+      const valid = this.theaterFilter?.cities.find(c => c.name === value);
+      this.cinemas = valid ? valid.theaters : [];
+      
+      // Trigger di valueChanges per aggiornare filteredCinemas
+      this.cinemaForm.patchValue({
+        cinema: this.cinemaForm.get('cinema')?.value
+      });
+    }));
   }
 
   private autoCompletefilter(value: string, list: string[]): string[] {
     const filterValue = value.toLowerCase();
     return list.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   filterValidDates(date: moment.Moment | null): boolean {

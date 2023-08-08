@@ -1,5 +1,8 @@
+<app-toast [toast]="toast$ | async"></app-toast>
+<app-spinner *ngIf="isLoading$ | async"></app-spinner>
+
 <div class="position-relative">
-    <button mat-mini-fab class="back-btn" [routerLink]="['/movie-list', movieId]">
+    <button mat-mini-fab class="back-btn" [routerLink]="['/movie-list', movie?.id]">
         <mat-icon>chevron_left</mat-icon>
     </button>
 </div>
