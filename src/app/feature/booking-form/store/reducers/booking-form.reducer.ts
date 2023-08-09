@@ -3,6 +3,7 @@ import { BookingFormActions } from '../actions/booking-form.actions';
 import { Toast, ToastStatus } from 'src/app/core/models/toast';
 import { Movie } from 'src/app/core/models/movie';
 import { TheaterFilter } from 'src/app/core/models/theater';
+import { Show } from 'src/app/core/models/show';
 
 export const bookingFormFeatureKey = 'bookingForm';
 
@@ -11,6 +12,7 @@ export interface State {
   isLoading: boolean;
   movie: Movie | null;
   filter: TheaterFilter | null;
+  shows: Show[];
 }
 
 export const initialState: State = {
@@ -18,6 +20,7 @@ export const initialState: State = {
   isLoading: false,
   movie: null,
   filter: null,
+  shows: [],
 };
 
 export const reducer = createReducer(
@@ -60,6 +63,29 @@ export const reducer = createReducer(
       ...state,
       toast: {
         message: "Errore durante il recupero del film.",
+        status: ToastStatus.ERROR,
+      },
+      isLoading: false,
+    };
+  }),
+  on(BookingFormActions.loadShowsList, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }),
+  on(BookingFormActions.loadShowsListSuccess, (state, { response }) => {
+    return {
+      ...state,
+      isLoading: false,
+      shows: response,
+    }
+  }),
+  on(BookingFormActions.loadShowsListFailure, (state) => {
+    return {
+      ...state,
+      toast: {
+        message: "Errore durante il recupero dei film.",
         status: ToastStatus.ERROR,
       },
       isLoading: false,

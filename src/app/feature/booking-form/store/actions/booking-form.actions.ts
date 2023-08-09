@@ -1,5 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { Movie } from 'src/app/core/models/movie';
+import { Movie, MovieFilter } from 'src/app/core/models/movie';
+import { Show } from 'src/app/core/models/show';
 import { TheaterFilter } from 'src/app/core/models/theater';
 
 export const BookingFormActions = createActionGroup({
@@ -12,5 +13,9 @@ export const BookingFormActions = createActionGroup({
     'Load Movie': props<{ id: number }>(),
     'Load Movie Success': props<{ response: Movie }>(),
     'Load Movie Failure': emptyProps(),
+
+    'Load ShowsList': props<{ filter: MovieFilter }>(),
+    'Load ShowsList Success': props<{ response: Show[] }>(),
+    'Load ShowsList Failure': emptyProps(),
   }
 });

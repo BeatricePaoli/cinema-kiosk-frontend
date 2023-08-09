@@ -13,5 +13,6 @@ export const environment = {
 
   movies: '/assets/mocks/movie-list.json',
   movie: '/assets/mocks/movie.json',
+  
   theaterFilter: '/assets/mocks/theater-filter.json',
 };

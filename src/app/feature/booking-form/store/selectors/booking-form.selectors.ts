@@ -33,3 +33,9 @@ export const selectMovie = createSelector(
   }
 );
 
+export const selectShows = createSelector(
+  selectBookingFormState,
+  (state: fromBookingForm.State) => {
+    return state?.shows;
+  }
+);

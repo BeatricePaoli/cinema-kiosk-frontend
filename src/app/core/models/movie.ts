@@ -4,6 +4,8 @@ export interface MovieFilter {
     movie?: string;
     city?: string;
     cinema?: string;
+
+    movieId?: number;
 }
 
 export interface MovieSearchResponse {
@@ -12,7 +14,7 @@ export interface MovieSearchResponse {
 }
 
 export interface Movie {
-    id: string;
+    id: number;
     name: string;
     img: string | SafeUrl;
     releaseDate: Date;

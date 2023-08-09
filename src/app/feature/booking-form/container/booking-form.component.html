@@ -87,8 +87,7 @@
                                 <mat-form-field dayFormat subscriptSizing="dynamic">
                                     <mat-label>Giorno</mat-label>
                                     <input matInput formControlName="date" [matDatepickerFilter]="boundFilterValidDates"
-                                        [matDatepicker]="picker" [min]="minShowDate" [max]="maxShowDate"
-                                        (dateChange)="onDateSelect($event)">
+                                        [matDatepicker]="picker" [min]="minShowDate" [max]="maxShowDate">
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>

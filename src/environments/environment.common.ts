@@ -12,5 +12,8 @@ export const commonEnvironment = {
 
     movies: '/movies',
     movie: '/movies/{id}',
-    theaterFilter: '/theater/filter',
+    
+    theaterFilter: '/theaters/filter',
+
+    shows: '/shows/filter',
 };

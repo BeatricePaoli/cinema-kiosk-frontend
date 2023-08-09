@@ -2,18 +2,18 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation, StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as _moment from 'moment';
 import { Observable, Subscription, map, of, startWith, take } from 'rxjs';
-import { Movie } from 'src/app/core/models/movie';
+import { Movie, MovieFilter } from 'src/app/core/models/movie';
 import { TheaterFilter } from 'src/app/core/models/theater';
 import { Toast } from 'src/app/core/models/toast';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
 import { BookingFormActions } from '../store/actions/booking-form.actions';
 import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
+import { Show } from 'src/app/core/models/show';
 
 const moment = _moment;
 
@@ -39,31 +39,14 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   cinemas: string[] = [];
   filteredCinemas: Observable<string[]> = new Observable<string[]>;
 
-  projTypes: string[] = ['2D', '3D'];
-  languages: string[] = ['Italiano', 'English'];
+  projTypes: string[] = [];
+  languages: string[] = [];
 
-  dates: string[] = ['2023-06-20'];
-  minShowDate = moment('2023-06-10');
-  maxShowDate = moment('2023-06-20');
+  dates: string[] = [];
+  minShowDate = moment();
+  maxShowDate = moment();
 
-  shows: any[] = [
-    {
-      id: 1,
-      startTime: '17:30'
-    },
-    {
-      id: 2,
-      startTime: '19:30'
-    },
-    {
-      id: 3,
-      startTime: '21:30'
-    },
-    {
-      id: 4,
-      startTime: '23:30'
-    }
-  ];
+  shows: Show[] = [];
 
   ticketsList: any[] = [
     {
@@ -179,7 +162,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
       if (params && params.movieId) {
         this.store.dispatch(BookingFormActions.loadFilter({ movieId: params.movieId }));
         this.store.dispatch(BookingFormActions.loadMovie({ id: params.movieId }));
-      } 
+      }
     });
 
     this.isLoading$ = this.store.select(BookingFormSelectors.selectIsLoading);
@@ -193,6 +176,20 @@ export class BookingFormComponent implements OnInit, OnDestroy {
 
     this.subs.push(this.store.select(BookingFormSelectors.selectMovie).subscribe(movie => {
       this.movie = movie;
+    }));
+
+    this.subs.push(this.store.select(BookingFormSelectors.selectShows).subscribe(shows => {
+      this.shows = shows;
+      this.projTypes = [...new Set(shows.map(s => s.projectionType))];
+      this.languages = [...new Set(shows.map(s => s.language))];
+      this.dates = [...new Set(shows.map(s => moment(s.date).format('YYYY-MM-DD')))];
+      this.minShowDate = moment.min(shows.map(s => moment(s.date)));
+      this.maxShowDate = moment.max(shows.map(s => moment(s.date)));
+
+      this.showForm.patchValue({
+        projectionType: this.projTypes[0],
+        language: this.languages[0],
+      });
     }));
 
     this.addTicketsForm();
@@ -241,7 +238,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     this.subs.push(this.cinemaForm.get('city')!.valueChanges.subscribe((value: string | null) => {
       const valid = this.theaterFilter?.cities.find(c => c.name === value);
       this.cinemas = valid ? valid.theaters : [];
-      
+
       // Trigger di valueChanges per aggiornare filteredCinemas
       this.cinemaForm.patchValue({
         cinema: this.cinemaForm.get('cinema')?.value
@@ -264,30 +261,53 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   };
   boundFilterValidDates = this.filterValidDates.bind(this);
 
-  onDateSelect(event: MatDatepickerInputEvent<moment.Moment>) {
-    console.log("Load shows or filter");
-  }
-
   onStepChanged(event: StepperSelectionEvent) {
     this.selectedStepIndex = event.selectedIndex;
 
-    if (this.selectedStepIndex === 3) {
-      const cinemaVals = this.cinemaForm.value;
-      const showVals = this.showForm.value;
-      const seatsVals = this.seatForm.value;
-
-      this.booking = {
-        ...cinemaVals,
-        ...showVals,
-        ...seatsVals,
-        startTime: this.getShowStartTime(showVals.showId),
-        date: showVals.date.toISOString(),
-        price: this.price,
-        movie: {
-          ...this.movie,
-        }
-      };
+    if (this.selectedStepIndex === 1) {
+      this.loadShows();
+    } else if (this.selectedStepIndex === 2) {
+      this.loadSeats();
+    } else if (this.selectedStepIndex === 3) {
+      this.createBookingSummary();
     }
+  }
+
+  loadShows() {
+    const cinemaVals = this.cinemaForm.value;
+    const filter: MovieFilter = {
+      city: cinemaVals.city,
+      cinema: cinemaVals.cinema,
+      movieId: this.movie?.id,
+    }
+    this.store.dispatch(BookingFormActions.loadShowsList({ filter }));
+  }
+
+  loadSeats() {
+    const showVals = this.showForm.value;
+    const filtered = this.shows.filter(s => s.id === showVals.showId);
+
+    if (filtered.length > 0) {
+      // TODO: load biglietti, posti prenotati, seatChart
+    }
+  }
+
+  createBookingSummary() {
+    const cinemaVals = this.cinemaForm.value;
+    const showVals = this.showForm.value;
+    const seatsVals = this.seatForm.value;
+
+    this.booking = {
+      ...cinemaVals,
+      ...showVals,
+      ...seatsVals,
+      startTime: this.getShowStartTime(showVals.showId),
+      date: showVals.date.toISOString(),
+      price: this.price,
+      movie: {
+        ...this.movie,
+      }
+    };
   }
 
   onSeatSelected(seats: string[]) {
