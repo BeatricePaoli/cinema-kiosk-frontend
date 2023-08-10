@@ -1,5 +1,5 @@
 import { Movie } from "./movie";
-import { TheaterScreen } from "./theater";
+import { Seat, TheaterScreen } from "./theater";
 import { ProjectionType } from "./tickets";
 
 export interface ShowFilter {
@@ -17,4 +17,5 @@ export interface Show {
     projectionType: ProjectionType;
     screen: TheaterScreen;
     movie: Movie;
+    seatsTaken: Seat[];
 }

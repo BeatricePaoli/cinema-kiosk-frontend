@@ -131,7 +131,7 @@
 
                         <div class="py-5">
                             <app-seats-editor *ngIf="selectedStepIndex === 2" [creativeMode]="false"
-                            [screenUrl]="screenUrl" [seatsTaken]="seatsTaken"
+                            [screen]="screen" [seatsTaken]="seatsTaken"
                             (selectedSeats)="onSeatSelected($event)"></app-seats-editor>
                         </div>
 
