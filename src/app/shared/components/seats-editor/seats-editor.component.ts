@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { fabric } from 'fabric';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { TheaterScreen } from 'src/app/core/models/theater';
 
 enum EditorMode {
   SELECT = "SELECT",
@@ -24,10 +24,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   canvasContainer?: ElementRef;
 
   @Input()
-  screen?: any;
-
-  @Input()
-  screenUrl?: string;
+  screen?: TheaterScreen;
 
   @Input()
   creativeMode: boolean = false;
@@ -84,7 +81,6 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(private zone: NgZone,
     private viewportRuler: ViewportRuler,
-    private httpClient: HttpClient // TODO: TEMP
   ) { }
 
   ngOnInit(): void {
@@ -240,6 +236,10 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
       });
       this.canvas.add(screen);
 
+      if (this.screen) {
+        this.loadCanvas(this.screen.seatChart);
+      }
+
       // Salva stato iniziale
       this.saveState();
     }
@@ -248,15 +248,13 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['screen'] && changes['screen'].currentValue) {
       const screen = changes['screen'].currentValue;
-      this.loadCanvas(screen.url);
+      this.loadCanvas(screen.seatChart);
 
-      this.screenForm.patchValue({
-        name: screen.name
-      });
-    }
-
-    if (changes['screenUrl'] && changes['screenUrl'].currentValue) {
-      this.loadCanvas(changes['screenUrl'].currentValue);
+      if (this.creativeMode) {
+        this.screenForm.patchValue({
+          name: screen.name
+        });
+      }
     }
 
     if (changes['seatsTaken'] && changes['seatsTaken'].currentValue) {
@@ -264,50 +262,44 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  loadCanvas(url: string) {
-    this.httpClient.get(url).subscribe(json => {
-      JSON.stringify(json);
+  loadCanvas(json: Object) {
+    this.canvas?.loadFromJSON(json, () => {
+      if (!this.creativeMode) {
+        this.canvas?.forEachObject(o => {
+          o.lockMovementX = true;
+          o.lockMovementY = true;
+          o.lockRotation = true;
+          o.lockScalingFlip = true;
+          o.lockScalingX = true;
+          o.lockScalingY = true;
+          o.lockSkewingX = true;
+          o.lockSkewingY = true;
+          o.hasControls = false;
+          o.hoverCursor = 'pointer';
 
-      this.canvas?.loadFromJSON(json, () => {
+          // Centra viewport in base a label 'Schermo'
+          if (o instanceof fabric.Text) {
+            this.centerViewportOnScreen(o);
+          }
+        });
 
-        if (!this.creativeMode) {
-          this.canvas?.forEachObject(o => {
-            o.lockMovementX = true;
-            o.lockMovementY = true;
-            o.lockRotation = true;
-            o.lockScalingFlip = true;
-            o.lockScalingX = true;
-            o.lockScalingY = true;
-            o.lockSkewingX = true;
-            o.lockSkewingY = true;
-            o.hasControls = false;
-            o.hoverCursor = 'pointer';
+        this.canvas!.selection = false;
 
-            // Centra viewport in base a label 'Schermo'
-            if (o instanceof fabric.Text) {
-              this.centerViewportOnScreen(o);
-            }
-          });
+        this.setSeatsTaken(this.seatsTaken);
+      } else {
+        this.canvas?.forEachObject(o => {
+          // Centra viewport in base a label 'Schermo'
+          if (o instanceof fabric.Text) {
+            this.centerViewportOnScreen(o);
+          }
+        });
 
-          this.canvas!.selection = false;
+        this.resetActionState();
+        this.saveState();
+        this.totSeats = this.canvas?.getObjects() ? this.canvas?.getObjects().length - 1 : 0;
+      }
 
-          this.setSeatsTaken(this.seatsTaken);
-        } else {
-          this.canvas?.forEachObject(o => {
-            // Centra viewport in base a label 'Schermo'
-            if (o instanceof fabric.Text) {
-              this.centerViewportOnScreen(o);
-            }
-          });
-
-          this.resetActionState();
-          this.saveState();
-          this.totSeats = this.canvas?.getObjects() ? this.canvas?.getObjects().length - 1 : 0;
-        }
-
-      });
     });
-
   }
 
   setSeatsTaken(seatsTaken: string[]) {
