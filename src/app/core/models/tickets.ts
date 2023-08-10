@@ -12,3 +12,12 @@ export enum Days {
     SATURDAY,
     SUNDAY
 }
+
+export interface TicketType {
+    id: number;
+    name: string;
+    price: number;
+    projectionType: ProjectionType;
+    availableOnline: boolean;
+    days: string[];
+}

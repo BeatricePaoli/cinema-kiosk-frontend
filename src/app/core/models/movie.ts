@@ -4,8 +4,6 @@ export interface MovieFilter {
     movie?: string;
     city?: string;
     cinema?: string;
-
-    movieId?: number;
 }
 
 export interface MovieSearchResponse {

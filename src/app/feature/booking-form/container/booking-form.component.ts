@@ -7,13 +7,13 @@ import { Store } from '@ngrx/store';
 import * as _moment from 'moment';
 import { Observable, Subscription, map, of, startWith, take } from 'rxjs';
 import { Movie, MovieFilter } from 'src/app/core/models/movie';
-import { TheaterFilter } from 'src/app/core/models/theater';
+import { TheaterFilter, TheaterScreen } from 'src/app/core/models/theater';
 import { Toast } from 'src/app/core/models/toast';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
 import { BookingFormActions } from '../store/actions/booking-form.actions';
 import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
-import { Show } from 'src/app/core/models/show';
+import { Show, ShowFilter } from 'src/app/core/models/show';
 import { TicketType } from 'src/app/core/models/tickets';
 
 const moment = _moment;
@@ -30,7 +30,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   selectedStepIndex: number = 0;
 
   screenUrl: string = "assets/mocks/screen_test.json";
-  seatsTaken: string[] = ['A-1', 'A-2', 'C-2'];
+  seatsTaken: string[] = [];
 
   theaterFilter: TheaterFilter | null = null;
 
@@ -46,9 +46,9 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   dates: string[] = [];
   minShowDate = moment();
   maxShowDate = moment();
-
   shows: Show[] = [];
 
+  screen?: TheaterScreen;
   ticketsList: TicketType[] = [];
 
   bookingForm = new FormGroup({
@@ -271,12 +271,14 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     // TODO: manca l'id del cinema...
     // this.store.dispatch(BookingFormActions.loadTicketTypesList({ id }));
   }
+
   loadShows() {
     const cinemaVals = this.cinemaForm.value;
-    const filter: MovieFilter = {
+    const filter: ShowFilter = {
       city: cinemaVals.city,
       cinema: cinemaVals.cinema,
-      movieId: this.movie?.id,
+      movieId: this.movie?.id ?? -1,
+      getBookedSeats: true,
     }
     this.store.dispatch(BookingFormActions.loadShowsList({ filter }));
   }
@@ -286,7 +288,8 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     const filtered = this.shows.filter(s => s.id === showVals.showId);
 
     if (filtered.length > 0) {
-      // TODO: load biglietti, posti prenotati, seatChart
+      this.screen = filtered[0].screen;
+      this.seatsTaken = filtered[0].seatsTaken.map(st => st.label);
     }
   }
 
