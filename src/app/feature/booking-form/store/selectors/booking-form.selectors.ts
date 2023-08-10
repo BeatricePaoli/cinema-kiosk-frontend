@@ -39,3 +39,10 @@ export const selectShows = createSelector(
     return state?.shows;
   }
 );
+
+export const selectTicketTypes = createSelector(
+  selectBookingFormState,
+  (state: fromBookingForm.State) => {
+    return state?.ticketTypes;
+  }
+);

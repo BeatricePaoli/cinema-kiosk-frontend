@@ -14,6 +14,7 @@ import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.vali
 import { BookingFormActions } from '../store/actions/booking-form.actions';
 import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
 import { Show } from 'src/app/core/models/show';
+import { TicketType } from 'src/app/core/models/tickets';
 
 const moment = _moment;
 
@@ -48,18 +49,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
 
   shows: Show[] = [];
 
-  ticketsList: any[] = [
-    {
-      id: 1,
-      name: "Adulti",
-      price: 9
-    },
-    {
-      id: 1,
-      name: "Bambini",
-      price: 7
-    },
-  ]
+  ticketsList: TicketType[] = [];
 
   bookingForm = new FormGroup({
     movieId: new FormControl<number | null>(null, Validators.required),
@@ -192,7 +182,10 @@ export class BookingFormComponent implements OnInit, OnDestroy {
       });
     }));
 
-    this.addTicketsForm();
+    this.subs.push(this.store.select(BookingFormSelectors.selectTicketTypes).subscribe(tickets => {
+      this.ticketsList = tickets;
+      this.addTicketsForm();
+    }));
   }
 
   addTicketsForm() {
@@ -265,6 +258,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     this.selectedStepIndex = event.selectedIndex;
 
     if (this.selectedStepIndex === 1) {
+      this.loadTicketTypes();
       this.loadShows();
     } else if (this.selectedStepIndex === 2) {
       this.loadSeats();
@@ -273,6 +267,10 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadTicketTypes() {
+    // TODO: manca l'id del cinema...
+    // this.store.dispatch(BookingFormActions.loadTicketTypesList({ id }));
+  }
   loadShows() {
     const cinemaVals = this.cinemaForm.value;
     const filter: MovieFilter = {

@@ -4,6 +4,7 @@ import { Toast, ToastStatus } from 'src/app/core/models/toast';
 import { Movie } from 'src/app/core/models/movie';
 import { TheaterFilter } from 'src/app/core/models/theater';
 import { Show } from 'src/app/core/models/show';
+import { TicketType } from 'src/app/core/models/tickets';
 
 export const bookingFormFeatureKey = 'bookingForm';
 
@@ -13,6 +14,7 @@ export interface State {
   movie: Movie | null;
   filter: TheaterFilter | null;
   shows: Show[];
+  ticketTypes: TicketType[];
 }
 
 export const initialState: State = {
@@ -21,6 +23,7 @@ export const initialState: State = {
   movie: null,
   filter: null,
   shows: [],
+  ticketTypes: [],
 };
 
 export const reducer = createReducer(
@@ -85,7 +88,30 @@ export const reducer = createReducer(
     return {
       ...state,
       toast: {
-        message: "Errore durante il recupero dei film.",
+        message: "Errore durante il recupero degli spettacoli.",
+        status: ToastStatus.ERROR,
+      },
+      isLoading: false,
+    };
+  }),
+  on(BookingFormActions.loadTicketTypesList, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }),
+  on(BookingFormActions.loadTicketTypesListSuccess, (state, { response }) => {
+    return {
+      ...state,
+      isLoading: false,
+      ticketTypes: response,
+    }
+  }),
+  on(BookingFormActions.loadTicketTypesListFailure, (state) => {
+    return {
+      ...state,
+      toast: {
+        message: "Errore durante il recupero delle tipologie di biglietti.",
         status: ToastStatus.ERROR,
       },
       isLoading: false,

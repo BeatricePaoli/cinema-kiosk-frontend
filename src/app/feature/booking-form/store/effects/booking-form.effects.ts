@@ -47,6 +47,18 @@ export class BookingFormEffects {
     );
   });
 
+  loadTicketTypesLists$ = createEffect(() => {
+    return this.actions$.pipe(
+
+      ofType(BookingFormActions.loadTicketTypesList),
+      switchMap((action) => this.theaterService.getTicketTypes(action.id)
+        .pipe(
+          map(data => BookingFormActions.loadTicketTypesListSuccess({ response: data })),
+          catchError(error => of(BookingFormActions.loadTicketTypesListFailure())))
+      )
+    );
+  });
+
 
   constructor(private actions$: Actions, 
     private movieService: MovieService,
