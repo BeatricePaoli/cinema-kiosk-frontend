@@ -277,8 +277,8 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   loadTicketTypes() {
-    // TODO: manca l'id del cinema...
-    // this.store.dispatch(BookingFormActions.loadTicketTypesList({ id }));
+    const cinemaVals = this.cinemaForm.value;
+    this.store.dispatch(BookingFormActions.loadTicketTypesList({ id: cinemaVals.cinema.id }));
   }
 
   loadShows() {
