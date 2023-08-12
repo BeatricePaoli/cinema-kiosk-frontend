@@ -34,9 +34,9 @@
                     <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
                         <mat-label>Cinema</mat-label>
                         <input matInput formControlName="cinema" [matAutocomplete]="autoCinema">
-                        <mat-autocomplete #autoCinema="matAutocomplete" hideSingleSelectionIndicator>
+                        <mat-autocomplete #autoCinema="matAutocomplete" hideSingleSelectionIndicator [displayWith]="displayFnCinema">
                             <mat-option *ngFor="let cinema of filteredCinemas | async" [value]="cinema">
-                                {{ cinema }}
+                                {{ cinema.name }}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>

@@ -2,7 +2,7 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import { BookingFormActions } from '../actions/booking-form.actions';
 import { Toast, ToastStatus } from 'src/app/core/models/toast';
 import { Movie } from 'src/app/core/models/movie';
-import { TheaterFilter } from 'src/app/core/models/theater';
+import { AutocompleteTheaterFilter } from 'src/app/core/models/theater';
 import { Show } from 'src/app/core/models/show';
 import { TicketType } from 'src/app/core/models/tickets';
 
@@ -12,7 +12,7 @@ export interface State {
   toast: Toast | null;
   isLoading: boolean;
   movie: Movie | null;
-  filter: TheaterFilter | null;
+  filter: AutocompleteTheaterFilter | null;
   shows: Show[];
   ticketTypes: TicketType[];
 }

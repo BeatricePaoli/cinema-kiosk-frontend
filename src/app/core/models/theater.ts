@@ -1,13 +1,18 @@
 import { Room } from "./room";
 import { TicketType } from "./tickets";
 
-export interface TheaterFilter {
+export interface AutocompleteTheaterFilter {
     cities: CityFilter[];
 }
 
 export interface CityFilter {
     name: string;
-    theaters: string[];
+    theaters: TheaterFilter[];
+}
+
+export interface TheaterFilter {
+    id: number;
+    name: string;
 }
 
 export interface Theater {

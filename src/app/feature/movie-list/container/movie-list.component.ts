@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription, map, of, startWith } from 'rxjs';
 import { SlideInOutAnimation } from 'src/app/core/animations/slide-in-out.animation';
 import { Movie, MovieFilter } from 'src/app/core/models/movie';
-import { TheaterFilter } from 'src/app/core/models/theater';
+import { AutocompleteTheaterFilter, TheaterFilter } from 'src/app/core/models/theater';
 import { Toast } from 'src/app/core/models/toast';
 import { MovieListActions } from '../store/actions/movie-list.actions';
 import * as MovieListSelectors from '../store/selectors/movie-list.selectors';
@@ -19,20 +19,20 @@ import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service
 export class MovieListComponent implements OnInit, OnDestroy {
 
   searchForm = new FormGroup({
-    movie: new FormControl(''),
-    city: new FormControl(''),
-    cinema: new FormControl('')
+    movie: new FormControl<string | null>(null),
+    city: new FormControl<string | null>(null),
+    cinema: new FormControl<TheaterFilter | null>(null),
   });
 
   additionalFiltersTot: number = 0;
 
-  theaterFilter: TheaterFilter | null = null;
+  theaterFilter: AutocompleteTheaterFilter | null = null;
 
   cities: string[] = [];
   filteredCities: Observable<string[]> = new Observable<string[]>;
 
-  cinemas: string[] = [];
-  filteredCinemas: Observable<string[]> = new Observable<string[]>;
+  cinemas: TheaterFilter[] = [];
+  filteredCinemas: Observable<TheaterFilter[]> = new Observable<TheaterFilter[]>;
 
   animationState = 'out';
 
@@ -110,7 +110,7 @@ export class MovieListComponent implements OnInit, OnDestroy {
     this.subs.forEach(s => s.unsubscribe());
   }
 
-  private setupSearchFilters(filter: TheaterFilter) {
+  private setupSearchFilters(filter: AutocompleteTheaterFilter) {
     this.theaterFilter = filter;
     this.cities = filter.cities.map(c => c.name);
     this.cinemas = [];
@@ -123,7 +123,7 @@ export class MovieListComponent implements OnInit, OnDestroy {
 
     this.filteredCinemas = this.searchForm.get('cinema')!.valueChanges.pipe(
       startWith(''),
-      map(value => this.autoCompletefilter(value || '', this.cinemas)),
+      map(value => this.autoCompletefilterCinema(value, this.cinemas)),
     );
 
     this.subs.push(this.searchForm.get('city')!.valueChanges.subscribe((value: string | null) => {
@@ -138,13 +138,22 @@ export class MovieListComponent implements OnInit, OnDestroy {
 
     this.subs.push(this.searchForm.valueChanges.subscribe(values => {
       const { city, cinema } = values; 
-      this.additionalFiltersTot = (city && city !== '' ? 1 : 0) + (cinema && cinema !== '' ? 1 : 0);
+      this.additionalFiltersTot = (city && city !== '' ? 1 : 0) + (cinema && cinema.id ? 1 : 0);
     }));
   }
 
   private autoCompletefilter(value: string, list: string[]): string[] {
     const filterValue = value.toLowerCase();
     return list.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private autoCompletefilterCinema(value: any, list: TheaterFilter[]): TheaterFilter[] {
+    if (!value) return list;
+    return list.filter(option => option.id === value.id);
+  }
+
+  displayFnCinema(cinema: TheaterFilter): string {
+    return cinema && cinema.name ? cinema.name : '';
   }
 
   onToggleAccordion() {
@@ -156,7 +165,7 @@ export class MovieListComponent implements OnInit, OnDestroy {
     const filter: MovieFilter = {
       movie: values.movie ?? undefined,
       city: values.city ?? undefined,
-      cinema: values.cinema ?? undefined,
+      theaterId: values.cinema && values.cinema.id ? values.cinema.id : undefined,
     };
     this.store.dispatch(MovieListActions.loadMovieList({ filter }));
   }

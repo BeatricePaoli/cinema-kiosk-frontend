@@ -5,7 +5,7 @@ import { ProjectionType } from "./tickets";
 export interface ShowFilter {
     movieId: number;
     city: string;
-    cinema: string;
+    theaterId: number;
     getBookedSeats: boolean;
 }
 

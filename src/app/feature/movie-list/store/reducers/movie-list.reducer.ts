@@ -2,7 +2,7 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import { MovieListActions } from '../actions/movie-list.actions';
 import { Toast, ToastStatus } from 'src/app/core/models/toast';
 import { Movie } from 'src/app/core/models/movie';
-import { TheaterFilter } from 'src/app/core/models/theater';
+import { AutocompleteTheaterFilter } from 'src/app/core/models/theater';
 
 export const movieListFeatureKey = 'movieList';
 
@@ -11,7 +11,7 @@ export interface State {
   isLoading: boolean;
   currentMovies: Movie[];
   futureMovies: Movie[];
-  filter: TheaterFilter | null;
+  filter: AutocompleteTheaterFilter | null;
 }
 
 export const initialState: State = {

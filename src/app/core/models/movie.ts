@@ -3,7 +3,7 @@ import { SafeUrl } from "@angular/platform-browser";
 export interface MovieFilter {
     movie?: string;
     city?: string;
-    cinema?: string;
+    theaterId?: number;
 }
 
 export interface MovieSearchResponse {

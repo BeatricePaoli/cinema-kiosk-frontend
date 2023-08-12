@@ -6,15 +6,15 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as _moment from 'moment';
 import { Observable, Subscription, map, of, startWith, take } from 'rxjs';
-import { Movie, MovieFilter } from 'src/app/core/models/movie';
-import { TheaterFilter, TheaterScreen } from 'src/app/core/models/theater';
+import { Movie } from 'src/app/core/models/movie';
+import { Show, ShowFilter } from 'src/app/core/models/show';
+import { AutocompleteTheaterFilter, TheaterFilter, TheaterScreen } from 'src/app/core/models/theater';
+import { TicketType } from 'src/app/core/models/tickets';
 import { Toast } from 'src/app/core/models/toast';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
 import { BookingFormActions } from '../store/actions/booking-form.actions';
 import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
-import { Show, ShowFilter } from 'src/app/core/models/show';
-import { TicketType } from 'src/app/core/models/tickets';
 
 const moment = _moment;
 
@@ -32,13 +32,13 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   screenUrl: string = "assets/mocks/screen_test.json";
   seatsTaken: string[] = [];
 
-  theaterFilter: TheaterFilter | null = null;
+  theaterFilter: AutocompleteTheaterFilter | null = null;
 
   cities: string[] = [];
   filteredCities: Observable<string[]> = new Observable<string[]>;
 
-  cinemas: string[] = [];
-  filteredCinemas: Observable<string[]> = new Observable<string[]>;
+  cinemas: TheaterFilter[] = [];
+  filteredCinemas: Observable<TheaterFilter[]> = new Observable<TheaterFilter[]>;
 
   projTypes: string[] = [];
   languages: string[] = [];
@@ -56,7 +56,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     formArray: new FormArray([
       new FormGroup({
         city: new FormControl<string | null>(null, [Validators.required, AutocompleteValidator.validOption(this.cities)]),
-        cinema: new FormControl<string | null>(null, [Validators.required, AutocompleteValidator.validOption(this.cinemas)])
+        cinema: new FormControl<TheaterFilter | null>(null, [Validators.required, AutocompleteValidator.validOption(this.cinemas)])
       }),
       new FormGroup({
         projectionType: new FormControl<string | null>(null, Validators.required),
@@ -208,7 +208,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   // TODO: molto simile a MovieListComponent
-  private setupSearchFilters(filter: TheaterFilter) {
+  private setupSearchFilters(filter: AutocompleteTheaterFilter) {
     this.theaterFilter = filter;
     this.cities = filter.cities.map(c => c.name);
     this.cinemas = [];
@@ -225,7 +225,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
 
     this.filteredCinemas = this.cinemaForm.get('cinema')!.valueChanges.pipe(
       startWith(''),
-      map(value => this.autoCompletefilter(value || '', this.cinemas)),
+      map(value => this.autoCompletefilterCinema(value, this.cinemas)),
     );
 
     this.subs.push(this.cinemaForm.get('city')!.valueChanges.subscribe((value: string | null) => {
@@ -242,6 +242,15 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   private autoCompletefilter(value: string, list: string[]): string[] {
     const filterValue = value.toLowerCase();
     return list.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private autoCompletefilterCinema(value: TheaterFilter, list: TheaterFilter[]): TheaterFilter[] {
+    if (!value) return list;
+    return list.filter(option => option.id === value.id);
+  }
+
+  displayFnCinema(cinema: TheaterFilter): string {
+    return cinema && cinema.name ? cinema.name : '';
   }
 
   ngOnDestroy(): void {
@@ -276,7 +285,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     const cinemaVals = this.cinemaForm.value;
     const filter: ShowFilter = {
       city: cinemaVals.city,
-      cinema: cinemaVals.cinema,
+      theaterId: cinemaVals.cinema.id,
       movieId: this.movie?.id ?? -1,
       getBookedSeats: true,
     }
