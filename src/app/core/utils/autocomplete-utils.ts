@@ -2,43 +2,43 @@ import { AbstractControl } from "@angular/forms";
 import { Observable, Subscription, map, startWith } from "rxjs";
 import { AutocompleteTheaterFilter, TheaterFilter } from "../models/theater";
 
-export function setupSearchFilters(filter: AutocompleteTheaterFilter, cinemaForm: AbstractControl<any>, 
+export function setupSearchFilters(filter: AutocompleteTheaterFilter, theaterForm: AbstractControl<any>, 
     subs: Subscription[]): 
     {
         cities: string[],
-        cinemas: TheaterFilter[],
+        theaters: TheaterFilter[],
         filteredCities: Observable<string[]>,
-        filteredCinemas: Observable<TheaterFilter[]>,
+        filteredTheaters: Observable<TheaterFilter[]>,
     } {
     const cities = filter.cities.map(c => c.name);
-    let cinemas: TheaterFilter[] = [];
-    filter.cities.forEach(city => cinemas = cinemas.concat(city.theaters));
+    let theaters: TheaterFilter[] = [];
+    filter.cities.forEach(city => theaters = theaters.concat(city.theaters));
 
-    const filteredCities = cinemaForm.get('city')!.valueChanges.pipe(
+    const filteredCities = theaterForm.get('city')!.valueChanges.pipe(
         startWith(''),
         map(value => autoCompletefilter(value || '', cities)),
     );
 
-    const filteredCinemas = cinemaForm.get('cinema')!.valueChanges.pipe(
+    const filteredTheaters = theaterForm.get('theater')!.valueChanges.pipe(
         startWith(''),
-        map(value => autoCompletefilterCinema(value, cinemas)),
+        map(value => autoCompletefilterTheater(value, theaters)),
     );
 
-    subs.push(cinemaForm.get('city')!.valueChanges.subscribe((value: string | null) => {
+    subs.push(theaterForm.get('city')!.valueChanges.subscribe((value: string | null) => {
         const valid = filter.cities.find(c => c.name === value);
-        cinemas = valid ? valid.theaters : [];
+        theaters = valid ? valid.theaters : [];
 
-        // Trigger di valueChanges per aggiornare filteredCinemas
-        cinemaForm.patchValue({
-            cinema: cinemaForm.get('cinema')?.value
+        // Trigger di valueChanges per aggiornare filteredTheaters
+        theaterForm.patchValue({
+            theater: theaterForm.get('theater')?.value
         });
     }));
 
     return {
         cities,
-        cinemas,
+        theaters,
         filteredCities,
-        filteredCinemas,
+        filteredTheaters,
     }
 }
 
@@ -47,7 +47,7 @@ function autoCompletefilter(value: string, list: string[]): string[] {
     return list.filter(option => option.toLowerCase().includes(filterValue));
 }
 
-function autoCompletefilterCinema(value: TheaterFilter, list: TheaterFilter[]): TheaterFilter[] {
+function autoCompletefilterTheater(value: TheaterFilter, list: TheaterFilter[]): TheaterFilter[] {
     if (!value) return list;
     return list.filter(option => option.id === value.id);
 }

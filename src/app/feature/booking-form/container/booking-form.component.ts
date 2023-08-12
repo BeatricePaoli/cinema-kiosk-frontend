@@ -38,8 +38,8 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   cities: string[] = [];
   filteredCities: Observable<string[]> = new Observable<string[]>;
 
-  cinemas: TheaterFilter[] = [];
-  filteredCinemas: Observable<TheaterFilter[]> = new Observable<TheaterFilter[]>;
+  theaters: TheaterFilter[] = [];
+  filteredTheaters: Observable<TheaterFilter[]> = new Observable<TheaterFilter[]>;
 
   projTypes: string[] = [];
   languages: string[] = [];
@@ -57,7 +57,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     formArray: new FormArray([
       new FormGroup({
         city: new FormControl<string | null>(null, [Validators.required, AutocompleteValidator.validOption(this.cities)]),
-        cinema: new FormControl<TheaterFilter | null>(null, [Validators.required, AutocompleteValidator.validOption(this.cinemas)])
+        theater: new FormControl<TheaterFilter | null>(null, [Validators.required, AutocompleteValidator.validOption(this.theaters)])
       }),
       new FormGroup({
         projectionType: new FormControl<string | null>(null, Validators.required),
@@ -87,7 +87,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     return this.bookingForm.get('formArray');
   }
 
-  get cinemaForm() {
+  get theaterForm() {
     return this.formArray!.get([0])!;
   }
 
@@ -100,7 +100,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   get city() {
-    return this.cinemaForm.get('city');
+    return this.theaterForm.get('city');
   }
 
   get cityErrorRequired() {
@@ -111,16 +111,16 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     return this.city?.errors ? this.city?.errors!['validOption'] : null;
   }
 
-  get cinema() {
-    return this.cinemaForm.get('cinema');
+  get theater() {
+    return this.theaterForm.get('theater');
   }
 
-  get cinemaErrorValidOption() {
-    return this.cinema?.errors ? this.cinema?.errors!['validOption'] : null;
+  get theaterErrorValidOption() {
+    return this.theater?.errors ? this.theater?.errors!['validOption'] : null;
   }
 
-  get cinemaErrorRequired() {
-    return this.cinema?.errors ? this.cinema?.errors!['required'] : null;
+  get theaterErrorRequired() {
+    return this.theater?.errors ? this.theater?.errors!['required'] : null;
   }
 
   get date() {
@@ -211,19 +211,19 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   private setupSearchFilters(filter: AutocompleteTheaterFilter) {
     this.theaterFilter = filter;
 
-    const { cities, cinemas, filteredCities, filteredCinemas } = setupSearchFilters(filter, this.cinemaForm, this.subs);
+    const { cities, theaters, filteredCities, filteredTheaters } = setupSearchFilters(filter, this.theaterForm, this.subs);
     this.cities = cities;
-    this.cinemas = cinemas;
+    this.theaters = theaters;
     this.filteredCities = filteredCities;
-    this.filteredCinemas = filteredCinemas;
+    this.filteredTheaters = filteredTheaters;
 
     // Update parameters for the AutocompleteValidator
     this.city?.setValidators([Validators.required, AutocompleteValidator.validOption(this.cities)]);
-    this.cinema?.setValidators([Validators.required, AutocompleteValidator.validOption(this.cinemas)]);
+    this.theater?.setValidators([Validators.required, AutocompleteValidator.validOption(this.theaters)]);
   }
 
-  displayFnCinema(cinema: TheaterFilter): string {
-    return cinema && cinema.name ? cinema.name : '';
+  displayFnTheater(theater: TheaterFilter): string {
+    return theater && theater.name ? theater.name : '';
   }
 
   ngOnDestroy(): void {
@@ -250,15 +250,15 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   loadTicketTypes() {
-    const cinemaVals = this.cinemaForm.value;
-    this.store.dispatch(BookingFormActions.loadTicketTypesList({ id: cinemaVals.cinema.id }));
+    const theaterVals = this.theaterForm.value;
+    this.store.dispatch(BookingFormActions.loadTicketTypesList({ id: theaterVals.theater.id }));
   }
 
   loadShows() {
-    const cinemaVals = this.cinemaForm.value;
+    const TheaterVals = this.theaterForm.value;
     const filter: ShowFilter = {
-      city: cinemaVals.city,
-      theaterId: cinemaVals.cinema.id,
+      city: TheaterVals.city,
+      theaterId: TheaterVals.theater.id,
       movieId: this.movie?.id ?? -1,
       getBookedSeats: true,
     }
@@ -276,12 +276,12 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   createBookingSummary() {
-    const cinemaVals = this.cinemaForm.value;
+    const theaterVals = this.theaterForm.value;
     const showVals = this.showForm.value;
     const seatsVals = this.seatForm.value;
 
     this.booking = {
-      ...cinemaVals,
+      ...theaterVals,
       ...showVals,
       ...seatsVals,
       startTime: this.getShowStartTime(showVals.showId),

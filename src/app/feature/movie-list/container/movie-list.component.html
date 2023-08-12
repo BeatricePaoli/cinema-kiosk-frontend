@@ -33,10 +33,10 @@
 
                     <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
                         <mat-label>Cinema</mat-label>
-                        <input matInput formControlName="cinema" [matAutocomplete]="autoCinema">
-                        <mat-autocomplete #autoCinema="matAutocomplete" hideSingleSelectionIndicator [displayWith]="displayFnCinema">
-                            <mat-option *ngFor="let cinema of filteredCinemas | async" [value]="cinema">
-                                {{ cinema.name }}
+                        <input matInput formControlName="theater" [matAutocomplete]="autoTheater">
+                        <mat-autocomplete #autoTheater="matAutocomplete" hideSingleSelectionIndicator [displayWith]="displayFnTheater">
+                            <mat-option *ngFor="let theater of filteredTheaters | async" [value]="theater">
+                                {{ theater.name }}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>

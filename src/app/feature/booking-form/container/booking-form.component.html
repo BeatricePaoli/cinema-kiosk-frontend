@@ -14,7 +14,7 @@
                 <mat-stepper formArrayName="formArray" [orientation]="(orientation$ | async)!" linear
                     (selectionChange)="onStepChanged($event)">
 
-                    <mat-step formGroupName="0" [stepControl]="cinemaForm">
+                    <mat-step formGroupName="0" [stepControl]="theaterForm">
                         <ng-template matStepLabel>Scegli il cinema</ng-template>
 
                         <div
@@ -37,21 +37,21 @@
 
                             <mat-form-field class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
                                 <mat-label>Cinema</mat-label>
-                                <input matInput formControlName="cinema" [matAutocomplete]="autoCinema">
-                                <mat-autocomplete #autoCinema="matAutocomplete" hideSingleSelectionIndicator [displayWith]="displayFnCinema">
-                                    <mat-option *ngFor="let cinema of filteredCinemas | async" [value]="cinema">
-                                        {{ cinema.name }}
+                                <input matInput formControlName="theater" [matAutocomplete]="autoTheater">
+                                <mat-autocomplete #autoTheater="matAutocomplete" hideSingleSelectionIndicator [displayWith]="displayFnTheater">
+                                    <mat-option *ngFor="let theater of filteredTheaters | async" [value]="theater">
+                                        {{ theater.name }}
                                     </mat-option>
                                 </mat-autocomplete>
-                                <mat-error *ngIf="cinema?.invalid">
-                                    <div *ngIf="cinemaErrorRequired">Valore obbligatorio</div>
-                                    <div *ngIf="!cinemaErrorRequired && cinemaErrorValidOption">Valore non trovato,
+                                <mat-error *ngIf="theater?.invalid">
+                                    <div *ngIf="theaterErrorRequired">Valore obbligatorio</div>
+                                    <div *ngIf="!theaterErrorRequired && theaterErrorValidOption">Valore non trovato,
                                         selezionare una delle opzioni proposte</div>
                                 </mat-error>
                             </mat-form-field>
 
                             <button mat-raised-button matStepperNext color="primary" type="button"
-                                [disabled]="!cinemaForm.valid">
+                                [disabled]="!theaterForm.valid">
                                 Avanti
                             </button>
 

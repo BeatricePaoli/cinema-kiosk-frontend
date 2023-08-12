@@ -22,7 +22,7 @@ export class MovieListComponent implements OnInit, OnDestroy {
   searchForm = new FormGroup({
     movie: new FormControl<string | null>(null),
     city: new FormControl<string | null>(null),
-    cinema: new FormControl<TheaterFilter | null>(null),
+    theater: new FormControl<TheaterFilter | null>(null),
   });
 
   additionalFiltersTot: number = 0;
@@ -32,8 +32,8 @@ export class MovieListComponent implements OnInit, OnDestroy {
   cities: string[] = [];
   filteredCities: Observable<string[]> = new Observable<string[]>;
 
-  cinemas: TheaterFilter[] = [];
-  filteredCinemas: Observable<TheaterFilter[]> = new Observable<TheaterFilter[]>;
+  theaters: TheaterFilter[] = [];
+  filteredTheaters: Observable<TheaterFilter[]> = new Observable<TheaterFilter[]>;
 
   animationState = 'out';
 
@@ -114,20 +114,20 @@ export class MovieListComponent implements OnInit, OnDestroy {
   private setupSearchFilters(filter: AutocompleteTheaterFilter) {
     this.theaterFilter = filter;
 
-    const { cities, cinemas, filteredCities, filteredCinemas } = setupSearchFilters(filter, this.searchForm, this.subs);
+    const { cities, theaters, filteredCities, filteredTheaters } = setupSearchFilters(filter, this.searchForm, this.subs);
     this.cities = cities;
-    this.cinemas = cinemas;
+    this.theaters = theaters;
     this.filteredCities = filteredCities;
-    this.filteredCinemas = filteredCinemas;
+    this.filteredTheaters = filteredTheaters;
 
     this.subs.push(this.searchForm.valueChanges.subscribe(values => {
-      const { city, cinema } = values; 
-      this.additionalFiltersTot = (city && city !== '' ? 1 : 0) + (cinema && cinema.id ? 1 : 0);
+      const { city, theater } = values; 
+      this.additionalFiltersTot = (city && city !== '' ? 1 : 0) + (theater && theater.id ? 1 : 0);
     }));
   }
 
-  displayFnCinema(cinema: TheaterFilter): string {
-    return cinema && cinema.name ? cinema.name : '';
+  displayFnTheater(theater: TheaterFilter): string {
+    return theater && theater.name ? theater.name : '';
   }
 
   onToggleAccordion() {
@@ -139,7 +139,7 @@ export class MovieListComponent implements OnInit, OnDestroy {
     const filter: MovieFilter = {
       movie: values.movie ?? undefined,
       city: values.city ?? undefined,
-      theaterId: values.cinema && values.cinema.id ? values.cinema.id : undefined,
+      theaterId: values.theater && values.theater.id ? values.theater.id : undefined,
     };
     this.store.dispatch(MovieListActions.loadMovieList({ filter }));
   }
