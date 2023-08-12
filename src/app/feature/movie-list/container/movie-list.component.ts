@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, map, of, startWith } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { SlideInOutAnimation } from 'src/app/core/animations/slide-in-out.animation';
 import { Movie, MovieFilter } from 'src/app/core/models/movie';
 import { AutocompleteTheaterFilter, TheaterFilter } from 'src/app/core/models/theater';
 import { Toast } from 'src/app/core/models/toast';
+import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
+import { setupSearchFilters } from 'src/app/core/utils/autocomplete-utils';
 import { MovieListActions } from '../store/actions/movie-list.actions';
 import * as MovieListSelectors from '../store/selectors/movie-list.selectors';
-import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -112,44 +113,17 @@ export class MovieListComponent implements OnInit, OnDestroy {
 
   private setupSearchFilters(filter: AutocompleteTheaterFilter) {
     this.theaterFilter = filter;
-    this.cities = filter.cities.map(c => c.name);
-    this.cinemas = [];
-    filter.cities.forEach(city => this.cinemas = this.cinemas.concat(city.theaters));
 
-    this.filteredCities = this.searchForm.get('city')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.autoCompletefilter(value || '', this.cities)),
-    );
-
-    this.filteredCinemas = this.searchForm.get('cinema')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.autoCompletefilterCinema(value, this.cinemas)),
-    );
-
-    this.subs.push(this.searchForm.get('city')!.valueChanges.subscribe((value: string | null) => {
-      const valid = this.theaterFilter?.cities.find(c => c.name === value);
-      this.cinemas = valid ? valid.theaters : [];
-      
-      // Trigger di valueChanges per aggiornare filteredCinemas
-      this.searchForm.patchValue({
-        cinema: this.searchForm.get('cinema')?.value
-      });
-    }));
+    const { cities, cinemas, filteredCities, filteredCinemas } = setupSearchFilters(filter, this.searchForm, this.subs);
+    this.cities = cities;
+    this.cinemas = cinemas;
+    this.filteredCities = filteredCities;
+    this.filteredCinemas = filteredCinemas;
 
     this.subs.push(this.searchForm.valueChanges.subscribe(values => {
       const { city, cinema } = values; 
       this.additionalFiltersTot = (city && city !== '' ? 1 : 0) + (cinema && cinema.id ? 1 : 0);
     }));
-  }
-
-  private autoCompletefilter(value: string, list: string[]): string[] {
-    const filterValue = value.toLowerCase();
-    return list.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  private autoCompletefilterCinema(value: any, list: TheaterFilter[]): TheaterFilter[] {
-    if (!value) return list;
-    return list.filter(option => option.id === value.id);
   }
 
   displayFnCinema(cinema: TheaterFilter): string {

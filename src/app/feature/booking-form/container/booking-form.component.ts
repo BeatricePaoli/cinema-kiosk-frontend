@@ -5,13 +5,14 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as _moment from 'moment';
-import { Observable, Subscription, map, of, startWith, take } from 'rxjs';
+import { Observable, Subscription, map, of, take } from 'rxjs';
 import { Movie } from 'src/app/core/models/movie';
 import { Show, ShowFilter } from 'src/app/core/models/show';
 import { AutocompleteTheaterFilter, TheaterFilter, TheaterScreen } from 'src/app/core/models/theater';
 import { TicketType } from 'src/app/core/models/tickets';
 import { Toast } from 'src/app/core/models/toast';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
+import { setupSearchFilters } from 'src/app/core/utils/autocomplete-utils';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
 import { BookingFormActions } from '../store/actions/booking-form.actions';
 import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
@@ -207,46 +208,18 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     }));
   }
 
-  // TODO: molto simile a MovieListComponent
   private setupSearchFilters(filter: AutocompleteTheaterFilter) {
     this.theaterFilter = filter;
-    this.cities = filter.cities.map(c => c.name);
-    this.cinemas = [];
-    filter.cities.forEach(city => this.cinemas = this.cinemas.concat(city.theaters));
+
+    const { cities, cinemas, filteredCities, filteredCinemas } = setupSearchFilters(filter, this.cinemaForm, this.subs);
+    this.cities = cities;
+    this.cinemas = cinemas;
+    this.filteredCities = filteredCities;
+    this.filteredCinemas = filteredCinemas;
 
     // Update parameters for the AutocompleteValidator
     this.city?.setValidators([Validators.required, AutocompleteValidator.validOption(this.cities)]);
     this.cinema?.setValidators([Validators.required, AutocompleteValidator.validOption(this.cinemas)]);
-
-    this.filteredCities = this.cinemaForm.get('city')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.autoCompletefilter(value || '', this.cities)),
-    );
-
-    this.filteredCinemas = this.cinemaForm.get('cinema')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.autoCompletefilterCinema(value, this.cinemas)),
-    );
-
-    this.subs.push(this.cinemaForm.get('city')!.valueChanges.subscribe((value: string | null) => {
-      const valid = this.theaterFilter?.cities.find(c => c.name === value);
-      this.cinemas = valid ? valid.theaters : [];
-
-      // Trigger di valueChanges per aggiornare filteredCinemas
-      this.cinemaForm.patchValue({
-        cinema: this.cinemaForm.get('cinema')?.value
-      });
-    }));
-  }
-
-  private autoCompletefilter(value: string, list: string[]): string[] {
-    const filterValue = value.toLowerCase();
-    return list.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  private autoCompletefilterCinema(value: TheaterFilter, list: TheaterFilter[]): TheaterFilter[] {
-    if (!value) return list;
-    return list.filter(option => option.id === value.id);
   }
 
   displayFnCinema(cinema: TheaterFilter): string {
