@@ -2,10 +2,23 @@
     height: 260px;
 }
 
-.barcode-container {
-    text-align: center;
+.movie-poster-mobile {
+    max-height: 40vh;
+    mask-image: linear-gradient(black, transparent);
+}
 
-    img {
-        max-width: 265px;
+img.barcode {
+    max-width: 240px;
+    max-height: 240px;
+}
+
+@media screen and (min-width: 576px) {
+    .movie-poster-mobile {
+        max-height: auto;
+        mask-image: none;
+        
+        img {
+            display: none;
+        }
     }
 }

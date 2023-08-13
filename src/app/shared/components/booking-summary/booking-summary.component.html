@@ -1,6 +1,10 @@
 <ng-container *ngIf="booking">
-    <div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3">
-        <img class="movie-poster-desktop" [src]="booking.movie.img" [alt]="booking.movie.name">
+    <div class="movie-poster-mobile">
+        <img class="w-100" [src]="booking.movie.img" [alt]="booking.movie.name">
+    </div>
+
+    <div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3 flex-sm-row-reverse">
+        <img class="barcode" [src]="booking.codeUrl" alt="Barcode" />
 
         <div class="flex-grow-1">
             <div class="d-flex justify-content-center flex-column gap-4">
@@ -30,10 +34,8 @@
             </button>
         </div>
 
-    </div>
+        <img class="d-none d-sm-block movie-poster-desktop" [src]="booking.movie.img" [alt]="booking.movie.name">
 
-    <div *ngIf="booking.codeUrl" class="pt-4 barcode-container">
-        <img [src]="booking.codeUrl" alt="Barcode" />
     </div>
 
 </ng-container>
