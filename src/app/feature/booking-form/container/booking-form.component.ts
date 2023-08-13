@@ -31,7 +31,6 @@ export class BookingFormComponent implements OnInit, OnDestroy {
 
   selectedStepIndex: number = 0;
 
-  screenUrl: string = "assets/mocks/screen_test.json";
   seatsTaken: string[] = [];
 
   theaterFilter: AutocompleteTheaterFilter | null = null;
