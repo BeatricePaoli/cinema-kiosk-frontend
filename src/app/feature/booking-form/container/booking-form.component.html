@@ -118,7 +118,7 @@
                         <div class="d-flex justify-content-center align-items-center pt-3 gap-4 flex-wrap">
 
                             <mat-form-field *ngFor="let ticket of getTicketsControls()" class="flex-grow-1" appearance="outline" subscriptSizing="dynamic">
-                                <mat-label>{{ ticket.get('name')?.value }}</mat-label>
+                                <mat-label>{{ ticket.get('name')?.value }} ({{ ticket.get('price')?.value | currency:'EUR' }})</mat-label>
                                 <input matInput [formControl]="getTicketProperty(ticket, 'quantity')" type="number" min="0">
                             </mat-form-field>
 
