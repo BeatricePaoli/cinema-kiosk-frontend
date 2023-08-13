@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap } from 'rxjs/operators';
-import { Observable, EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { BookingService } from 'src/app/core/services/booking/booking.service';
 import { BookingActions } from '../actions/booking.actions';
 
 
 @Injectable()
 export class BookingEffects {
 
-  loadBookings$ = createEffect(() => {
+  loadBooking$ = createEffect(() => {
     return this.actions$.pipe(
 
-      ofType(BookingActions.loadBookings),
-      concatMap(() =>
-        /** An EMPTY observable only emits completion. Replace with your own observable API request */
-        EMPTY.pipe(
-          map(data => BookingActions.loadBookingsSuccess({ data })),
-          catchError(error => of(BookingActions.loadBookingsFailure({ error }))))
+      ofType(BookingActions.loadBooking),
+      switchMap((action) => this.bookingService.getBooking(action.id)
+        .pipe(
+          map(data => BookingActions.loadBookingSuccess({ response: data })),
+          catchError(error => of(BookingActions.loadBookingFailure())))
       )
     );
   });
 
 
-  constructor(private actions$: Actions) {}
+  constructor(private actions$: Actions,
+    private bookingService: BookingService) {}
 }

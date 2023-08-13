@@ -1,10 +1,11 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { Booking } from 'src/app/core/models/booking';
 
 export const BookingActions = createActionGroup({
   source: 'Booking',
   events: {
-    'Load Bookings': emptyProps(),
-    'Load Bookings Success': props<{ data: unknown }>(),
-    'Load Bookings Failure': props<{ error: unknown }>(),
+    'Load Booking': props<{ id: number }>(),
+    'Load Booking Success': props<{ response: Booking }>(),
+    'Load Booking Failure': emptyProps(),
   }
 });
