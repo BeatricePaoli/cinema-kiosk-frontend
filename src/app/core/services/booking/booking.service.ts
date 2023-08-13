@@ -23,4 +23,10 @@ export class BookingService {
     url = UrlCreator.of(url).addPathVariable('id', id).createUrl();
     return this.http.get<Booking>(url);
   }
+
+  getBookings(): Observable<Booking[]> {
+    let url = environment.bookings;
+    url = UrlCreator.of(url).createUrl();
+    return this.http.get<Booking[]>(url);
+  }
 }

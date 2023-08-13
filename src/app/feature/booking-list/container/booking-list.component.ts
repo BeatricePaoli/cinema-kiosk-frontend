@@ -1,7 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription, of } from 'rxjs';
 import { CollapseAnimation } from 'src/app/core/animations/collapse.animation';
+import { Booking } from 'src/app/core/models/booking';
+import { Toast } from 'src/app/core/models/toast';
+import { BookingListActions } from '../store/actions/booking-list.actions';
+import * as BookingListSelectors from '../store/selectors/booking-list.selectors';
 
 @Component({
   selector: 'app-booking-list',
@@ -9,100 +15,38 @@ import { CollapseAnimation } from 'src/app/core/animations/collapse.animation';
   styleUrls: ['./booking-list.component.scss'],
   animations: [CollapseAnimation],
 })
-export class BookingListComponent {
+export class BookingListComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
-  bookings: any[] = [
-    {
-      city: "One",
-      theater: {
-        id: 1,
-        name: "Cinema Test"
-      },
-      projectionType: "3D",
-      language: "Italiano",
-      date: "2023-06-19T22:00:00.000Z",
-      showId: 1,
-      tickets: [
-        {
-          name: "Adulti",
-          quantity: 1
-        },
-        {
-          name: "Bambini",
-          quantity: 1
-        }
-      ],
-      seats: [
-        "A-3"
-      ],
-      startTime: "17:30",
-      price: 19,
-      movie: {
-        id: 1,
-        name: "Spider-man: Across the Spiderverse",
-        img: "https://cinemaadriano.it/images/locandine_film/spider.jpg"
-      },
-      barcode: 'assets/mocks/barcode.gif'
-    },
-    {
-      city: "One",
-      theater: {
-        id: 1,
-        name: "Cinema Test"
-      },
-      projectionType: "3D",
-      language: "Italiano",
-      date: "2023-06-17T22:00:00.000Z",
-      showId: 1,
-      adultsSeats: 2,
-      childrenSeats: null,
-      seats: [
-        "A-3"
-      ],
-      startTime: "17:30",
-      price: 9,
-      movie: {
-        id: 1,
-        name: "Elemental",
-        img: "https://cinemaadriano.it/images/locandine_film/elemental.jpg"
-      },
-      barcode: 'assets/mocks/barcode.gif'
-    },
-    {
-      city: "One",
-      theater: {
-        id: 1,
-        name: "Cinema Test"
-      },
-      projectionType: "3D",
-      language: "Italiano",
-      date: "2023-06-15T22:00:00.000Z",
-      showId: 1,
-      adultsSeats: 1,
-      childrenSeats: null,
-      seats: [
-        "A-3"
-      ],
-      startTime: "17:30",
-      price: 9,
-      movie: {
-        id: 1,
-        name: "Spider-man: Across the Spiderverse",
-        img: "https://cinemaadriano.it/images/locandine_film/spider.jpg"
-      },
-      barcode: 'assets/mocks/barcode.gif'
-    }
-  ];
+  bookings: Booking[] = [];
 
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+  isLoading$: Observable<boolean> = of(false);
+  toast$: Observable<Toast | null> = of(null);
+
+  subs: Subscription[] = [];
+
+  dataSource: MatTableDataSource<Booking> = new MatTableDataSource<Booking>([]);
   columnsToDisplay = ['date', 'movie', 'price'];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
-  expandedElement: any | null;
+  expandedElement: Booking | null = null;
 
-  ngAfterViewInit() {
-    this.initTable();
+  constructor(private store: Store) {}
+
+  ngOnInit(): void {
+    this.store.dispatch(BookingListActions.loadBookingLists());
+
+    this.isLoading$ = this.store.select(BookingListSelectors.selectIsLoading);
+    this.toast$ = this.store.select(BookingListSelectors.selectToast);
+
+    this.subs.push(this.store.select(BookingListSelectors.selectBookings).subscribe(bookings => {
+      this.bookings = bookings;
+      this.initTable();
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   initTable() {
