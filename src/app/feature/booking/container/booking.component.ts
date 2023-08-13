@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription, of, take } from 'rxjs';
 import { Booking } from 'src/app/core/models/booking';
@@ -13,7 +13,7 @@ import * as BookingSelectors from '../store/selectors/booking.selectors';
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.scss']
 })
-export class BookingComponent implements OnInit {
+export class BookingComponent implements OnInit, OnDestroy {
 
   booking: Booking | null = null;
 
@@ -36,7 +36,11 @@ export class BookingComponent implements OnInit {
 
     this.subs.push(this.store.select(BookingSelectors.selectBooking).subscribe(booking => {
       this.booking = booking;
-    }))
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
 }
