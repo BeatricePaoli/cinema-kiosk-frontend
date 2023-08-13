@@ -4,7 +4,7 @@
     </div>
 
     <div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3 flex-sm-row-reverse">
-        <img class="barcode" [src]="booking.codeUrl" alt="Barcode" />
+        <img *ngIf="booking.codeUrl" class="barcode" [src]="booking.codeUrl" alt="Barcode" />
 
         <div class="flex-grow-1">
             <div class="d-flex justify-content-center flex-column gap-4">
