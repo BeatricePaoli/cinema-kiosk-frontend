@@ -16,6 +16,7 @@ import { setupSearchFilters } from 'src/app/core/utils/autocomplete-utils';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
 import { BookingFormActions } from '../store/actions/booking-form.actions';
 import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
+import { Booking } from 'src/app/core/models/booking';
 
 const moment = _moment;
 
@@ -74,7 +75,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
 
   selectedSeatsTotalError: boolean = false;
 
-  booking: any;
+  booking: Booking | null = null;
   price: number = 0;
 
   isLoading$: Observable<boolean> = of(false);
@@ -187,6 +188,12 @@ export class BookingFormComponent implements OnInit, OnDestroy {
       this.ticketsList = tickets;
       this.addTicketsForm();
     }));
+
+    this.subs.push(this.store.select(BookingFormSelectors.selectSavedBookingId).subscribe(id => {
+      if (id) {
+        this.router.navigate(['/booking-list', id]);
+      }
+    }));
   }
 
   addTicketsForm() {
@@ -283,7 +290,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     this.booking = {
       ...theaterVals,
       ...showVals,
-      ...seatsVals,
+      seats: seatsVals.seats.map((s: string) => { return { label: s} }),
       startTime: this.getShowStartTime(showVals.showId),
       date: showVals.date.toISOString(),
       price: this.price,
@@ -320,9 +327,9 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log("Submitted");
-    const bookingId = 1;
-    this.router.navigate(['/booking-list', bookingId]);
+    if (this.booking) {
+      this.store.dispatch(BookingFormActions.saveBooking({ booking: this.booking }));
+    }
   }
 
 }

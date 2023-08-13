@@ -16,7 +16,10 @@ export class BookingListComponent {
   bookings: any[] = [
     {
       city: "One",
-      cinema: "Two",
+      theater: {
+        id: 1,
+        name: "Cinema Test"
+      },
       projectionType: "3D",
       language: "Italiano",
       date: "2023-06-19T22:00:00.000Z",
@@ -45,7 +48,10 @@ export class BookingListComponent {
     },
     {
       city: "One",
-      cinema: "Two",
+      theater: {
+        id: 1,
+        name: "Cinema Test"
+      },
       projectionType: "3D",
       language: "Italiano",
       date: "2023-06-17T22:00:00.000Z",
@@ -66,7 +72,10 @@ export class BookingListComponent {
     },
     {
       city: "One",
-      cinema: "Two",
+      theater: {
+        id: 1,
+        name: "Cinema Test"
+      },
       projectionType: "3D",
       language: "Italiano",
       date: "2023-06-15T22:00:00.000Z",

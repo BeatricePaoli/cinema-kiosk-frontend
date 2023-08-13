@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Booking } from 'src/app/core/models/booking';
 import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
 
 
@@ -10,7 +11,7 @@ import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service
 export class BookingSummaryComponent implements OnChanges {
 
   @Input()
-  booking: any;
+  booking: Booking | null = null;
 
   @Input()
   toComplete: boolean = false;
@@ -29,6 +30,10 @@ export class BookingSummaryComponent implements OnChanges {
         }
       }
     }
+  }
+
+  getSeatsString() {
+    return this.booking?.seats.map(s => s.label).join(", ");
   }
 
 }

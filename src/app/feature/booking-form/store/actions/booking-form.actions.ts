@@ -1,4 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { Booking } from 'src/app/core/models/booking';
 import { Movie, MovieFilter } from 'src/app/core/models/movie';
 import { Show, ShowFilter } from 'src/app/core/models/show';
 import { AutocompleteTheaterFilter } from 'src/app/core/models/theater';
@@ -22,5 +23,9 @@ export const BookingFormActions = createActionGroup({
     'Load TicketTypesList': props<{ id: number }>(),
     'Load TicketTypesList Success': props<{ response: TicketType[] }>(),
     'Load TicketTypesList Failure': emptyProps(),
+
+    'Save Booking': props<{ booking: Booking }>(),
+    'Save Booking Success': props<{ response: number }>(),
+    'Save Booking Failure': emptyProps(),
   }
 });

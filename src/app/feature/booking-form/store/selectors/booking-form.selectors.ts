@@ -46,3 +46,10 @@ export const selectTicketTypes = createSelector(
     return state?.ticketTypes;
   }
 );
+
+export const selectSavedBookingId = createSelector(
+  selectBookingFormState,
+  (state: fromBookingForm.State) => {
+    return state?.savedBookingId;
+  }
+);

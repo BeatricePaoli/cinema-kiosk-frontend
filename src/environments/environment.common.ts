@@ -17,4 +17,7 @@ export const commonEnvironment = {
     ticketTypes: '/theaters/{id}/tickets',
 
     shows: '/shows/filter',
+
+    bookings: '/bookings',
+    booking: '/bookings/{id}',
 };

@@ -15,6 +15,7 @@ export interface State {
   filter: AutocompleteTheaterFilter | null;
   shows: Show[];
   ticketTypes: TicketType[];
+  savedBookingId: number | null;
 }
 
 export const initialState: State = {
@@ -24,6 +25,7 @@ export const initialState: State = {
   filter: null,
   shows: [],
   ticketTypes: [],
+  savedBookingId: null,
 };
 
 export const reducer = createReducer(
@@ -112,6 +114,29 @@ export const reducer = createReducer(
       ...state,
       toast: {
         message: "Errore durante il recupero delle tipologie di biglietti.",
+        status: ToastStatus.ERROR,
+      },
+      isLoading: false,
+    };
+  }),
+  on(BookingFormActions.saveBooking, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }),
+  on(BookingFormActions.saveBookingSuccess, (state, { response }) => {
+    return {
+      ...state,
+      isLoading: false,
+      savedBookingId: response,
+    }
+  }),
+  on(BookingFormActions.saveBookingFailure, (state) => {
+    return {
+      ...state,
+      toast: {
+        message: "Errore durante il salvataggio della prenotazione.",
         status: ToastStatus.ERROR,
       },
       isLoading: false,

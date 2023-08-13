@@ -1,43 +1,39 @@
-<div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3">
-    <img class="movie-poster-desktop" [src]="booking?.movie.img" [alt]="booking?.movie.name">
+<ng-container *ngIf="booking">
+    <div class="d-flex justify-content-center flex-wrap flex-md-nowrap gap-4 pt-3">
+        <img class="movie-poster-desktop" [src]="booking.movie.img" [alt]="booking.movie.name">
 
-    <div class="flex-grow-1">
-        <div class="d-flex justify-content-center flex-column gap-4">
+        <div class="flex-grow-1">
+            <div class="d-flex justify-content-center flex-column gap-4">
 
-            <h5 class="fw-bold">{{ booking?.movie.name }}</h5>
+                <h5 class="fw-bold">{{ booking.movie.name }}</h5>
 
-            <div class="d-flex justify-content-between">
-                <span class="fw-bold">Cinema</span>
-                <span>{{ booking?.theater.name }} ({{ booking?.city }})</span>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <span class="fw-bold">Spettacolo</span>
-                <span>{{ booking?.date | date: 'dd/MM/YYYY' }} - {{ booking?.startTime }}</span>
-            </div>
-
-            <ng-container *ngFor="let ticket of booking?.tickets">
-                <div *ngIf="ticket.quantity" class="d-flex justify-content-between">
-                    <span class="fw-bold">{{ ticket.name }}</span>
-                    <span>{{ ticket.quantity }}</span>
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold">Cinema</span>
+                    <span>{{ booking.theater.name }} ({{ booking.city }})</span>
                 </div>
-            </ng-container>
 
-            <div class="d-flex justify-content-between">
-                <span class="fw-bold">Posti</span>
-                <span>{{ booking?.seats?.join(', ') }}</span>
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold">Spettacolo</span>
+                    <span>{{ booking.date | date: 'dd/MM/YYYY' }} - {{ booking.startTime }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold">Posti</span>
+                    <span>{{ getSeatsString() }}</span>
+                </div>
+
             </div>
 
+            <button *ngIf="toComplete" mat-raised-button color="primary" class="px-5 mt-4">
+                Prenota
+                <span class="ps-2">{{ booking.price | currency:'EUR' }}</span>
+            </button>
         </div>
 
-        <button *ngIf="toComplete" mat-raised-button color="primary" class="px-5 mt-4">
-            Prenota
-            <span class="ps-2">{{ booking?.price | currency:'EUR' }}</span>
-        </button>
     </div>
 
-</div>
+    <div *ngIf="booking.codeUrl" class="pt-4 barcode-container">
+        <img [src]="booking.codeUrl" alt="Barcode" />
+    </div>
 
-<div *ngIf="booking?.barcode" class="pt-4 barcode-container">
-    <img [src]="booking.barcode" alt="Barcode" />
-</div>
+</ng-container>
