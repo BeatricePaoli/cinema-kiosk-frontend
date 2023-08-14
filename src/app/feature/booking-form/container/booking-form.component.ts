@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as _moment from 'moment';
 import { Observable, Subscription, map, of, take } from 'rxjs';
+import { Booking } from 'src/app/core/models/booking';
 import { Movie } from 'src/app/core/models/movie';
 import { Show, ShowFilter } from 'src/app/core/models/show';
 import { AutocompleteTheaterFilter, TheaterFilter, TheaterScreen } from 'src/app/core/models/theater';
@@ -16,7 +17,6 @@ import { setupSearchFilters } from 'src/app/core/utils/autocomplete-utils';
 import { AutocompleteValidator } from 'src/app/core/validators/autocomplete.validator';
 import { BookingFormActions } from '../store/actions/booking-form.actions';
 import * as BookingFormSelectors from '../store/selectors/booking-form.selectors';
-import { Booking } from 'src/app/core/models/booking';
 
 const moment = _moment;
 
@@ -177,10 +177,13 @@ export class BookingFormComponent implements OnInit, OnDestroy {
       this.minShowDate = moment.min(shows.map(s => moment(s.date)));
       this.maxShowDate = moment.max(shows.map(s => moment(s.date)));
 
-      this.showForm.patchValue({
-        projectionType: this.projTypes[0],
-        language: this.languages[0],
-      });
+      const showVals = this.showForm.value;
+      if (!showVals.projectionType || !showVals.language) {
+        this.showForm.patchValue({
+          projectionType: this.projTypes[0],
+          language: this.languages[0],
+        });
+      }
     }));
 
     this.subs.push(this.store.select(BookingFormSelectors.selectTicketTypes).subscribe(tickets => {
@@ -256,8 +259,10 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   loadTicketTypes() {
-    const theaterVals = this.theaterForm.value;
-    this.store.dispatch(BookingFormActions.loadTicketTypesList({ id: theaterVals.theater.id }));
+    if (this.ticketsList.length === 0) {
+      const theaterVals = this.theaterForm.value;
+      this.store.dispatch(BookingFormActions.loadTicketTypesList({ id: theaterVals.theater.id }));
+    }
   }
 
   loadShows() {
@@ -289,7 +294,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     this.booking = {
       ...theaterVals,
       ...showVals,
-      seats: seatsVals.seats.map((s: string) => { return { label: s} }),
+      seats: seatsVals.seats.map((s: string) => { return { label: s } }),
       startTime: this.getShowStartTime(showVals.showId),
       date: showVals.date.toISOString(),
       price: this.price,
