@@ -20,6 +20,7 @@ import { SeatsEditorComponent } from './components/seats-editor/seats-editor.com
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { DayFormatDatepickerDirective } from './directives/day-format-datepicker.directive';
 import { ToastComponent } from './components/toast/toast.component';
+import { SecurePipe } from './pipes/secure.pipe';
 
 const IMPORTS = [
   CommonModule,
@@ -41,6 +42,10 @@ const IMPORTS = [
 
 const DIRECTIVES = [
   DayFormatDatepickerDirective,
+];
+
+const PIPES = [
+  SecurePipe,
 ]
 
 const COMPONENTS = [
@@ -49,12 +54,13 @@ const COMPONENTS = [
   BookingSummaryComponent,
   SpinnerComponent,
   ToastComponent,
-]
+];
 
 @NgModule({
   declarations: [
     DIRECTIVES,
     COMPONENTS,
+    PIPES,
   ],
   imports: [
     IMPORTS,
@@ -63,6 +69,7 @@ const COMPONENTS = [
     IMPORTS,
     DIRECTIVES,
     COMPONENTS,
+    PIPES,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: I18nPaginator }],
 })
