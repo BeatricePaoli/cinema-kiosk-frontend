@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, mapToCanMatch } from '@angular/router';
-import { AuthLoadGuard } from './core/guard/auth/authLoad.guard';
+import { AuthGuard } from './core/guard/auth/auth.guard';
 
 const routes: Routes = [
   {
@@ -31,7 +31,7 @@ const routes: Routes = [
   },
   {
     path: 'booking-form/:movieId',
-    canMatch: mapToCanMatch([AuthLoadGuard]),
+    canMatch: mapToCanMatch([AuthGuard]),
     loadChildren: () =>
       import('./feature/booking-form/booking-form.module').then(
         (m) => m.BookingFormModule
@@ -39,7 +39,7 @@ const routes: Routes = [
   },
   {
     path: 'booking-list',
-    canMatch: mapToCanMatch([AuthLoadGuard]),
+    canMatch: mapToCanMatch([AuthGuard]),
     loadChildren: () =>
       import('./feature/booking-list/booking-list.module').then(
         (m) => m.BookingListModule
@@ -47,7 +47,7 @@ const routes: Routes = [
   },
   {
     path: 'booking-list/:bookingId',
-    canMatch: mapToCanMatch([AuthLoadGuard]),
+    canMatch: mapToCanMatch([AuthGuard]),
     loadChildren: () =>
       import('./feature/booking/booking.module').then(
         (m) => m.BookingModule

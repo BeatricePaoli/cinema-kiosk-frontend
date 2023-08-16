@@ -2,17 +2,17 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { OAuthLogger, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
 
-import { AuthLoadGuard } from './authLoad.guard';
+import { AuthGuard } from './auth.guard';
 
-describe('AuthLoadGuardService', () => {
-  let service: AuthLoadGuard;
+describe('AuthGuard', () => {
+  let service: AuthGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
-      providers: [ AuthLoadGuard, OAuthService, UrlHelperService, OAuthLogger ]
+      providers: [ AuthGuard, OAuthService, UrlHelperService, OAuthLogger ]
     });
-    service = TestBed.inject(AuthLoadGuard);
+    service = TestBed.inject(AuthGuard);
   });
 
   it('should be created', () => {
