@@ -7,6 +7,9 @@ import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { MovieActions } from '../store/actions/movie.actions';
 import * as MovieSelectors from '../store/selectors/movie.selectors';
 import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
+import * as _moment from 'moment';
+
+const moment = _moment;
 
 @Component({
   selector: 'app-movie',
@@ -60,7 +63,7 @@ export class MovieComponent implements OnInit, OnDestroy {
   }
 
   showBookingBtn() {
-    return this.movie && this.movie.releaseDate <= new Date();
+    return this.movie && moment(this.movie.releaseDate).isSameOrBefore(moment());
   }
 
   ngOnDestroy(): void {
