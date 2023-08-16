@@ -27,5 +27,7 @@ export const BookingFormActions = createActionGroup({
     'Save Booking': props<{ booking: Booking }>(),
     'Save Booking Success': props<{ response: number }>(),
     'Save Booking Failure': emptyProps(),
+
+    'Reset Saved Booking Id': emptyProps(),
   }
 });

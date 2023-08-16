@@ -142,6 +142,12 @@ export const reducer = createReducer(
       isLoading: false,
     };
   }),
+  on(BookingFormActions.resetSavedBookingId, (state) => {
+    return {
+      ...state,
+      savedBookingId: null,
+    }
+  }),
 );
 
 export const bookingFormFeature = createFeature({

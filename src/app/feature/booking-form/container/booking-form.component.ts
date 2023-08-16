@@ -194,6 +194,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
     this.subs.push(this.store.select(BookingFormSelectors.selectSavedBookingId).subscribe(id => {
       if (id) {
         this.router.navigate(['/booking-list', id]);
+        this.store.dispatch(BookingFormActions.resetSavedBookingId());
       }
     }));
   }
