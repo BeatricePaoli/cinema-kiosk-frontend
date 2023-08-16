@@ -21,15 +21,19 @@
         </mat-toolbar>
     
         <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button *ngIf="!isUserLogged()" mat-menu-item routerLink="login">
+                <mat-icon>login</mat-icon>
+                <span>Login</span>
+            </button>
+            <button *ngIf="isUserLogged()" mat-menu-item>
                 <mat-icon>settings</mat-icon>
                 <span>Profilo</span>
             </button>
-            <button mat-menu-item routerLink="booking-list">
+            <button *ngIf="isUserLogged()" mat-menu-item routerLink="booking-list">
                 <mat-icon>list_alt</mat-icon>
                 <span>Prenotazioni</span>
             </button>
-            <button mat-menu-item>
+            <button *ngIf="isUserLogged()" mat-menu-item (click)="onLogoutClicked()">
                 <mat-icon>logout</mat-icon>
                 <span>Logout</span>
             </button>

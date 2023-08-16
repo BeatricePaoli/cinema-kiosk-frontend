@@ -7,6 +7,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { NavigationActionTiming, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { environment } from 'src/environments/environment';
 import { reducers } from '.';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,7 +29,7 @@ import { HeaderModule } from './feature/header/header.module';
         strictStateImmutability: true,
         strictActionImmutability: true,
         strictStateSerializability: true,
-        strictActionSerializability: true, // TODO: Check se va messo a false
+        strictActionSerializability: true,
         strictActionWithinNgZone: true,
         strictActionTypeUniqueness: true,
       },
@@ -38,6 +40,12 @@ import { HeaderModule } from './feature/header/header.module';
       navigationActionTiming: NavigationActionTiming.PostActivation,
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: [environment.keycloakApiUrl, environment.apiUrl],
+        sendAccessToken: true,
+      },
+    }),
     HeaderModule,
   ],
   bootstrap: [AppComponent]

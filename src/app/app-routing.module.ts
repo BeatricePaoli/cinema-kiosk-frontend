@@ -1,11 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, mapToCanMatch } from '@angular/router';
+import { AuthLoadGuard } from './core/guard/auth/authLoad.guard';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'movie-list',
     pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./feature/login/login.module').then(
+        (m) => m.LoginModule
+      ),
   },
   {
     path: 'movie-list',
@@ -23,6 +31,7 @@ const routes: Routes = [
   },
   {
     path: 'booking-form/:movieId',
+    canMatch: mapToCanMatch([AuthLoadGuard]),
     loadChildren: () =>
       import('./feature/booking-form/booking-form.module').then(
         (m) => m.BookingFormModule
@@ -30,6 +39,7 @@ const routes: Routes = [
   },
   {
     path: 'booking-list',
+    canMatch: mapToCanMatch([AuthLoadGuard]),
     loadChildren: () =>
       import('./feature/booking-list/booking-list.module').then(
         (m) => m.BookingListModule
@@ -37,6 +47,7 @@ const routes: Routes = [
   },
   {
     path: 'booking-list/:bookingId',
+    canMatch: mapToCanMatch([AuthLoadGuard]),
     loadChildren: () =>
       import('./feature/booking/booking.module').then(
         (m) => m.BookingModule

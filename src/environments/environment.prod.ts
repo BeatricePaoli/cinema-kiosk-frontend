@@ -1,15 +1,13 @@
 import { commonEnvironment } from './environment.common';
 // Da cambiare con gli endpoint online
-const baseUrl = 'http://localhost:8081/api';
 
 export const environment = {
   ...commonEnvironment,
   production: false,
   mock: false,
 
-  apiUrl: baseUrl,
-  adminApiUrl: baseUrl + '/admin',
+  apiUrl: 'http://localhost:8081/api',
 
-  keycloakApiUrl: 'http://localhost:8080/auth/realms/master',
+  keycloakApiUrl: 'http://localhost:8090/realms/cinema-kiosk',
   redirectUri: 'http://localhost:4200/',
 };
