@@ -5,7 +5,7 @@
     <button mat-mini-fab class="back-btn" routerLink="/movie-list">
         <mat-icon>chevron_left</mat-icon>
     </button>
-    <img *ngIf="movie" class="w-100" [src]="movie.img" [alt]="movie.name">
+    <img *ngIf="!(isLoading$ | async) && movie" class="w-100" [src]="movie.img" [alt]="movie.name">
 </div>
 
 <div *ngIf="!(isLoading$ | async) && movie" class="container py-2 py-sm-5">
