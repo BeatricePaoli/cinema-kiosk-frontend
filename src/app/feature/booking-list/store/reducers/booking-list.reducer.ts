@@ -42,6 +42,32 @@ export const reducer = createReducer(
       isLoading: false,
     };
   }),
+  on(BookingListActions.deleteBooking, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }),
+  on(BookingListActions.deleteBookingSuccess, (state) => {
+    return {
+      ...state,
+      toast: {
+        message: "Prenotazione cancellata.",
+        status: ToastStatus.SUCCESS,
+      },
+      isLoading: false,
+    }
+  }),
+  on(BookingListActions.deleteBookingFailure, (state) => {
+    return {
+      ...state,
+      toast: {
+        message: "Errore durante il recupero delle prenotazioni.",
+        status: ToastStatus.ERROR,
+      },
+      isLoading: false,
+    };
+  }),
 );
 
 export const bookingListFeature = createFeature({

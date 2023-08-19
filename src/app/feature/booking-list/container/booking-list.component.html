@@ -24,12 +24,17 @@
                     </ng-container>
 
                     <ng-container matColumnDef="expand">
-                        <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+                        <th mat-header-cell *matHeaderCellDef> Azioni </th>
                         <td mat-cell *matCellDef="let row">
-                            <button mat-icon-button (click)="(expandedElement = expandedElement === row ? null : row); $event.stopPropagation()">
-                                <mat-icon *ngIf="expandedElement !== row">keyboard_arrow_down</mat-icon>
-                                <mat-icon *ngIf="expandedElement === row">keyboard_arrow_up</mat-icon>
-                            </button>
+                            <div class="d-flex justify-content-center">
+                                <button mat-icon-button matTooltip="Dettaglio" (click)="(expandedElement = expandedElement === row ? null : row); $event.stopPropagation()">
+                                    <mat-icon *ngIf="expandedElement !== row">keyboard_arrow_down</mat-icon>
+                                    <mat-icon *ngIf="expandedElement === row">keyboard_arrow_up</mat-icon>
+                                </button>
+                                <button *ngIf="canBeDeleted(row)" mat-icon-button color="primary" matTooltip="Cancella" (click)="onCancelClicked(row); $event.stopPropagation()">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
                         </td>
                     </ng-container>
 

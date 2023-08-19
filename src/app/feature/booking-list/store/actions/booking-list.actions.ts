@@ -7,5 +7,10 @@ export const BookingListActions = createActionGroup({
     'Load BookingLists': emptyProps(),
     'Load BookingLists Success': props<{ response: Booking[] }>(),
     'Load BookingLists Failure': emptyProps(),
+
+    'Delete Booking': props<{ id: number }>(),
+    'Delete Booking Success And Reload': emptyProps(),
+    'Delete Booking Success': emptyProps(),
+    'Delete Booking Failure': emptyProps(),
   }
 });

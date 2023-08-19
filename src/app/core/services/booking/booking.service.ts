@@ -29,4 +29,10 @@ export class BookingService {
     url = UrlCreator.of(url).createUrl();
     return this.http.get<Booking[]>(url);
   }
+
+  deleteBooking(id: number): Observable<void> {
+    let url = environment.booking;
+    url = UrlCreator.of(url).addPathVariable('id', id).createUrl();
+    return this.http.delete<void>(url);
+  }
 }

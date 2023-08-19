@@ -12,4 +12,12 @@ export interface Booking {
     startTime: string;
     price: number;
     codeUrl: string;
+    status: BookingStatus;
+}
+
+export enum BookingStatus {
+    CREATED = "CREATED",
+    PAID = "PAID",
+    CHECKEDIN = "CHECKEDIN",
+    CANCELED = "CANCELED",
 }
