@@ -6,7 +6,6 @@ import { SlideInOutAnimation } from 'src/app/core/animations/slide-in-out.animat
 import { Movie, MovieFilter } from 'src/app/core/models/movie';
 import { AutocompleteTheaterFilter, TheaterFilter } from 'src/app/core/models/theater';
 import { Toast } from 'src/app/core/models/toast';
-import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
 import { setupSearchFilters } from 'src/app/core/utils/autocomplete-utils';
 import { MovieListActions } from '../store/actions/movie-list.actions';
 import * as MovieListSelectors from '../store/selectors/movie-list.selectors';
@@ -37,8 +36,8 @@ export class MovieListComponent implements OnInit, OnDestroy {
 
   animationState = 'out';
 
-  currentMovies: Movie[] = [];
-  futureMovies: Movie[] = [];
+  currentMovies$:  Observable<Movie[]> = of([]);
+  futureMovies$:  Observable<Movie[]> = of([]);
 
   isLoading$: Observable<boolean> = of(false);
   toast$: Observable<Toast | null> = of(null);
@@ -74,28 +73,14 @@ export class MovieListComponent implements OnInit, OnDestroy {
 
   subs: Subscription[] = [];
 
-  constructor(private store: Store, private imgSanitizer: ImgSanitizerService) { }
+  constructor(private store: Store) { }
 
   ngOnInit() {
     this.store.dispatch(MovieListActions.loadMovieList({ filter: {} }));
     this.store.dispatch(MovieListActions.loadFilter());
 
-    this.subs.push(this.store.select(MovieListSelectors.selectCurrentMovies).subscribe(movies => {
-      this.currentMovies = movies.map(m => {
-        return {
-          ...m,
-          img: this.imgSanitizer.sanitizeImg(m.img.toString()),
-        };
-      });
-    }));
-    this.subs.push(this.store.select(MovieListSelectors.selectFutureMovies).subscribe(movies => {
-      this.futureMovies = movies.map(m => {
-        return {
-          ...m,
-          img: this.imgSanitizer.sanitizeImg(m.img.toString()),
-        };
-      });
-    }));
+    this.currentMovies$ = this.store.select(MovieListSelectors.selectCurrentMovies);
+    this.futureMovies$ = this.store.select(MovieListSelectors.selectFutureMovies);
 
     this.isLoading$ = this.store.select(MovieListSelectors.selectIsLoading);
     this.toast$ = this.store.select(MovieListSelectors.selectToast);

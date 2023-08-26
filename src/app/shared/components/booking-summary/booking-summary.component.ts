@@ -1,6 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Booking } from 'src/app/core/models/booking';
-import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service';
 
 
 @Component({
@@ -8,7 +7,7 @@ import { ImgSanitizerService } from 'src/app/core/services/img-sanitizer.service
   templateUrl: './booking-summary.component.html',
   styleUrls: ['./booking-summary.component.scss']
 })
-export class BookingSummaryComponent implements OnChanges {
+export class BookingSummaryComponent {
 
   @Input()
   booking: Booking | null = null;
@@ -16,21 +15,7 @@ export class BookingSummaryComponent implements OnChanges {
   @Input()
   toComplete: boolean = false;
 
-  constructor(private imgSanitizer: ImgSanitizerService) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['booking'] && changes['booking'].currentValue) {
-      const b = changes['booking'].currentValue;
-      this.booking = {
-        ...b,
-        movie: {
-          id: b.movie.id,
-          name: b.movie.name,
-          img: this.imgSanitizer.sanitizeImg(b.movie.img.toString()),
-        }
-      }
-    }
-  }
+  constructor() {}
 
   getSeatsString() {
     return this.booking?.seats.map(s => s.label).join(", ");

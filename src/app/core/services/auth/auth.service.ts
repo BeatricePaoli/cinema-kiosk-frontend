@@ -59,7 +59,6 @@ export class AuthService {
       })
 
       .then(() => {
-        console.log("serv", this.oauthService.state)
         if (window.location.href.includes('login')) {
           // TODO: da cambiare a seconda dei ruoli
           this.router.navigate(['']);
