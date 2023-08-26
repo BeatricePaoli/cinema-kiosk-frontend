@@ -128,7 +128,6 @@ export class SchedulingComponent implements OnInit {
         end: moment().isoWeekday(changeDay).endOf('day'),
       });
     } else {
-      // TODO: check
       this.searchForm.patchValue({
         start: moment().add(1, 'weeks').isoWeekday(changeDay).subtract(1, 'weeks').startOf('day'),
         end: moment().add(1, 'weeks').isoWeekday(changeDay).endOf('day'),
@@ -286,11 +285,6 @@ export class SchedulingComponent implements OnInit {
         ]
       },
     })
-  }
-
-  // TODO: inutilizzato
-  onSubmit() {
-    console.log("submitted")
   }
 
 }
