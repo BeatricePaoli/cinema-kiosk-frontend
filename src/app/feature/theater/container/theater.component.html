@@ -8,16 +8,16 @@
     <div class="row">
         <div class="col">
 
-            <h3 class="fw-bold">{{ theater ? theater.name : 'Nuovo cinema' }}</h3>
+            <h3>{{ theater ? theater.name : 'Nuovo cinema' }}</h3>
 
             <app-theater-form [theater]="theater" (onSave)="onTheaterSubmit($event)"></app-theater-form>
 
             <ng-container *ngIf="theater">
-                <h3 class="fw-bold">Sale</h3>
+                <h3>Sale</h3>
 
                 <app-screen-list [screens]="theater.screens" (onDelete)="onScreenDelete($event)"></app-screen-list>
 
-                <h3 class="pt-4 fw-bold">Biglietti</h3>
+                <h3 class="pt-4">Biglietti</h3>
 
                 <app-ticket-list [ticketsList]="theater.tickets" (onSave)="onTicketsSubmit($event)"></app-ticket-list>
             </ng-container>
