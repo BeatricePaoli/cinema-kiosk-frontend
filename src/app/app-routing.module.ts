@@ -89,6 +89,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'booking-validator',
+    loadChildren: () =>
+      import('./feature/booking-validator/booking-validator.module').then(
+        (m) => m.BookingValidatorModule
+      ),
+  },
+  {
     path: 'error',
     loadChildren: () =>
       import('./feature/error/error.module').then(

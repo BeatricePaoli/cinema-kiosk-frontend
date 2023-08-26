@@ -1,0 +1,78 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col">
+            <h3 class="mb-3">Valida un QR Code</h3>
+            <div class="d-flex flex-column flex-md-row gap-5">
+
+                <div class="d-flex justify-content-center align-items-center scanner-container">
+                    <zxing-scanner class="scanner" [ngClass]="{'d-none': !scannerEnabled || !permission}"
+                        [formats]="allowedFormats" (permissionResponse)="onPermissionResponse($event)"
+                        (scanSuccess)="scanSuccessHandler($event)"></zxing-scanner>
+
+                    <button *ngIf="!scannerEnabled && permission" (click)="enableScanner()" mat-raised-button
+                        color="accent">
+                        Leggi un altro QR Code
+                    </button>
+
+                    <div *ngIf="!permission" class="alert alert-danger" role="alert">
+                        Permesso di accesso alla fotocamera rifiutato. Lo scanner non può essere utilizzato.
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column gap-4">
+
+                    <h3>Dettagli prenotazione</h3>
+
+                    <div *ngIf="!qrCodeError && !booking" class="alert alert-info" role="alert">
+                        Scannerizza un QR Code per vedere il riepilogo di una prenotazione.
+                    </div>
+
+                    <div *ngIf="qrCodeError" class="alert alert-danger" role="alert">
+                        QR Code non valido.
+                    </div>
+
+                    <ng-container *ngIf="booking">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Film</span>
+                            <span>{{ booking.movieName }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Cinema</span>
+                            <span>{{ booking.theaterName }} ({{ booking.city }})</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Spettacolo</span>
+                            <span>{{ booking.date | date: 'dd/MM/YYYY' }} - {{ booking.startTime }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Totale Posti</span>
+                            <span>{{ booking.totalSeats }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Prezzo</span>
+                            <span>{{ booking.price | currency:'EUR' }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Stato Prenotazione</span>
+                            <span class="fw-bold" [ngStyle]="getStatusColor(booking.status)">
+                                {{ getStatusLabel(booking.status) }}
+                            </span>
+                        </div>
+
+                        <div>
+                            <button mat-raised-button color="primary" class="px-5 mt-4"
+                                [disabled]="booking.status === 'CANCELED' || booking.status === 'CHECKEDIN'"
+                                (click)="onConfirmClicked()">Conferma</button>
+                        </div>
+                    </ng-container>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

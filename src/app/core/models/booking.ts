@@ -21,3 +21,15 @@ export enum BookingStatus {
     CHECKEDIN = "CHECKEDIN",
     CANCELED = "CANCELED",
 }
+
+export interface BookingCompact {
+    id: number;
+    city: string;
+    theaterName: string;
+    movieName: string;
+    totalSeats: number;
+    date: Date;
+    startTime: string;
+    price: number;
+    status: BookingStatus;
+}
