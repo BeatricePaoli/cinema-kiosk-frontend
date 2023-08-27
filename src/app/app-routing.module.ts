@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, mapToCanMatch } from '@angular/router';
 import { AuthGuard } from './core/guard/auth/auth.guard';
+import { Role } from './core/models/role';
+import { RolesGuard } from './core/guard/roles/roles.guard';
 
 const routes: Routes = [
   {
@@ -90,10 +92,12 @@ const routes: Routes = [
   },
   {
     path: 'booking-validator',
+    canMatch: mapToCanMatch([AuthGuard, RolesGuard]),
     loadChildren: () =>
       import('./feature/booking-validator/booking-validator.module').then(
         (m) => m.BookingValidatorModule
       ),
+    data: { role: [ Role.CASHIER ] }
   },
   {
     path: 'error',

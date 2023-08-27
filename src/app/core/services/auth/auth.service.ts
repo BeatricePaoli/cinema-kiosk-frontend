@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { BehaviorSubject } from 'rxjs';
 import { authCodeFlowConfig } from './auth.configuration';
+import { Role } from '../../models/role';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class AuthService {
   constructor(
     private oauthService: OAuthService,
     private router: Router,
-  ) {}
+  ) { }
 
   public configure() {
     this.oauthService.configure(authCodeFlowConfig);
@@ -36,8 +37,7 @@ export class AuthService {
     localStorage.removeItem('roles');
     this.setRoles([]);
     this.oauthService.logOut();
-    // TODO: cambiare endpoint per vari ruoli?
-    this.router.navigate(['']);
+    this.router.navigate([this.getRedirectRoute(true)]);
   }
 
   public runInitialLoginSequence(): Promise<void> {
@@ -47,7 +47,7 @@ export class AuthService {
         if (this.oauthService.hasValidAccessToken()) {
           const obj: any = this.oauthService.getIdentityClaims();
           const roles = obj.roles ? obj.roles : [];
-          
+
           localStorage.setItem('roles', JSON.stringify(roles));
           this.setRoles(roles);
 
@@ -60,8 +60,7 @@ export class AuthService {
 
       .then(() => {
         if (window.location.href.includes('login')) {
-          // TODO: da cambiare a seconda dei ruoli
-          this.router.navigate(['']);
+          this.router.navigate([this.getRedirectRoute()]);
         } else {
           let url = window.location.pathname;
           if (decodeURIComponent(window.location.search)) {
@@ -86,5 +85,23 @@ export class AuthService {
     if (roles) {
       this.setRoles(JSON.parse(roles));
     }
+  }
+
+  private getRedirectRoute(forLogout?: boolean): string {
+    let roles = localStorage.getItem('roles');
+    roles = JSON.parse(roles ?? '[]');
+    if (roles && roles.length > 0) {
+      switch (roles[0]) {
+        case Role.SYSADMIN:
+          return forLogout ? 'login' : '';
+        case Role.ADMIN:
+          return forLogout ? 'login' : 'theater-list';
+        case Role.CASHIER:
+          return forLogout ? 'login' : 'booking-validator';
+        default:
+          return '';
+      }
+    }
+    return '';
   }
 }
