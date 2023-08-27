@@ -1,7 +1,12 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { BarcodeFormat } from '@zxing/library';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
+import { Observable, Subscription, of } from 'rxjs';
 import { BookingCompact, BookingStatus } from 'src/app/core/models/booking';
+import { Toast } from 'src/app/core/models/toast';
+import { BookingValidatorActions } from '../store/actions/booking-validator.actions';
+import * as BookingValidatorSelectors from '../store/selectors/booking-validator.selectors';
 
 
 @Component({
@@ -9,7 +14,7 @@ import { BookingCompact, BookingStatus } from 'src/app/core/models/booking';
   templateUrl: './booking-validator.component.html',
   styleUrls: ['./booking-validator.component.scss']
 })
-export class BookingValidatorComponent implements AfterViewInit {
+export class BookingValidatorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(ZXingScannerComponent) scanner?: ZXingScannerComponent;
 
@@ -20,14 +25,37 @@ export class BookingValidatorComponent implements AfterViewInit {
   permission: boolean = true;
   qrCodeError: boolean = false;
 
+  isLoading$: Observable<boolean> = of(false);
+  toast$: Observable<Toast | null> = of(null);
+
+  subs: Subscription[] = [];
+
+  constructor(private store: Store) {}
+
+  ngOnInit() {
+    this.isLoading$ = this.store.select(BookingValidatorSelectors.selectIsLoading);
+    this.toast$ = this.store.select(BookingValidatorSelectors.selectToast);
+
+    this.subs.push(this.store.select(BookingValidatorSelectors.selectBooking).subscribe(booking => {
+      if (this.booking && booking) {
+        this.booking.status = booking?.status;
+      }
+    }))
+  }
+
   ngAfterViewInit(): void {
     this.scanner?.askForPermission();
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   enableScanner() {
     this.scannerEnabled = true;
     this.qrCodeError = false;
     this.booking = null;
+    this.store.dispatch(BookingValidatorActions.resetBooking());
   }
 
   onPermissionResponse(permission: boolean) {
@@ -38,6 +66,8 @@ export class BookingValidatorComponent implements AfterViewInit {
     if (this.scannerEnabled) {
       try {
         this.booking = JSON.parse(event);
+        this.store.dispatch(BookingValidatorActions.loadBooking({ id: this.booking!.id }));
+
         this.scannerEnabled = false;
         this.qrCodeError = false;
       } catch (error) {
@@ -67,8 +97,7 @@ export class BookingValidatorComponent implements AfterViewInit {
   }
 
   onConfirmClicked() {
-    console.log("conferma");
-    this.booking!.status = BookingStatus.CHECKEDIN;
+    this.store.dispatch(BookingValidatorActions.validateBooking({ id: this.booking!.id }))
   }
 
 }

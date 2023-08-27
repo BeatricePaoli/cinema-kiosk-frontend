@@ -35,4 +35,10 @@ export class BookingService {
     url = UrlCreator.of(url).addPathVariable('id', id).createUrl();
     return this.http.delete<void>(url);
   }
+
+  validateBooking(id: number): Observable<void> {
+    let url = environment.booking;
+    url = UrlCreator.of(url).addPathVariable('id', id).createUrl();
+    return this.http.patch<void>(url, {});
+  }
 }

@@ -37,14 +37,14 @@ export class BookingListEffects {
     return this.actions$.pipe(
 
       ofType(BookingListActions.deleteBookingSuccessAndReload),
-      map(data => BookingListActions.deleteBookingSuccess()),
+      map(action => BookingListActions.deleteBookingSuccess()),
     );
   });
   reloadBookingsOnDelete$ = createEffect(() => {
     return this.actions$.pipe(
 
       ofType(BookingListActions.deleteBookingSuccessAndReload),
-      map(data => BookingListActions.loadBookingLists()),
+      map(action => BookingListActions.loadBookingLists()),
     );
   });
 

@@ -1,3 +1,6 @@
+<app-toast [toast]="toast$ | async"></app-toast>
+<app-spinner *ngIf="isLoading$ | async"></app-spinner>
+
 <div class="container py-5">
     <div class="row">
         <div class="col">
@@ -6,7 +9,7 @@
 
                 <div class="d-flex justify-content-center align-items-center scanner-container">
                     <zxing-scanner class="scanner" [ngClass]="{'d-none': !scannerEnabled || !permission}"
-                        [formats]="allowedFormats" (permissionResponse)="onPermissionResponse($event)"
+                        [formats]="allowedFormats" [enable]="scannerEnabled" (permissionResponse)="onPermissionResponse($event)"
                         (scanSuccess)="scanSuccessHandler($event)"></zxing-scanner>
 
                     <button *ngIf="!scannerEnabled && permission" (click)="enableScanner()" mat-raised-button
@@ -67,7 +70,7 @@
                         <div>
                             <button mat-raised-button color="primary" class="px-5 mt-4"
                                 [disabled]="booking.status === 'CANCELED' || booking.status === 'CHECKEDIN'"
-                                (click)="onConfirmClicked()">Conferma</button>
+                                (click)="onConfirmClicked()">Valida</button>
                         </div>
                     </ng-container>
                 </div>
