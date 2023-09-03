@@ -36,7 +36,7 @@ export class ScreenComponent {
 
         }
       }
-    })
+    });
   }
 
   onSave(formValues: any) {

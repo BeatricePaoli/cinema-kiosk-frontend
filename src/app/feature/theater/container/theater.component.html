@@ -13,7 +13,12 @@
             <app-theater-form [theater]="theater" (onSave)="onTheaterSubmit($event)"></app-theater-form>
 
             <ng-container *ngIf="theater">
-                <h3>Sale</h3>
+
+                <div class="d-flex align-items-center flex-wrap gap-5">
+                    <button mat-raised-button color="accent" [routerLink]="['./bar-list']">Gestisci bar</button>
+                </div>
+
+                <h3 class="pt-4">Sale</h3>
 
                 <app-screen-list [screens]="theater.screens" (onDelete)="onScreenDelete($event)"></app-screen-list>
 

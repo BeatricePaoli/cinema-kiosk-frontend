@@ -77,6 +77,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'theater-list/:theaterId/bar-list',
+    loadChildren: () =>
+      import('./feature/bar-list/bar-list.module').then(
+        (m) => m.BarListModule
+      ),
+  },
+  {
     path: 'theater-list/:theaterId/scheduling',
     loadChildren: () =>
       import('./feature/scheduling/scheduling.module').then(
