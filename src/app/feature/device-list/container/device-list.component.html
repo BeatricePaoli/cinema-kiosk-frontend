@@ -1,0 +1,23 @@
+<div class="container pt-5">
+    <div class="row">
+        <div class="col">
+
+            <div class="d-flex justify-content-between">
+                <h3>Lista dispositivi</h3>
+                <!-- <button mat-raised-button color="primary">Aggiungi</button> -->
+            </div>
+
+            <mat-tab-group class="pt-5">
+                <mat-tab label="Braccialetti">
+                    <app-device-table [devices]="smartbands" [canBeSwitchedOff]="true"
+                        (onTurnOff)="onTurnOffBandClicked($event)" (onDelete)="onCancelBandClicked($event)"></app-device-table>
+                </mat-tab>
+                <mat-tab label="Casse">
+                    <app-device-table [devices]="cashRegisters" [canBeSwitchedOff]="false"
+                        (onDelete)="onCancelRegisterClicked($event)"></app-device-table>
+                </mat-tab>
+            </mat-tab-group>
+
+        </div>
+    </div>
+</div>

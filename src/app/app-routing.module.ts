@@ -84,6 +84,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'theater-list/:theaterId/device-list',
+    loadChildren: () =>
+      import('./feature/device-list/device-list.module').then(
+        (m) => m.DeviceListModule
+      ),
+  },
+  {
     path: 'cash-desk',
     loadChildren: () =>
       import('./feature/cash-desk/cash-desk.module').then(
