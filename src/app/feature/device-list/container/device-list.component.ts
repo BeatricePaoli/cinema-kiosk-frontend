@@ -7,6 +7,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DeviceListComponent implements OnInit {
 
+  theater: any = {
+    id: 1,
+    name: "Cinema 1",
+    screens: [
+      {
+        id: 1,
+        name: "Sala a",
+        totalSeats: 140
+      },
+      {
+        id: 2,
+        name: "Sala b",
+        totalSeats: 245
+      }
+    ],
+  };
+
   smartbands = [
     {
       id: 1,
