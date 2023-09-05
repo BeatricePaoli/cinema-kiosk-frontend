@@ -1,9 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
 import * as _moment from 'moment';
+import { take } from 'rxjs';
 import { Days, ProjectionType } from 'src/app/core/models/tickets';
+import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { customTimepickerTheme } from 'src/app/core/timepicker.theme';
 
 
@@ -19,15 +22,48 @@ interface DayLabeled {
   templateUrl: './ticket-list.component.html',
   styleUrls: ['./ticket-list.component.scss']
 })
-export class TicketListComponent implements OnChanges {
+export class TicketListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
-  @Input()
-  ticketsList: any[] = [];
+  theaterId?: number;
+  theater: any = {
+    id: 1,
+    name: "Cinema 1",
+  };
 
-  @Output()
-  onSave: EventEmitter<any> = new EventEmitter<any>();
+  ticketsList: any[] = [
+    {
+      id: 1,
+      name: "Adulti",
+      price: 9,
+      projectionType: "2D",
+      availableOnline: true,
+      days: [0, 1, 2, 3, 4, 5, 6, 7],
+      fromTime: "14:00",
+      toTime: "23:59"
+    },
+    {
+      id: 2,
+      name: "Bambini",
+      price: 7,
+      projectionType: "2D",
+      availableOnline: true,
+      days: [0, 1, 2, 3, 4, 5, 6, 7],
+      fromTime: "14:00",
+      toTime: "23:59"
+    },
+    {
+      id: 3,
+      name: "Sconto a",
+      price: 4.5,
+      projectionType: "2D",
+      availableOnline: false,
+      days: [2],
+      fromTime: "14:00",
+      toTime: "19:00"
+    }
+  ];
 
   ticketForm = new FormGroup({
     tickets: new FormArray([])
@@ -45,17 +81,22 @@ export class TicketListComponent implements OnChanges {
     return (this.ticketForm.get('tickets') as FormArray);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ticketsList'] && changes['ticketsList'].currentValue) {
-      const ticketsList = changes['ticketsList'].currentValue;
-      this.tickets.patchValue([]);
+  constructor(private store: Store) { }
 
-      ticketsList.forEach((ticket: any) => {
-        this.pushForm(ticket);
-      });
+  ngOnInit(): void {
+    this.store.select(RouterSelectors.selectParams).pipe(take(1)).subscribe(params => {
+      if (params && params.theaterId) {
+        this.theaterId = params.theaterId;
 
-      this.initTable();
-    }
+        // this.tickets.patchValue([]);
+
+        this.ticketsList.forEach((ticket: any) => {
+          this.pushForm(ticket);
+        });
+
+        this.initTable();
+      }
+    });
   }
 
   initTable() {
@@ -102,7 +143,6 @@ export class TicketListComponent implements OnChanges {
   }
 
   onSubmit() {
-    this.onSave.emit(this.tickets.value);
+    console.log(this.tickets.value);
   }
-
 }

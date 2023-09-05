@@ -10,22 +10,80 @@
 
             <h3>{{ theater ? theater.name : 'Nuovo cinema' }}</h3>
 
-            <app-theater-form [theater]="theater" (onSave)="onTheaterSubmit($event)"></app-theater-form>
+            <form [formGroup]="theaterForm" (ngSubmit)="onSubmit()">
+                <div class="py-4 d-flex gap-4 flex-wrap align-items-center">
 
-            <ng-container *ngIf="theater">
+                    <div class="w-100">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Nome</mat-label>
+                            <input matInput formControlName="name">
 
-                <div class="d-flex align-items-center flex-wrap gap-5">
-                    <button mat-raised-button color="accent" [routerLink]="['./bar-list']">Gestisci bar</button>
+                            <mat-error *ngIf="name?.invalid">
+                                <div *ngIf="nameErrorRequired">Valore obbligatorio</div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <h5 class="w-100 fw-bold mb-0">Indirizzo</h5>
+
+                    <mat-form-field class="flex-grow-1 flex-sm-grow-0" appearance="outline">
+                        <mat-label>Città</mat-label>
+                        <input matInput formControlName="city">
+
+                        <mat-error *ngIf="city?.invalid">
+                            <div *ngIf="cityErrorRequired">Valore obbligatorio</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="flex-grow-1 flex-sm-grow-0" appearance="outline">
+                        <mat-label>Nazione</mat-label>
+                        <input matInput formControlName="country">
+
+                        <mat-error *ngIf="country?.invalid">
+                            <div *ngIf="countryErrorRequired">Valore obbligatorio</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="flex-grow-1" appearance="outline">
+                        <mat-label>Via</mat-label>
+                        <input matInput formControlName="street">
+
+                        <mat-error *ngIf="street?.invalid">
+                            <div *ngIf="streetErrorRequired">Valore obbligatorio</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field style="width: 140px;" appearance="outline">
+                        <mat-label>Numero civico</mat-label>
+                        <input matInput formControlName="number">
+
+                        <mat-error *ngIf="number?.invalid">
+                            <div *ngIf="numberErrorRequired">Valore obbligatorio</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field style="width: 125px;" appearance="outline">
+                        <mat-label>CAP</mat-label>
+                        <input matInput formControlName="zipCode">
+
+                        <mat-error *ngIf="zipCode?.invalid">
+                            <div *ngIf="zipCodeErrorRequired">Valore obbligatorio</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="w-100 text-end">
+                        <button mat-raised-button color="primary" type="submit"
+                            [disabled]="!theaterForm.valid">Salva</button>
+                    </div>
+
                 </div>
+            </form>
 
-                <h3 class="pt-4">Sale</h3>
-
-                <app-screen-list [screens]="theater.screens" (onDelete)="onScreenDelete($event)"></app-screen-list>
-
-                <h3 class="pt-4">Biglietti</h3>
-
-                <app-ticket-list [ticketsList]="theater.tickets" (onSave)="onTicketsSubmit($event)"></app-ticket-list>
-            </ng-container>
+            <div *ngIf="theater" class="d-flex align-items-center flex-wrap gap-5">
+                <button mat-raised-button color="accent" [routerLink]="['./screen-list']">Gestisci sale</button>
+                <button mat-raised-button color="accent" [routerLink]="['./ticket-list']">Gestisci biglietti</button>
+                <button mat-raised-button color="accent" [routerLink]="['./bar-list']">Gestisci bar</button>
+            </div>
 
         </div>
     </div>

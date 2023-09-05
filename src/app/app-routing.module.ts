@@ -70,10 +70,24 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'theater-list/:theaterId/screen-list',
+    loadChildren: () =>
+      import('./feature/screen-list/screen-list.module').then(
+        (m) => m.ScreenListModule
+      ),
+  },
+  {
     path: 'theater-list/:theaterId/screen-list/:screenId',
     loadChildren: () =>
       import('./feature/screen/screen.module').then(
         (m) => m.ScreenModule
+      ),
+  },
+  {
+    path: 'theater-list/:theaterId/ticket-list',
+    loadChildren: () =>
+      import('./feature/ticket-list/ticket-list.module').then(
+        (m) => m.TicketListModule
       ),
   },
   {
@@ -120,11 +134,11 @@ const routes: Routes = [
         (m) => m.ErrorModule
       ),
   },
-  {
-    path: '**',
-    redirectTo: 'error',
-    pathMatch: 'full',
-  },
+  // {
+  //   path: '**',
+  //   redirectTo: 'error',
+  //   pathMatch: 'full',
+  // },
 ];
 
 @NgModule({
