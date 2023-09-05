@@ -248,8 +248,8 @@ export class SchedulingComponent implements OnInit {
     this.initTable();
   }
 
-  onSaveClicked(index: number) {
-    console.log(this.schedulings.value[index]);
+  onSaveClicked() {
+    console.log(this.schedulings.value);
 
     this.dialog.open<ErrorListModalComponent, ErrorListModalData>(ErrorListModalComponent, {
       data: {
