@@ -77,6 +77,7 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
   // Screen
   screenForm = new FormGroup({
     name: new FormControl('', Validators.required),
+    emitterSerial: new FormControl('', Validators.required),
   });
 
   constructor(private zone: NgZone,
@@ -252,7 +253,8 @@ export class SeatsEditorComponent implements OnInit, AfterViewInit, OnChanges {
 
       if (this.creativeMode) {
         this.screenForm.patchValue({
-          name: screen.name
+          name: screen.name,
+          emitterSerial: screen.emitterSerial,
         });
       }
     }

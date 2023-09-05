@@ -23,8 +23,13 @@
                         <td mat-cell *matCellDef="let row"> {{ row.name }} </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="emitterSerial">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> N° seriale </th>
+                        <td mat-cell *matCellDef="let row"> {{ row.emitterSerial }} </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="totalSeats">
-                        <th mat-header-cell *matHeaderCellDef> N° Posti </th>
+                        <th mat-header-cell *matHeaderCellDef> N° posti </th>
                         <td mat-cell *matCellDef="let row"> {{ row.totalSeats }} </td>
                     </ng-container>
 

@@ -23,10 +23,10 @@
                 </ng-container>
     
                 <ng-container matColumnDef="emitterSerial">
-                    <th mat-header-cell *matHeaderCellDef> N° Seriale </th>
+                    <th mat-header-cell *matHeaderCellDef> N° seriale </th>
                     <td mat-cell *matCellDef="let row">
                         <mat-form-field style="width: 180px;" appearance="outline">
-                            <mat-label>N° Seriale</mat-label>
+                            <mat-label>N° seriale</mat-label>
                             <input matInput [formControl]="row.get('emitterSerial')">
     
                             <mat-error *ngIf="row.get('emitterSerial')?.invalid">

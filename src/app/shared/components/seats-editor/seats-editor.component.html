@@ -35,10 +35,15 @@
 
     <div *ngIf="creativeMode" class="p-4 z-3 sidebar bg-light d-flex flex-column gap-3">
         <div class="flex-grow-1 d-flex flex-column gap-3">
-            <form id="screenForm" [formGroup]="screenForm" (ngSubmit)="onSaveScreen()">
+            <form id="screenForm" [formGroup]="screenForm" (ngSubmit)="onSaveScreen()" class="d-flex flex-column gap-3">
                 <mat-form-field class="mw-100" appearance="outline" subscriptSizing="dynamic">
-                    <mat-label>Nome Sala</mat-label>
+                    <mat-label>Nome sala</mat-label>
                     <input matInput formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field class="mw-100" appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>N° seriale</mat-label>
+                    <input matInput formControlName="emitterSerial">
                 </mat-form-field>
             </form>
 

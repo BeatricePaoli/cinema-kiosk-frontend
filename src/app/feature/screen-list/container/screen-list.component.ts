@@ -29,16 +29,18 @@ export class ScreenListComponent implements OnInit {
     {
       id: 1,
       name: "Sala a",
+      emitterSerial: "ABCD89",
       totalSeats: 140
     },
     {
       id: 2,
       name: "Sala b",
+      emitterSerial: "ABCD12",
       totalSeats: 245
     }
   ];
 
-  displayedColumns: string[] = ['name', 'totalSeats', 'actions'];
+  displayedColumns: string[] = ['name', 'emitterSerial', 'totalSeats', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
   constructor(private store: Store, public dialog: MatDialog) { }

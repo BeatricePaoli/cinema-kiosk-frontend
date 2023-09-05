@@ -31,6 +31,7 @@ export class ScreenComponent {
           this.screen = {
             id: 1,
             name: "Sala a",
+            emitterSerial: "ABCD1234",
             url: "assets/mocks/screen_test.json",
           };
 
