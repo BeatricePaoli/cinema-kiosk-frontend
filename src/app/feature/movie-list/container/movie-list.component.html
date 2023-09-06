@@ -54,7 +54,7 @@
     <ng-container *ngIf="!(isLoading$ | async)">
         <div class="row">
             <div class="col">
-                <h3>Al Cinema</h3>
+                <h3 *ngIf="((currentMovies$ | async) ?? []).length > 0">Al Cinema</h3>
 
                 <div class="d-flex justify-content-center">
                     <ngx-slick-carousel class="py-4" #slickCurrent="slick-carousel" [config]="slideConfig">
@@ -70,7 +70,7 @@
 
         <div class="row">
             <div class="col">
-                <h3>Prossimamente</h3>
+                <h3 *ngIf="((futureMovies$ | async) ?? []).length > 0">Prossimamente</h3>
 
                 <div class="d-flex justify-content-center">
                     <ngx-slick-carousel class="py-4" #slickFuture="slick-carousel" [config]="slideConfig">

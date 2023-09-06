@@ -5,6 +5,8 @@ export const commonEnvironment = {
     movies: '/movies',
     movie: '/movies/{id}',
     
+    theaters: '/theaters',
+    theater: '/theaters/{id}',
     theaterFilter: '/theaters/filter',
     ticketTypes: '/theaters/{id}/tickets',
 

@@ -57,10 +57,12 @@ const routes: Routes = [
   },
   {
     path: 'theater-list',
+    canMatch: mapToCanMatch([AuthGuard, RolesGuard]),
     loadChildren: () =>
       import('./feature/theater-list/theater-list.module').then(
         (m) => m.TheaterListModule
       ),
+    data: { role: [ Role.ADMIN ] }
   },
   {
     path: 'theater-list/:theaterId',
@@ -134,11 +136,11 @@ const routes: Routes = [
         (m) => m.ErrorModule
       ),
   },
-  // {
-  //   path: '**',
-  //   redirectTo: 'error',
-  //   pathMatch: 'full',
-  // },
+  {
+    path: '**',
+    redirectTo: 'error',
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

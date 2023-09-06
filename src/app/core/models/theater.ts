@@ -19,8 +19,6 @@ export interface Theater {
     id: number;
     name: string;
     address: Address;
-    screens: TheaterScreen[];
-    ticketTypes: TicketType[];
 }
 
 export interface Address {

@@ -1,75 +1,52 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { take } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription, of, take } from 'rxjs';
+import { Theater } from 'src/app/core/models/theater';
+import { Toast } from 'src/app/core/models/toast';
 import { ActionModalComponent, ActionModalData, ActionModalOutput } from 'src/app/shared/components/action-modal/action-modal.component';
+import { TheaterListActions } from '../store/actions/theater-list.actions';
+import * as TheaterListSelectors from '../store/selectors/theater-list.selectors';
 
 @Component({
   selector: 'app-theater-list',
   templateUrl: './theater-list.component.html',
   styleUrls: ['./theater-list.component.scss']
 })
-export class TheaterListComponent implements OnInit, AfterViewInit {
+export class TheaterListComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
-  theaters: any[] = [
-    {
-      id: 1,
-      name: "Cinema 1",
-      address: {
-        id: 1,
-        street: "Via Pinco Pallino",
-        number: "8",
-        city: "Firenze",
-        country: "Italia"
-      },
-      screens: [
-        {
-          id: 1,
-          name: "Sala a"
-        },
-        {
-          id: 2,
-          name: "Sala b"
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: "Cinema 2",
-      address: {
-        id: 1,
-        street: "Via Pinco Pallino",
-        number: "8",
-        city: "Firenze",
-        country: "Italia"
-      },
-      screens: [
-        {
-          id: 1,
-          name: "Sala a"
-        },
-        {
-          id: 2,
-          name: "Sala b"
-        }
-      ]
-    }
-  ]
+  theaters: Theater[] = [];
 
-  displayedColumns: string[] = ['name', 'address', 'screens', 'actions'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+  displayedColumns: string[] = ['name', 'address', 'actions'];
+  dataSource: MatTableDataSource<Theater> = new MatTableDataSource<Theater>([]);
 
-  constructor(public dialog: MatDialog) {}
+  isLoading$: Observable<boolean> = of(false);
+  toast$: Observable<Toast | null> = of(null);
 
-  ngOnInit() {}
+  subs: Subscription[] = [];
 
-  ngAfterViewInit() {
-    this.initTable();
+  constructor(public dialog: MatDialog, private store: Store) {}
+
+  ngOnInit(): void {
+    this.store.dispatch(TheaterListActions.loadTheaterList());
+
+    this.isLoading$ = this.store.select(TheaterListSelectors.selectIsLoading);
+    this.toast$ = this.store.select(TheaterListSelectors.selectToast);
+
+    this.subs.push(this.store.select(TheaterListSelectors.selectTheaters).subscribe(theaters => {
+      this.theaters = theaters;
+      this.initTable();
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   initTable() {
@@ -78,7 +55,7 @@ export class TheaterListComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort!;
   }
 
-  onCancelClicked(theater: any) {
+  onCancelClicked(theater: Theater) {
     this.dialog.open<ActionModalComponent, ActionModalData, ActionModalOutput>(ActionModalComponent, {
       height: '50vh',
       data: {
@@ -89,12 +66,7 @@ export class TheaterListComponent implements OnInit, AfterViewInit {
       },
     }).afterClosed().pipe(take(1)).subscribe(output => {
       if (output?.result) {
-        const index = this.theaters.findIndex(t => t.id === theater.id);
-        if (index > -1) {
-          this.theaters.splice(index, 1);
-        }
-
-        this.initTable();
+        this.store.dispatch(TheaterListActions.deleteTheater({ id: theater.id }));
       }
     });
   }
