@@ -19,6 +19,12 @@ export class TheaterService {
     return this.http.get<Theater[]>(url);
   }
 
+  getTheater(theaterId: number): Observable<Theater> {
+    let url = environment.theater;
+    url = UrlCreator.of(url).addPathVariable('id', theaterId).createUrl();
+    return this.http.get<Theater>(url);
+  }
+
   getFilters(movieId?: number): Observable<AutocompleteTheaterFilter> {
     let url = environment.theaterFilter;
     if (movieId) {
@@ -33,6 +39,12 @@ export class TheaterService {
     let url = environment.ticketTypes;
     url = UrlCreator.of(url).addPathVariable('id', theaterId).createUrl();
     return this.http.get<TicketType[]>(url);
+  }
+
+  saveTheater(dto: Theater): Observable<number> {
+    let url = environment.theaters;
+    url = UrlCreator.of(url).createUrl();
+    return this.http.post<number>(url, dto);
   }
 
   deleteTheater(id: number): Observable<void> {

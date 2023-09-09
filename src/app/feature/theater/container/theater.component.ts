@@ -1,18 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { Observable, Subscription, of, take } from 'rxjs';
+import { Theater } from 'src/app/core/models/theater';
+import { Toast } from 'src/app/core/models/toast';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
+import { TheaterActions } from '../store/actions/theater.actions';
+import * as TheaterSelectors from '../store/selectors/theater.selectors';
 
 @Component({
   selector: 'app-theater',
   templateUrl: './theater.component.html',
   styleUrls: ['./theater.component.scss']
 })
-export class TheaterComponent implements OnInit {
+export class TheaterComponent implements OnInit, OnDestroy {
 
   theaterId?: number;
-  theater: any;
+  theater: Theater | null = null;
 
   theaterForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -22,6 +27,9 @@ export class TheaterComponent implements OnInit {
     number: new FormControl('', Validators.required),
     zipCode: new FormControl('', Validators.required),
   });
+
+  isLoading$: Observable<boolean> = of(false);
+  toast$: Observable<Toast | null> = of(null);
 
   get name() {
     return this.theaterForm.get('name');
@@ -71,7 +79,9 @@ export class TheaterComponent implements OnInit {
     return this.zipCode?.errors ? this.zipCode?.errors!['required'] : null;
   }
 
-  constructor(private store: Store) { }
+  subs: Subscription[] = [];
+
+  constructor(private store: Store, private router: Router) { }
 
   ngOnInit(): void {
     this.store.select(RouterSelectors.selectParams).pipe(take(1)).subscribe(params => {
@@ -79,35 +89,56 @@ export class TheaterComponent implements OnInit {
         const id = parseInt(params.theaterId);
         if (!Number.isNaN(id)) {
           this.theaterId = id;
-
-          this.theater = {
-            id: 1,
-            name: "Cinema 1",
-            address: {
-              id: 1,
-              street: "Via Pinco Pallino",
-              number: "8",
-              city: "Firenze",
-              country: "Italia",
-              zipCode: 10000
-            }
-          };
-
-          this.theaterForm.patchValue({
-            name: this.theater.name,
-            city: this.theater.address.city,
-            country: this.theater.address.country,
-            street: this.theater.address.street,
-            number: this.theater.address.number,
-            zipCode: this.theater.address.zipCode,
-          });
-
+          this.store.dispatch(TheaterActions.loadTheater({ id }));
         }
       }
-    })
+    });
+
+    this.subs.push(this.store.select(TheaterSelectors.selectTheater).subscribe(theater => {
+      if (theater) {
+        this.theater = theater;
+        this.theaterForm.patchValue({
+          name: this.theater.name,
+          city: this.theater.address.city,
+          country: this.theater.address.country,
+          street: this.theater.address.street,
+          number: this.theater.address.number,
+          zipCode: this.theater.address.zipCode,
+        });
+      }
+    }));
+
+    this.subs.push(this.store.select(TheaterSelectors.selectSavedTheaterId).subscribe(id => {
+      if (id && !this.theaterId) {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/theater-list', id]);
+        });
+        this.store.dispatch(TheaterActions.resetSavedTheaterId());
+      }
+    }));
+
+    this.isLoading$ = this.store.select(TheaterSelectors.selectIsLoading);
+    this.toast$ = this.store.select(TheaterSelectors.selectToast);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   onSubmit() {
-    console.log(this.theaterForm.value);
+    const formVals = this.theaterForm.value;
+    const theater: Theater = {
+      id: this.theater ? this.theater.id : undefined,
+      name: formVals.name!,
+      address: {
+        id: this.theater ? this.theater.address.id : undefined,
+        street: formVals.street!,
+        city: formVals.city!,
+        number: formVals.number!,
+        country: formVals.country!,
+        zipCode: formVals.zipCode!,
+      }
+    }
+    this.store.dispatch(TheaterActions.saveTheater({ theater }));
   }
 }

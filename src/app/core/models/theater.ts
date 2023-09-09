@@ -16,13 +16,13 @@ export interface TheaterFilter {
 }
 
 export interface Theater {
-    id: number;
+    id?: number;
     name: string;
     address: Address;
 }
 
 export interface Address {
-    id: number;
+    id?: number;
     number: string;
     street: string;
     city: string;

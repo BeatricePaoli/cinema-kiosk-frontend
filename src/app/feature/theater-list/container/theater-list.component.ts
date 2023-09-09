@@ -66,7 +66,7 @@ export class TheaterListComponent implements OnInit, OnDestroy {
       },
     }).afterClosed().pipe(take(1)).subscribe(output => {
       if (output?.result) {
-        this.store.dispatch(TheaterListActions.deleteTheater({ id: theater.id }));
+        this.store.dispatch(TheaterListActions.deleteTheater({ id: theater.id! }));
       }
     });
   }
