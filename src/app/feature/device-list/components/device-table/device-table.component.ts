@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { take } from 'rxjs';
-import { Device } from 'src/app/core/models/device';
+import { Device, DeviceType } from 'src/app/core/models/device';
 import { ActionModalComponent, ActionModalData, ActionModalOutput } from 'src/app/shared/components/action-modal/action-modal.component';
 
 @Component({
@@ -21,7 +21,10 @@ export class DeviceTableComponent implements AfterViewInit, OnChanges {
   devices: Device[] = [];
 
   @Input()
-  canBeSwitchedOff: boolean = false;
+  type: DeviceType = DeviceType.SMARTBAND;
+
+  @Input()
+  theaterId?: number;
 
   @Output()
   onTurnOff: EventEmitter<Device> = new EventEmitter<Device>();
@@ -44,13 +47,11 @@ export class DeviceTableComponent implements AfterViewInit, OnChanges {
     this.initTable(this.devices);
   }
 
-  initTable(devices: any[]) {
+  initTable(devices: Device[]) {
     this.dataSource = new MatTableDataSource(devices);
     this.dataSource.paginator = this.paginator!;
     this.dataSource.sort = this.sort!;
-
-    // TODO: temp?
-    this.displayedColumns = this.canBeSwitchedOff ? ['contextBrokerId', 'status', 'actions'] : ['contextBrokerId', 'status'];
+    this.displayedColumns = this.type === DeviceType.SMARTBAND ? ['contextBrokerId', 'status', 'actions'] : ['contextBrokerId', 'status'];
   }
 
   getStatusLabel(isActive: boolean) {
@@ -61,7 +62,7 @@ export class DeviceTableComponent implements AfterViewInit, OnChanges {
     this.onTurnOff.emit(device);
   }
 
-  onCancelClicked(device: any) {
+  onCancelClicked(device: Device) {
     this.dialog.open<ActionModalComponent, ActionModalData, ActionModalOutput>(ActionModalComponent, {
       height: '50vh',
       data: {

@@ -6,7 +6,7 @@ import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { DeviceListActions } from '../store/actions/device-list.actions';
 import { Store } from '@ngrx/store';
 import * as DeviceListSelectors from '../store/selectors/device-list.selectors';
-import { Device } from 'src/app/core/models/device';
+import { Device, DeviceType } from 'src/app/core/models/device';
 
 
 @Component({
@@ -21,6 +21,8 @@ export class DeviceListComponent implements OnInit, OnDestroy {
 
   smartbands: Device[] = [];
   cashRegisters: Device[] = [];
+
+  deviceType = DeviceType;
 
   isLoading$: Observable<boolean> = of(false);
   toast$: Observable<Toast | null> = of(null);

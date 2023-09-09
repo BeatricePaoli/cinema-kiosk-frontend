@@ -114,6 +114,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'theater-list/:theaterId/device-list/smartband/:deviceId',
+    loadChildren: () =>
+      import('./feature/smartband/smartband.module').then(
+        (m) => m.SmartbandModule
+      ),
+  },
+  {
     path: 'cash-desk',
     loadChildren: () =>
       import('./feature/cash-desk/cash-desk.module').then(

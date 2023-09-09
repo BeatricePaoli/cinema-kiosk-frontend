@@ -13,6 +13,7 @@ export const commonEnvironment = {
 
     devices: '/theaters/{id}/devices',
     device: '/theaters/{id}/devices/{idDevice}',
+    deviceActivities: '/theaters/{id}/devices/{idDevice}/activities',
 
     shows: '/shows/filter',
 

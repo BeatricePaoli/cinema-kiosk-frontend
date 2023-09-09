@@ -18,11 +18,11 @@
 
             <mat-tab-group class="pt-5">
                 <mat-tab label="Braccialetti">
-                    <app-device-table [devices]="smartbands" [canBeSwitchedOff]="true"
+                    <app-device-table [devices]="smartbands" [theaterId]="theaterId" [type]="deviceType.SMARTBAND"
                         (onTurnOff)="onTurnOffBandClicked($event)" (onDelete)="onCancelBandClicked($event)"></app-device-table>
                 </mat-tab>
                 <mat-tab label="Casse">
-                    <app-device-table [devices]="cashRegisters" [canBeSwitchedOff]="false"
+                    <app-device-table [devices]="cashRegisters" [theaterId]="theaterId" [type]="deviceType.CASHREGISTER"
                         (onDelete)="onCancelRegisterClicked($event)"></app-device-table>
                 </mat-tab>
             </mat-tab-group>

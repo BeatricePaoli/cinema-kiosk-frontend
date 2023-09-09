@@ -15,9 +15,13 @@
             <th mat-header-cell *matHeaderCellDef> Azioni </th>
             <td mat-cell *matCellDef="let row">
                 <div class="d-flex justify-content-center">
-                    <button *ngIf="canBeSwitchedOff" mat-icon-button color="primary" matTooltip="Disattiva"
+                    <button mat-icon-button color="primary" matTooltip="Disattiva"
                         [disabled]="!row.isActive" (click)="onTurnOffClicked(row)">
                         <mat-icon>power_settings_new</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="Visualizza log attività"
+                        [routerLink]="['/theater-list', theaterId, 'device-list', 'smartband', row.id]">
+                        <mat-icon>list</mat-icon>
                     </button>
                     <!-- <button mat-icon-button color="primary" matTooltip="Cancella" (click)="onCancelClicked(row)">
                         <mat-icon>delete</mat-icon>
