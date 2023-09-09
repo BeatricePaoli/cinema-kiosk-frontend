@@ -8,7 +8,11 @@ export const commonEnvironment = {
     theaters: '/theaters',
     theater: '/theaters/{id}',
     theaterFilter: '/theaters/filter',
+    
     ticketTypes: '/theaters/{id}/tickets',
+
+    devices: '/theaters/{id}/devices',
+    device: '/theaters/{id}/devices/{idDevice}',
 
     shows: '/shows/filter',
 

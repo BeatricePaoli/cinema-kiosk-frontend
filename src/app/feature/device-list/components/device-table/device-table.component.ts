@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { take } from 'rxjs';
+import { Device } from 'src/app/core/models/device';
 import { ActionModalComponent, ActionModalData, ActionModalOutput } from 'src/app/shared/components/action-modal/action-modal.component';
 
 @Component({
@@ -17,19 +18,19 @@ export class DeviceTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatSort) sort?: MatSort;
 
   @Input()
-  devices: any[] = [];
+  devices: Device[] = [];
 
   @Input()
   canBeSwitchedOff: boolean = false;
 
   @Output()
-  onTurnOff: EventEmitter<any> = new EventEmitter<any>();
+  onTurnOff: EventEmitter<Device> = new EventEmitter<Device>();
 
   @Output()
-  onDelete: EventEmitter<any> = new EventEmitter<any>();
+  onDelete: EventEmitter<Device> = new EventEmitter<Device>();
 
   displayedColumns: string[] = [];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+  dataSource: MatTableDataSource<Device> = new MatTableDataSource<Device>([]);
 
   constructor(public dialog: MatDialog) {}
 
@@ -52,8 +53,8 @@ export class DeviceTableComponent implements AfterViewInit, OnChanges {
     this.displayedColumns = this.canBeSwitchedOff ? ['contextBrokerId', 'status', 'actions'] : ['contextBrokerId', 'status'];
   }
 
-  getStatusLabel(on: boolean) {
-    return on ? 'ATTIVO' : 'DISATTIVO';
+  getStatusLabel(isActive: boolean) {
+    return isActive ? 'ATTIVO' : 'DISATTIVO';
   }
 
   onTurnOffClicked(device: any) {
