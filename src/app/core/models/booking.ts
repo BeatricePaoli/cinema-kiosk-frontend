@@ -19,7 +19,6 @@ export interface Booking {
 
 export enum BookingStatus {
     CREATED = "CREATED",
-    PAID = "PAID",
     CHECKEDIN = "CHECKEDIN",
     CANCELED = "CANCELED",
 }

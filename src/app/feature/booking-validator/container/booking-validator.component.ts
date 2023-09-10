@@ -77,11 +77,9 @@ export class BookingValidatorComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  // TODO: gestione created vs paid
   getStatusLabel(status: BookingStatus) {
     switch (status) {
       case BookingStatus.CREATED: return 'Creata';
-      case BookingStatus.PAID: return 'Pagata';
       case BookingStatus.CHECKEDIN: return 'Validata';
       case BookingStatus.CANCELED: return 'Cancellata';
     }
@@ -90,7 +88,6 @@ export class BookingValidatorComponent implements OnInit, AfterViewInit, OnDestr
   getStatusColor(status: BookingStatus) {
     switch (status) {
       case BookingStatus.CREATED: return { color: "#ffbe48" };
-      case BookingStatus.PAID: return { color: "#ffbe48" };
       case BookingStatus.CHECKEDIN: return { color: "#76c500" };
       case BookingStatus.CANCELED: return { color: "#ff2020" };
     }
