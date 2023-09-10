@@ -13,6 +13,8 @@ export interface Booking {
     price: number;
     codeUrl: string;
     status: BookingStatus;
+
+    username: string;
 }
 
 export enum BookingStatus {

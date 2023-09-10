@@ -128,6 +128,7 @@ export class DeviceService {
           price: 10,
           codeUrl: "",
           status: BookingStatus.CREATED,
+          username: "beatrice",
         }
       }
     ])
