@@ -27,7 +27,7 @@ export class DeviceListEffects {
     return this.actions$.pipe(
 
       ofType(DeviceListActions.loadSmartBands),
-      switchMap((action) => this.deviceService.getDeviceList(action.theaterId, DeviceType.SMARTBAND)
+      switchMap((action) => this.deviceService.getDeviceList(action.filter)
         .pipe(
           map(data => DeviceListActions.loadSmartBandsSuccess({ response: data })),
           catchError(error => of(DeviceListActions.loadSmartBandsFailure())))
@@ -39,7 +39,7 @@ export class DeviceListEffects {
     return this.actions$.pipe(
 
       ofType(DeviceListActions.loadCashRegisters),
-      switchMap((action) => this.deviceService.getDeviceList(action.theaterId, DeviceType.CASHREGISTER)
+      switchMap((action) => this.deviceService.getDeviceList(action.filter)
         .pipe(
           map(data => DeviceListActions.loadCashRegistersSuccess({ response: data })),
           catchError(error => of(DeviceListActions.loadCashRegistersFailure())))
@@ -51,9 +51,9 @@ export class DeviceListEffects {
     return this.actions$.pipe(
 
       ofType(DeviceListActions.deactivateSmartBand),
-      switchMap((action) => this.deviceService.deactivateSmartBand(action.theaterId, action.id)
+      switchMap((action) => this.deviceService.deactivateSmartBand(action.id)
         .pipe(
-          map(data => DeviceListActions.deactivateSmartBandSuccessAndReload({ theaterId: action.theaterId })),
+          map(data => DeviceListActions.deactivateSmartBandSuccessAndReload({ filter: action.filter })),
           catchError(error => of(DeviceListActions.deactivateSmartBandFailure())))
       )
     );
@@ -70,7 +70,7 @@ export class DeviceListEffects {
     return this.actions$.pipe(
 
       ofType(DeviceListActions.deactivateSmartBandSuccessAndReload),
-      map(action => DeviceListActions.loadSmartBands({ theaterId: action.theaterId })),
+      map(action => DeviceListActions.loadSmartBands({ filter: action.filter })),
     );
   });
 

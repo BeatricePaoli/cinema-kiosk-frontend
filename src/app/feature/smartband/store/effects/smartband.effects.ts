@@ -13,7 +13,7 @@ export class SmartbandEffects {
     return this.actions$.pipe(
 
       ofType(SmartbandActions.loadSmartBand),
-      switchMap((action) => this.deviceService.getDevice(action.theaterId, action.id)
+      switchMap((action) => this.deviceService.getDevice(action.id)
         .pipe(
           map(data => SmartbandActions.loadSmartBandSuccess({ response: data })),
           catchError(error => of(SmartbandActions.loadSmartBandFailure())))
@@ -25,7 +25,7 @@ export class SmartbandEffects {
     return this.actions$.pipe(
 
       ofType(SmartbandActions.loadActivities),
-      switchMap((action) => this.deviceService.getDeviceActivities(action.theaterId, action.id)
+      switchMap((action) => this.deviceService.getDeviceActivities(action.id)
         .pipe(
           map(data => SmartbandActions.loadActivitiesSuccess({ response: data })),
           catchError(error => of(SmartbandActions.loadActivitiesFailure())))

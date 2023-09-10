@@ -41,13 +41,14 @@ export class SmartbandComponent implements OnInit, OnDestroy {
       if (params && params.theaterId && params.deviceId) {
         const theaterId = parseInt(params.theaterId);
         const id = parseInt(params.deviceId);
+        
         if (!Number.isNaN(theaterId) && !Number.isNaN(id)) {
           this.theaterId = theaterId;
-          this.store.dispatch(SmartbandActions.loadSmartBand({ theaterId, id }));
+          this.store.dispatch(SmartbandActions.loadSmartBand({ id }));
           
           // Ricarica log ogni 10s
           this.subs.push(timer(0, 10000).subscribe(() => {
-            this.store.dispatch(SmartbandActions.loadActivities({ theaterId, id }));
+            this.store.dispatch(SmartbandActions.loadActivities({ id }));
           }));
         }
       }
@@ -84,6 +85,8 @@ export class SmartbandComponent implements OnInit, OnDestroy {
         return 'UTENTE NELLA SALA SBAGLIATE';
       case DeviceActivityEvent.ROOM_CHANGE:
         return 'CAMBIO STANZA';
+      case DeviceActivityEvent.BAR_PURCHASE:
+        return 'ACQUISTO AL BAR';
     }
   }
 

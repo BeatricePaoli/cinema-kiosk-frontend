@@ -11,9 +11,9 @@ export const commonEnvironment = {
     
     ticketTypes: '/theaters/{id}/tickets',
 
-    devices: '/theaters/{id}/devices',
-    device: '/theaters/{id}/devices/{idDevice}',
-    deviceActivities: '/theaters/{id}/devices/{idDevice}/activities',
+    devices: '/devices/filter',
+    device: '/devices/{id}',
+    deviceActivities: '/devices/{id}/activities',
 
     shows: '/shows/filter',
 

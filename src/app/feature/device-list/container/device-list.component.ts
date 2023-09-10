@@ -6,7 +6,7 @@ import * as RouterSelectors from 'src/app/core/router/router.selectors';
 import { DeviceListActions } from '../store/actions/device-list.actions';
 import { Store } from '@ngrx/store';
 import * as DeviceListSelectors from '../store/selectors/device-list.selectors';
-import { Device, DeviceType } from 'src/app/core/models/device';
+import { Device, DeviceFilterDto, DeviceType } from 'src/app/core/models/device';
 
 
 @Component({
@@ -38,8 +38,18 @@ export class DeviceListComponent implements OnInit, OnDestroy {
         if (!Number.isNaN(id)) {
           this.theaterId = id;
           this.store.dispatch(DeviceListActions.loadTheater({ id }));
-          this.store.dispatch(DeviceListActions.loadSmartBands({ theaterId: id }));
-          this.store.dispatch(DeviceListActions.loadCashRegisters({ theaterId: id }));
+
+          const sFilter: DeviceFilterDto = {
+            theaterId: id,
+            type: DeviceType.SMARTBAND,
+          };
+          this.store.dispatch(DeviceListActions.loadSmartBands({ filter: sFilter }));
+
+          const dFilter: DeviceFilterDto = {
+            theaterId: id,
+            type: DeviceType.CASHREGISTER,
+          };
+          this.store.dispatch(DeviceListActions.loadCashRegisters({ filter: dFilter }));
         }
       }
     });
@@ -65,7 +75,11 @@ export class DeviceListComponent implements OnInit, OnDestroy {
   }
 
   onTurnOffBandClicked(device: Device) {
-    this.store.dispatch(DeviceListActions.deactivateSmartBand({ id: device.id, theaterId: this.theaterId! }));
+    const sFilter: DeviceFilterDto = {
+      theaterId: this.theaterId!,
+      type: DeviceType.SMARTBAND,
+    };
+    this.store.dispatch(DeviceListActions.deactivateSmartBand({ id: device.id, filter: sFilter }));
     // const index = this.smartbands.findIndex(t => t.id === device.id);
     // if (index > -1) {
     //   this.smartbands[index].isActive = false;

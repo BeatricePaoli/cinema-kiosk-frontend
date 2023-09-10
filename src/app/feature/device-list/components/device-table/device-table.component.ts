@@ -55,7 +55,7 @@ export class DeviceTableComponent implements AfterViewInit, OnChanges {
   }
 
   getStatusLabel(isActive: boolean) {
-    return isActive ? 'ATTIVO' : 'DISATTIVO';
+    return isActive || this.type === DeviceType.CASHREGISTER ? 'ATTIVO' : 'DISATTIVO';
   }
 
   onTurnOffClicked(device: any) {
