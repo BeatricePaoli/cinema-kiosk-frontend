@@ -47,7 +47,7 @@ export const reducer = createReducer(
   on(SmartbandActions.loadActivities, (state) => {
     return {
       ...state,
-      isLoading: true,
+      // isLoading: true,
     }
   }),
   on(SmartbandActions.loadActivitiesSuccess, (state, { response }) => {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, of, take } from 'rxjs';
+import { Observable, Subscription, of, take, timer } from 'rxjs';
 import { Device, DeviceActivity, DeviceActivityEvent } from 'src/app/core/models/device';
 import { Toast } from 'src/app/core/models/toast';
 import * as RouterSelectors from 'src/app/core/router/router.selectors';
@@ -44,7 +44,11 @@ export class SmartbandComponent implements OnInit, OnDestroy {
         if (!Number.isNaN(theaterId) && !Number.isNaN(id)) {
           this.theaterId = theaterId;
           this.store.dispatch(SmartbandActions.loadSmartBand({ theaterId, id }));
-          this.store.dispatch(SmartbandActions.loadActivities({ theaterId, id }));
+          
+          // Ricarica log ogni 10s
+          this.subs.push(timer(0, 10000).subscribe(() => {
+            this.store.dispatch(SmartbandActions.loadActivities({ theaterId, id }));
+          }));
         }
       }
     });
