@@ -26,6 +26,11 @@
                         <td mat-cell *matCellDef="let row"> {{ row.booking.username }} </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="movie">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Film </th>
+                        <td mat-cell *matCellDef="let row"> {{ row.booking.movie.name }} </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="eventCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Evento </th>
                         <td mat-cell *matCellDef="let row"> {{ getEventLabel(row.eventCode) }} </td>

@@ -26,7 +26,7 @@ export class SmartbandComponent implements OnInit, OnDestroy {
 
   activities: DeviceActivity[] = [];
 
-  displayedColumns: string[] = ['tms', 'user', 'eventCode', 'emitterSerial', 'product', 'quantity'];
+  displayedColumns: string[] = ['tms', 'user', 'movie', 'eventCode', 'emitterSerial', 'product', 'quantity'];
   dataSource: MatTableDataSource<DeviceActivity> = new MatTableDataSource<DeviceActivity>([]);
 
   isLoading$: Observable<boolean> = of(false);
