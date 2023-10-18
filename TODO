@@ -1,0 +1,24 @@
+Funzionalità Seat Editor:
+- (optional) Selezione tipo di labeling (lettere, numeri, asc, desc, alternazione pari/dispari ...)
+- (optional) Touch gestures
+
+Pagine da fare:
+- user?
+
+Pagine da collegare al backend:
+- cassa (cashier)
+- anagrafica cinema (admin)
+
+Dubbi da smarcare + Todo:
+- show/hide elementi header in base al ruolo
+- gestione creazione/cancellazione smartband e cashregister
+- migliorare check be autorizzazioni
+
+Bug ignorati:
+- refresh token non funzionante
+- manca il redirect dopo il login alla pagina precedente
+
+Prossimi step prima di sentire i prof:
+- relazione: google doc che espande i punti della presentazione
+- implementazioni:
+    - pagina dispositivi deve essere accessibile al cassiere, admin e cassiere non devono poter accedere a pagine utente
